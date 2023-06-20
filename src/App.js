@@ -40,7 +40,8 @@ import themeDark from "assets/theme-dark";
 import routes from "routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useMaterialUIController } from "contexts/UIContext";
+import {  setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActions";
 
 // Images
 import brandWhite from "assets/images/sd-white-logo.png"; // brand logo

@@ -46,7 +46,9 @@ import {
 } from "examples/Navbars/DashboardNavbar/styles";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useMaterialUIController} from "contexts/UIContext";
+import {setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActions";
+
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();

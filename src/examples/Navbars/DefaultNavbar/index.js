@@ -30,7 +30,7 @@ import MDTypography from "components/MDTypography";
 import DefaultNavbarLink from "examples/Navbars/DefaultNavbar/DefaultNavbarLink";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController } from "context";
+import { useMaterialUIController } from "contexts/UIContext";
 
 function DefaultNavbar({ light }) {
   const [controller] = useMaterialUIController();

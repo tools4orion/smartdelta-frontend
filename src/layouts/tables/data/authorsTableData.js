@@ -20,8 +20,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDBadge from "components/MDBadge";
 
-export default function data() {
-  const Author = ({ name }) => (
+const Author = ({ name }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       <MDBox lineHeight={1}>
         <MDTypography display="block" variant="button" fontWeight="medium">
@@ -39,6 +38,9 @@ export default function data() {
       <MDTypography variant="caption">{description}</MDTypography>
     </MDBox>
   );
+
+
+export default function data() {
 
   return {
     columns: [
