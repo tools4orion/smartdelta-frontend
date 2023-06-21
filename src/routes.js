@@ -40,7 +40,7 @@ import Dashboard from "layouts/dashboard";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import Tables from "layouts/tables";
-import FileUpload from "layouts/file-upload";
+
 // import Billing from "layouts/billing";
 // import Notifications from "layouts/notifications";
 // import Profile from "layouts/profile";
@@ -48,6 +48,9 @@ import Dataset from "layouts/dataset";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+
+import FileManagementLayout from "pages/FileManagementLayout";
+
 
 const routes = [
   {
@@ -72,7 +75,7 @@ const routes = [
     key: "fileUpload",
     icon: <Icon fontSize="small">file_upload</Icon>,
     route: "/file-upload",
-    component: <FileUpload />,
+    component: <FileManagementLayout />,
   },
   {
     type: "collapse",

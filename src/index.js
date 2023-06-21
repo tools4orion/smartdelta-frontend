@@ -20,12 +20,15 @@ import App from "App";
 
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "contexts/UIContext";
+import { FileControllerProvider } from "contexts/FileContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <MaterialUIControllerProvider>
+	  <FileControllerProvider>
         <App />
+	  </FileControllerProvider>
       </MaterialUIControllerProvider>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,4 +1,4 @@
-// This file seperated for only Context-related code
+// This file separated for only Context-related code
 
 import { createContext, useContext, useReducer, useMemo } from "react";
 

@@ -51,7 +51,7 @@ function Tables() {
                 justifyContent="space-between"
               >
                 <MDTypography variant="h6" color="white">
-                  Table Template for Files
+				 Manage Files
                 </MDTypography>
                 <MDTypography variant="h6" color="white">
                   Storage Area: 600 MB / 3 GB used; 2,4 GB free
