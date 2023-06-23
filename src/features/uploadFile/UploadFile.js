@@ -23,7 +23,9 @@ const UploadFile = () => {
     setIsUploadStarted(true);
     const responseData = await uploadFile(dispatch, formData, setUploadProgress);
 
-    if (responseData) navigate("/dataset", { state: { result: responseData } });
+    if (responseData) { navigate("/dataset", { state: { result: responseData } });
+	dispatch({ type: "RESET_STATUS", payload: false })
+  }
 
     setIsUploadStarted(false);
     setSelectedFile(null);

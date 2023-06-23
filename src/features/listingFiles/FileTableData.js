@@ -16,42 +16,20 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
-import MDBadge from "components/MDBadge";
-import { formatDate } from "utils/formatDate";
-import MDButton from "components/MDButton";
-import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
+import MDBox from "../../components/MDBox";
+import MDTypography from "../../components/MDTypography";
+import MDBadge from "../../components/MDBadge";
+import { formatDate } from "../../utils/formatDate";
+import Action from "./listItem/Action";
+import FileName from "./listItem/FileName";
 
-const Author = ({ name }) => (
-    <MDBox display="flex" alignItems="center" lineHeight={1}>
-      <MDBox lineHeight={1}>
-        <MDTypography display="block" variant="button" fontWeight="medium">
-          {name}
-        </MDTypography>
-      </MDBox>
-    </MDBox>
-  );
-
-  const Job = ({ title, description }) => (
-    <MDBox lineHeight={1} textAlign="left">
-      <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {title}
-      </MDTypography>
-      <MDTypography variant="caption">{description}</MDTypography>
-    </MDBox>
-  );
-
-
-export default function data(attachments) {
+export const  getFileTableData = (attachments) => {
 	let rows = [];
-	
+	console.log(attachments)
 	if (attachments && attachments.length > 0) {
 		rows = attachments.map((attachment) => ({
-			fileName: <Author name={attachment.fileName} />,
-			fileDescription: <MDButton size='large' color='white'  iconOnly >
-				<VisibilitySharpIcon fontSize="large" />
-			</MDButton>,
+			fileName: <FileName name={attachment.fileName} />,
+			fileDescription: <Action fileName={attachment.path} />,
 			fileId: (
 			  <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
 				{attachment.path}

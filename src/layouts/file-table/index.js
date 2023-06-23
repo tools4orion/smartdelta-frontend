@@ -26,6 +26,7 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import authorsTableData from "layouts/tables/data/authorsTableData";
 
+
 function Tables() {
   const { columns, rows } = authorsTableData();
 
@@ -33,6 +34,7 @@ function Tables() {
     <MDBox pt={6} pb={3}>
       <Grid container spacing={6}>
         <Grid item xs={12}>
+		  
           <Card>
             <MDBox
               mx={2}

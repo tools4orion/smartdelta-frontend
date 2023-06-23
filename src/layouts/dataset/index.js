@@ -7,16 +7,22 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { Card, Grid } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import FlowChart from "../reactFlow";
+import { useFileController } from "contexts/FileContext";
 
 function Dataset() {
   const location = useLocation();
+  
+    const {state} = useFileController();
+	const { fileStateToView } = state;
+
+  
 
   // eslint-disable-next-line no-console
   console.log(location.state?.result);
   // TODO: async await ekleyip bu sayfada file upload loading eklemeliyim diğer sayfaya
   // TODO: sonra da buraya react flow ekleyerek data göstermeliyim.
-  const data = location.state?.result;
-
+  const data = location.state?.result || fileStateToView;
+console.log(fileStateToView);
   return (
     <DashboardLayout>
       <DashboardNavbar />

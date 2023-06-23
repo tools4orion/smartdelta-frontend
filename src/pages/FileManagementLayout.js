@@ -6,8 +6,8 @@ import Footer from "../examples/Footer";
 import MDBox from "../components/MDBox";
 import { Grid } from "@mui/material";
 
-import Tables from "../layouts/file-table";
 import UploadFile from "features/uploadFile/UploadFile";
+import FileList from 'features/listingFiles/FileList';
 
 const FileManagementLayout = () => {
 
@@ -20,7 +20,7 @@ const FileManagementLayout = () => {
 		    <UploadFile />
 		  </Grid>
         </Grid>
-        <Tables />
+        <FileList />
       </MDBox>
       <Footer />
     </DashboardLayout>

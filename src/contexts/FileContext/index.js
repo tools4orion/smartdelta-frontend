@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useMemo } from "react";
 import PropTypes from "prop-types";
 
-import {  fetchFiles, uploadFile } from "./fileActions";
+import {  fetchFiles, uploadFile, viewFile } from "./fileActions";
 import fileReducer from "./fileReducer";
 
 
@@ -12,6 +12,9 @@ function FileControllerProvider({ children }) {
 	const initialState = {
 	  // Define  initial file-related state here
 	  attachments: [],
+	  isUploading: false,
+	  sumOfSize: 0.0,
+	  fileStateToView: null,
 	};
   
 	const [controller, dispatch] = useReducer(fileReducer, initialState);
@@ -34,7 +37,8 @@ function FileControllerProvider({ children }) {
 		state,
 		dispatch,
 		fetchFiles: () => fetchFiles(dispatch),
-		uploadFile: uploadFile
+		uploadFile: uploadFile,
+		viewFile: (dispatch,filePath)=> viewFile(dispatch, filePath)
 	  };
   }
   

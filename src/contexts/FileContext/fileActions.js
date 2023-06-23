@@ -1,6 +1,6 @@
 import attachmentEndpoints from "../../network/endpoints/attachment";
-import {UPLOAD_FILE, LIST_FILES, DELETE_FILE} from "./actionTypes";
-import axios from "axios";
+import {UPLOAD_FILE, LIST_FILES, DELETE_FILE,VIEW_FILE} from "./actionTypes";
+
 
 const fetchFiles = async (dispatch) => {
   try {
@@ -10,6 +10,7 @@ const fetchFiles = async (dispatch) => {
     dispatch({ type: LIST_FILES, payload: attachments });
   } catch (error) {
     // Handle the error
+	console.log(error);
   }
 };
 
@@ -31,5 +32,10 @@ const uploadFile = async (dispatch, attachmentData, onProgress) => {
 	}
   };
   
+const viewFile = async (dispatch, name) => {
+	const response = await attachmentEndpoints.getMeta(name);
+    const dataToView = response.data;
+	dispatch({ type: VIEW_FILE, payload: dataToView  });
+ }
 
-export { fetchFiles, uploadFile };
+export { fetchFiles, uploadFile, viewFile};
