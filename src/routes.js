@@ -44,7 +44,7 @@ import Tables from "layouts/tables";
 // import Billing from "layouts/billing";
 // import Notifications from "layouts/notifications";
 // import Profile from "layouts/profile";
-import Dataset from "layouts/dataset";
+import Visualizer from "features/visualize";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -79,11 +79,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "DataSet",
-    key: "dataset",
+    name: "Visualizer",
+    key: "visualizer",
     icon: <Icon fontSize="small">check_circle</Icon>,
-    route: "/dataset",
-    component: <Dataset />,
+    route: "/visualizer",
+    component: <Visualizer/>,
   },
   // {
   //   type: "collapse",

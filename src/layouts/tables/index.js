@@ -32,6 +32,7 @@ import authorsTableData from "layouts/tables/data/authorsTableData";
 
 function Tables() {
   const { columns, rows } = authorsTableData();
+  
 
   return (
     <DashboardLayout>

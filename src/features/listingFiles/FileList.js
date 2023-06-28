@@ -14,15 +14,11 @@ const FileList = () => {
   const { state, fetchFiles }  = useFileController();
 
   const {attachments,isUploading, sumOfSize}= state;
-  console.log(attachments);
-
   const { columns, rows } = getFileTableData(attachments);
 
   const quotaInMB = 3072;
   const freeSpaceInMB = quotaInMB - sumOfSize;
   const freeSpaceInGB = parseFloat((freeSpaceInMB / 1024).toFixed(2));
-
- 
 
    useEffect(() => {
 		fetchFiles();

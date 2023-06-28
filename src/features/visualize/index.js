@@ -1,20 +1,23 @@
 // import React, { useState } from 'react';
 // import axios from 'axios';
+import React from 'react';
 import { useLocation } from "react-router-dom";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { Card, Grid } from "@mui/material";
 import MDTypography from "components/MDTypography";
-import FlowChart from "../reactFlow";
-import { useFileController } from "contexts/FileContext";
 
-function Dataset() {
+import { useFileController } from "contexts/FileContext";
+import ReactFlowWrapper from './ForceLayout';
+
+
+function Visualizer() {
   const location = useLocation();
   
     const {state} = useFileController();
 	const { fileStateToView } = state;
-
+	
   
 
   // eslint-disable-next-line no-console
@@ -22,7 +25,7 @@ function Dataset() {
   // TODO: async await ekleyip bu sayfada file upload loading eklemeliyim diğer sayfaya
   // TODO: sonra da buraya react flow ekleyerek data göstermeliyim.
   const data = location.state?.result || fileStateToView;
-console.log(fileStateToView);
+console.log(data);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -46,7 +49,7 @@ console.log(fileStateToView);
               </MDBox>
               <MDBox pt={3} pl={10} pb={5}>
                 {/* {location.state?.result.owner || `There is no solution, yet`} */}
-                {data ? <FlowChart data={data} /> : `There is no data to investigate`}
+                {data ? <ReactFlowWrapper csvData={data} /> : `There is no data to investigate`}
               </MDBox>
             </Card>
           </Grid>
@@ -56,4 +59,4 @@ console.log(fileStateToView);
   );
 }
 
-export default Dataset;
+export default Visualizer;
