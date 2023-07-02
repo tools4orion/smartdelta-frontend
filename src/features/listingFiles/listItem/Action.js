@@ -12,7 +12,8 @@ const Action = ({fileName}) => {
 	const navigate = useNavigate();
 	const onClickHandler = () => {
 		viewFile(dispatch, fileName);
-		navigate("/visualizer")
+		navigate("/visualizer");
+	
 	}
 
 	return (

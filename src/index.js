@@ -17,17 +17,22 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "App";
+import './index.css'
+
 
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "contexts/UIContext";
 import { FileControllerProvider } from "contexts/FileContext";
+import { VisualizerControllerProvider } from "contexts/VisualizerContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <MaterialUIControllerProvider>
 	  <FileControllerProvider>
-        <App />
+	    <VisualizerControllerProvider>
+            <App />
+        </VisualizerControllerProvider>
 	  </FileControllerProvider>
       </MaterialUIControllerProvider>
     </BrowserRouter>

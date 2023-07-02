@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState } from 'react';
 import {
   Box,
-  FormControl,
   FormLabel,
   Grid,
   Slider,
@@ -11,11 +10,14 @@ import {
 
 import ReactFlow, {
   Background,
+  ControlButton,
   Controls,
   MarkerType,
   MiniMap,
+  Panel,
   ReactFlowProvider,
-  useReactFlow
+  useReactFlow,
+  useStore
 } from 'reactflow';
 
 // Import custom components and styles
@@ -25,6 +27,13 @@ import FloatingEdge from './FloatingEdge';
 import './styles/index.css';
 import 'reactflow/dist/style.css';
 import { generateRandomColor } from './helpers/generateRandomColors';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import RemoveIcon from '@mui/icons-material/Remove';
+
+import FormControl from '@mui/material/FormControl';
+
+import { useVisualizerController } from 'contexts/VisualizerContext';
+import SidePanel from './SidePanel';
 
 // Define default viewport
 const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
@@ -47,10 +56,30 @@ function generateRandomSource() {
   }
 
 function ForceLayoutTopology({ csvData }) {
-  const { setNodes, setEdges } = useReactFlow();
+  const { setNodes, setEdges,zoomIn, zoomOut, getNodes} = useReactFlow();
   const [strength, setStrength] = useState(-1000);
   const [distance, setDistance] = useState(350);
   const [simulationFrozen, setSimulationFrozen] = useState(false);
+ 
+  const  currentZoom  = useStore((store) => store.transform[2]);
+
+  // Sort nodes 
+  const sortedNodes = [...getNodes()];
+  sortedNodes.sort((a, b) => a.id.localeCompare(b.id));
+
+  const { state } = useVisualizerController();
+  const { isSidePanelOpen } = state;
+
+
+  // Zoom handlers
+
+  const handleZoomIn = () => {
+    zoomIn({ duration: 800 });
+  };
+
+const handleZoomOut = () => {
+	zoomOut({ duration: 800 });
+ };
 
   // Event handlers
   const handleOnNodeMouseMove = (event, node) => {
@@ -67,7 +96,7 @@ function ForceLayoutTopology({ csvData }) {
 	setSimulationFrozen(false);
   };
 
-  // Calculate nodes and edges positions
+  // Calculate nodes and edges initial positions
   const calculateNodes = () => {
     return csvData.nodes.map((node, index) => {
       const angle = (index / csvData.nodes.length) * 2 * Math.PI;
@@ -90,11 +119,14 @@ function ForceLayoutTopology({ csvData }) {
       source: direction.source,
       sourceHandle: generateRandomSource(),
       targetHandle: generateRandomTarget(),
-      animated: direction.count > 20,
+      animated: true,
       target: direction.target,
       data: { count: direction.count },
-      style: { strokeWidth: (direction.count % 5) + 2, stroke: generateRandomColor() },
+      style: { strokeWidth: (direction.count * 0.1) , stroke: generateRandomColor() },
       type: 'floating',
+	  data: {
+		endLabel: direction.count,
+	  },
       markerEnd: {
         type: MarkerType.Arrow,
       },
@@ -133,7 +165,6 @@ function ForceLayoutTopology({ csvData }) {
         onNodeMouseMove={handleOnNodeMouseMove}
       >
         <Background color="#ccc" variant="dots" />
-
         <Stack sx={{ marginTop: '20px', borderRadius: '8px', p: 2 }}>
           <Grid container spacing={2} direction="column">
             <Grid item>
@@ -178,9 +209,24 @@ function ForceLayoutTopology({ csvData }) {
             </Grid>
           </Grid>
         </Stack>
-
+		
         <MiniMap zoomStep={8} />
-        <Controls />
+		   <Panel position="top-center">
+        <div style={{ color: "green" }}>
+          Zoom is at {Math.round(currentZoom * 100)} %
+        </div>
+      </Panel>
+	  {isSidePanelOpen && (
+        <SidePanel/>
+        )}
+        <Controls>
+		<ControlButton onClick={handleZoomIn} title="another action">
+		<AddTwoToneIcon fontSize='large' />
+      </ControlButton>
+	  <ControlButton onClick={handleZoomOut} title="another action">
+		<RemoveIcon fontSize='large' />
+      </ControlButton>
+		</Controls>
       </ReactFlow>
     </div>
   );

@@ -1,3 +1,11 @@
+.react-flow__controls-zoomout {
+	display:none;
+}
+
+.react-flow__controls-zoomin {
+	display:none;
+}
+
 .floatingedges {
 	flex-direction: column;
 	display: flex;

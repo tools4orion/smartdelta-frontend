@@ -49,8 +49,7 @@ import {
 import { useMaterialUIController} from "contexts/UIContext";
 import {setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActions";
 
-
-function DashboardNavbar({ absolute, light, isMini }) {
+function DashboardNavbar({ absolute, light, isMini, searchAction }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
