@@ -1,5 +1,5 @@
 import attachmentEndpoints from "../../network/endpoints/attachment";
-import {UPLOAD_FILE, LIST_FILES, DELETE_FILE,VIEW_FILE} from "./actionTypes";
+import {UPLOAD_FILE, LIST_FILES, DELETE_FILE,VIEW_FILE, GET_CSV} from "./actionTypes";
 
 
 const fetchFiles = async (dispatch) => {
@@ -13,6 +13,19 @@ const fetchFiles = async (dispatch) => {
 	console.log(error);
   }
 };
+const getCsv = async (dispatch, name) => {
+	try {
+	  const response = await attachmentEndpoints.getCsv(name);
+	  const data = response.data;
+	  console.log(data)
+	  // Dispatch action to update state with retrieved attachments
+	  dispatch({ type: GET_CSV, payload: data });
+	} catch (error) {
+	  // Handle the error
+	  console.log(error);
+	}
+  }
+
 
 const uploadFile = async (dispatch, attachmentData, onProgress) => {
 	try {
@@ -38,4 +51,4 @@ const viewFile = async (dispatch, name) => {
 	dispatch({ type: VIEW_FILE, payload: dataToView  });
  }
 
-export { fetchFiles, uploadFile, viewFile};
+export { fetchFiles, uploadFile, viewFile, getCsv};

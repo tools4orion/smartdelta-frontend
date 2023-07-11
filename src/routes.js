@@ -50,6 +50,7 @@ import Visualizer from "features/visualize";
 import Icon from "@mui/material/Icon";
 
 import FileManagementLayout from "pages/FileManagementLayout";
+import RawDataList from "features/listingRaw/RawDataList";
 
 
 const routes = [
@@ -63,11 +64,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Tables",
-    key: "tables",
+    name: "Feature Discovery",
+    key: "feature-discovery",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
+    route: "/feature-discovery",
+    component: <RawDataList /> ,
   },
   {
     type: "collapse",

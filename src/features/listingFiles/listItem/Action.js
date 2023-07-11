@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import MDButton from "../../../components/MDButton";
+
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import { useFileController } from "contexts/FileContext";
+import { IconButton } from "@mui/material";
 
 
 const Action = ({fileName}) => {
@@ -13,13 +14,12 @@ const Action = ({fileName}) => {
 	const onClickHandler = () => {
 		viewFile(dispatch, fileName);
 		navigate("/visualizer");
-	
 	}
 
 	return (
-	  <MDButton onClick={onClickHandler} size='large' color='white'  iconOnly >
-		<VisibilitySharpIcon fontSize="large" />
-      </MDButton>
+	  <IconButton onClick={onClickHandler}>
+		<VisibilitySharpIcon fontSize="medium" color='white' />
+      </IconButton>
 	)
 }
 

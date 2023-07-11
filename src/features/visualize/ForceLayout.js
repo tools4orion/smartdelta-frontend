@@ -150,6 +150,7 @@ const handleZoomOut = () => {
 
   // Apply force layout
   useForceLayout({ strength, distance, simulationFrozen });
+    // Event handler for clicking on the canvas (outside elements)
 
   return (
     <div style={{ height: '500px' }}>
@@ -211,11 +212,6 @@ const handleZoomOut = () => {
         </Stack>
 		
         <MiniMap zoomStep={8} />
-		   <Panel position="top-center">
-        <div style={{ color: "green" }}>
-          Zoom is at {Math.round(currentZoom * 100)} %
-        </div>
-      </Panel>
 	  {isSidePanelOpen && (
         <SidePanel/>
         )}

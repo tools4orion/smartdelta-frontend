@@ -1,20 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/function-component-definition */
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // Material Dashboard 2 React components
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
@@ -22,6 +5,7 @@ import MDBadge from "../../components/MDBadge";
 import { formatDate } from "../../utils/formatDate";
 import Action from "./listItem/Action";
 import FileName from "./listItem/FileName";
+import EntityAction from "./listItem/EntityAction";
 
 export const  getFileTableData = (attachments) => {
 	let rows = [];
@@ -30,6 +14,7 @@ export const  getFileTableData = (attachments) => {
 		rows = attachments.map((attachment) => ({
 			fileName: <FileName name={attachment.fileName} />,
 			fileDescription: <Action fileName={attachment.path} />,
+			featureDiscovery: <EntityAction fileName={attachment.path}/>,
 			fileId: (
 			  <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
 				{attachment.path}
@@ -55,7 +40,8 @@ export const  getFileTableData = (attachments) => {
 				<MDBadge badgeContent="X" variant="gradient" size="sm" />
 			  </MDBox>
 			),
-		  })); 
+		  }));
+		  console.log(rows) 
 	}
   
   return {
@@ -66,7 +52,7 @@ export const  getFileTableData = (attachments) => {
         accessor: "fileDescription",
         /* width: "45%", */ align: "left",
       },
-      { Header: "File ID", accessor: "fileId", align: "center" },
+      { Header: "Feature Discovery", accessor: "featureDiscovery", align: "center" },
       { Header: "Created Date", accessor: "createdDate", align: "center" },
       { Header: "Created By", accessor: "createdBy", align: "center" },
       { Header: "File Size", accessor: "fileSize", align: "center" },

@@ -47,6 +47,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const { miniSidenav, whiteSidenav, darkMode } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
+console.log(location.pathname)
 
   let textColor = "white";
 
@@ -77,6 +78,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     return () => window.removeEventListener("resize", handleMiniSidenav);
   }, [dispatch, location]);
 
+  if(location.pathname === "/feature-discovery") return null;
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
     let returnValue;

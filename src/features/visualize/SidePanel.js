@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import  {
 Panel, useReactFlow
@@ -21,15 +21,40 @@ import DetailPanel from './DetailPanel';
 const SidePanel = () => {
 	const {state, dispatch, toggleSidePanel, selectNode} = useVisualizerController();
 	const { isAnyNodeSelected } = state;
-	const { getNodes, getEdges} = useReactFlow();
+	const { getNodes, getEdges, setViewport} = useReactFlow();
+	const handleTransform = useCallback(() => {
+		const nodePosition = getNodePositionById(getNodes(), isAnyNodeSelected);
+		const { x, y } = nodePosition;
+		
+		setViewport(
+			{ x:x, y:y},
+			{ duration: 800 }
+		  );
+		
+	  }, [setViewport]);
+	  console.log(getNodes())
+	
 	const [selected, setSelected] = useState('');
 	const [selectBool, setSelectBool] = useState(false);
 	const [helperText, setHelperText] =
 	useState(" Select Node and Display Interaction ");
 
+
 	 // Sort nodes 
 	 const sortedNodes = [...getNodes()];
 	 sortedNodes.sort((a, b) => a.id.localeCompare(b.id));
+
+	 const getNodePositionById = (nodes, targetNodeId) => {
+		const targetNode = nodes.find((node) => node.id === targetNodeId);
+	  
+		if (targetNode) {
+		  const { x, y } = targetNode.position;
+		  return { x, y };
+		}
+	  
+		// Return null or any other value to indicate that the node with the given ID was not found.
+		return null;
+	  };
 
 	const handleCloseSidePanel = () => {
 		toggleSidePanel(dispatch,false);
@@ -37,7 +62,7 @@ const SidePanel = () => {
 		}
 		  const handleChange = (event) => {
 			setSelected(event.target.value);
-		
+			
 		  };
 		  const getIntereactions = (node) => {
 			const edges = getEdges();
@@ -63,6 +88,7 @@ const SidePanel = () => {
 		
 		  useEffect(()=>{
 			setSelected(isAnyNodeSelected)
+		
 		  },[isAnyNodeSelected])
 
 	return(

@@ -29,7 +29,7 @@ function FileUpload() {
       .then((response) => {
         console.log(response.data);
         // TODO: async await ekleyip bu sayfada file upload loading eklemeliyim
-        navigate("/dataset", { state: { result: response.data } });
+        navigate("/visualizer", { state: { result: response.data } });
       })
       .catch((error) => {
         console.error(error);
