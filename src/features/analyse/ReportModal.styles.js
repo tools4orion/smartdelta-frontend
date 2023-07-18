@@ -1,5 +1,3 @@
-// AnalysisReport.styles.js
-
 const styles = {
 	container: {
 	  width: '60vw',

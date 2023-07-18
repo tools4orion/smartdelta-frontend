@@ -1,15 +1,14 @@
 import { generateRandomColor } from 'features/visualize/helpers/generateRandomColors';
 import {  Pie } from 'react-chartjs-2';
 const chartOptions = {
-	responsive: true, // Enable responsiveness
-	maintainAspectRatio: false, // Disable aspect ratio maintenance
-	width: 600, // Set the desired width
-	height: 600, // Set the desired height
+	responsive: true,
+	maintainAspectRatio: false,
+	width: 600, 
+	height: 600
 
   };
 
 const ServiceActionDistribution = ({tableData}) => {
-	 
   // Calculate the counts of service action types
   const serviceActionCounts = tableData.reduce((counts, row) => {
 	const serviceAction = row.serviceAction;

@@ -14,7 +14,6 @@ import ReactFlow, {
   Controls,
   MarkerType,
   MiniMap,
-  Panel,
   ReactFlowProvider,
   useReactFlow,
   useStore
