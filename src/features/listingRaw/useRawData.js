@@ -43,8 +43,9 @@ export function useRawData(directions, searchQuery, filterKeywords, sortDirectio
     }
 
     filteredData.sort((a, b) => {
-      const timeStampA = new Date(a.timeStamp);
-      const timeStampB = new Date(b.timeStamp);
+
+      const timeStampA = new Date(a.timestamp);
+      const timeStampB = new Date(b.timestamp);
       return sortDirection === 'asc' ? timeStampA - timeStampB : timeStampB - timeStampA;
     });
 

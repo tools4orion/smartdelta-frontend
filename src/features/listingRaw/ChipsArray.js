@@ -1,4 +1,4 @@
-import { Box, Chip,Paper,styled } from "@mui/material";
+import { Box, Chip, styled } from "@mui/material";
 import React from "react";
 
 const ListItem = styled('li')(({ theme }) => ({

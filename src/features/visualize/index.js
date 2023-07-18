@@ -1,5 +1,4 @@
 import React from 'react';
-import { useReactFlow } from 'reactflow';
 import { useLocation } from "react-router-dom";
 
 import MDBox from "components/MDBox";
@@ -20,7 +19,6 @@ function Visualizer() {
 	const { fileStateToView } = state;
 	const { fileName } = fileStateToView || {};
 	const data = location.state?.result || fileStateToView;
-	console.log(fileStateToView)
 
 	const breadcrumbs = [
 	<MDTypography variant="h6" color="white">
