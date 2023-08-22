@@ -19,7 +19,7 @@ const fileReducer = (state, action) => {
 	  case VIEW_FILE:
 		return {
 		  ...state,
-		  fileStateToView: action.payload,
+		  fileStateToView: action.payload
 		}
 	  case RESET_STATUS:
 		return {

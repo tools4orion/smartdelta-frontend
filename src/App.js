@@ -46,9 +46,11 @@ import {  setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActio
 // Images
 import brandWhite from "assets/images/sd-white-logo.png"; // brand logo
 import brandDark from "assets/images/sd-black-logo.png";
+import { useFileController } from "contexts/FileContext";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
+  const { fileStateToView } = useFileController().state;
   const { miniSidenav, direction, layout, openConfigurator, sidenavColor, whiteSidenav, darkMode } =
     controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);

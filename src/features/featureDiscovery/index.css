@@ -41,7 +41,7 @@ th{
 }
 
 .ReactVirtualized__Table__headerTruncatedText{
-min-width: 240px !important;
+min-width: 15rem !important;
 }
 
 .ReactVirtualized__Table__row{
@@ -51,8 +51,40 @@ min-width: 240px !important;
 .ReactVirtualized__Table__headerColumn,
 .ReactVirtualized__Table__rowColumn 
 {
-	max-width: 215px;
-	min-width: 200px;
+	max-width: 13.4375rem;
+	min-width: 12.5rem;
 	
 }
 
+.rawTableContainer{
+	width: 290vw;
+	height: 50rem; 
+	overflow: auto;
+	margin-top: 5.625rem; 
+}
+
+.column{
+	
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	width: 21.875rem;
+}
+
+.table{
+	font-size: 0.875rem;
+}
+
+.fileName {
+	position: fixed;
+	top: 6px; /* 0.375rem * 16px = 6px */
+	left: 32.5px;
+	color: #EDF2F7;
+  }
+  
+  .result {
+	position: fixed;
+	top: 40px; /* 2.5rem * 16px = 40px */
+	left: 335px; /* 20.9375rem * 16px = 335px */
+	color: #BEE3F8;
+  }

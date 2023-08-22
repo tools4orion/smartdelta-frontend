@@ -11,6 +11,9 @@ import Footer from "examples/Footer";
 // import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 // import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import FadeIn from "hooks/FadeIn";
+import { useEffect } from "react";
+import { getClusterInfo } from "features/k8/actions/cluster.action";
 
 // Data
 // import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
@@ -22,10 +25,16 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 function Dashboard() {
   // const { sales, tasks } = reportsLineChartData;
+  useEffect(() => {
+	const info = getClusterInfo();
+	console.log(info);
+  }, [])
 
   return (
     <DashboardLayout>
+	<>
       <DashboardNavbar />
+	  <FadeIn>
       <MDBox py={3}>
         <Grid container spacing={3} mt={3} sx={{ border: 1 }}>
           <Grid item xs={12} md={6} lg={3}>
@@ -33,16 +42,29 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Microservices"
-                count={281}
+                title="Nodes"
+                count={1}
                 percentage={{
                   color: "success",
                   amount: "+55%",
                   label: "than lask week",
                 }}
               />
+
             </MDBox>
+			<ComplexStatisticsCard
+                color="dark"
+                icon="weekend"
+                title="Pods"
+                count={8}
+                percentage={{
+                  color: "success",
+                  amount: "+55%",
+                  label: "than lask week",
+                }}
+              />
           </Grid>
+
           {/* <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
@@ -140,7 +162,9 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
+	  </FadeIn>
       <Footer />
+	  </>
     </DashboardLayout>
   );
 }

@@ -5,6 +5,8 @@ import { formatDate } from "../../utils/formatDate";
 import Action from "./listItem/Action";
 import FileName from "./listItem/FileName";
 import EntityAction from "./listItem/EntityAction";
+import MlAction from "./listItem/MlAction";
+
 
 export const getFileTableData = (attachments) => {
   // Prepare the columns for the table
@@ -12,6 +14,7 @@ export const getFileTableData = (attachments) => {
     { Header: "File Name", accessor: "fileName", align: "left" },
     { Header: "Visualize", accessor: "fileDescription", align: "left" },
     { Header: "Feature Discovery", accessor: "featureDiscovery", align: "center" },
+    {Header:'Predict Trends', accessor: "mlDsAnalysis", align: "center"},
     { Header: "Created Date", accessor: "createdDate", align: "center" },
     { Header: "Created By", accessor: "createdBy", align: "center" },
     { Header: "File Size", accessor: "fileSize", align: "center" },
@@ -26,6 +29,7 @@ export const getFileTableData = (attachments) => {
       fileName: <FileName name={attachment.fileName} />,
       fileDescription: <Action fileName={attachment.path} />,
       featureDiscovery: <EntityAction fileName={attachment.path} />,
+	  mlDsAnalysis: <MlAction fileName={attachment.path} />,
       fileId: (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
           {attachment.path}

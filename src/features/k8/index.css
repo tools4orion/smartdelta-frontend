@@ -1,0 +1,29 @@
+.copyIcon {
+	position: absolute;
+	top: 2px;     /* Corrected value */
+	right: 2px;   /* Corrected value */
+	cursor: pointer;
+	z-index: 1px;
+  }
+  
+
+.copyIcon:hover{
+	color:white;
+}
+
+.logoRed {
+	color: #DB4437; /* Google Cloud's red color */
+  }
+  
+  .logoBlue {
+	color: #4285F4; /* Google Cloud's blue color */
+  }
+  
+  .logoGreen {
+	color: #0F9D58;
+  }
+  
+  .logoYellow {
+	color: #F4B400;
+  }
+  

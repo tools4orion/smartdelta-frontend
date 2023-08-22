@@ -31,9 +31,9 @@ import MDTypography from "components/MDTypography";
 import MDSnackbarIconRoot from "components/MDSnackbar/MDSnackbarIconRoot";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController } from "context/UIContext";
+import { useMaterialUIController } from "../../contexts/UIContext";
 
-function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...rest }) {
+function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, children, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -139,7 +139,9 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
           }}
         >
           {content}
+		  {children} 
         </MDBox>
+
       </MDBox>
     </Snackbar>
   );

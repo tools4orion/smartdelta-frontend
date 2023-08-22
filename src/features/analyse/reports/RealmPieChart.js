@@ -3,9 +3,7 @@ import { Pie } from 'react-chartjs-2';
 const RealmPieChart = ({ tableData }) => {
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false, 
-    width: 500, 
-    height: '100%',
+    maintainAspectRatio: false
   };
 
   // Initialize the messageRealm count map

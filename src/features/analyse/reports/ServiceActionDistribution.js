@@ -3,9 +3,6 @@ import {  Pie } from 'react-chartjs-2';
 const chartOptions = {
 	responsive: true,
 	maintainAspectRatio: false,
-	width: 600, 
-	height: 600
-
   };
 
 const ServiceActionDistribution = ({tableData}) => {

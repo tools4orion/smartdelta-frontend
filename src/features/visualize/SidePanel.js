@@ -6,7 +6,8 @@ Panel, useReactFlow
   import {
 	Box,
 	InputLabel,
-	IconButton
+	IconButton,
+	Paper
   } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -17,6 +18,7 @@ import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 
 import { useVisualizerController } from 'contexts/VisualizerContext';
 import DetailPanel from './DetailPanel';
+import FadeIn from 'hooks/FadeIn';
 
 const SidePanel = () => {
 	const {state, dispatch, toggleSidePanel, selectNode} = useVisualizerController();
@@ -92,14 +94,16 @@ const SidePanel = () => {
 		  },[isAnyNodeSelected])
 
 	return(
-<Panel
+
+		<Panel
             position="top-right"
             style={{
               backgroundColor: '#1f283e',
               paddingLeft: '4px',
               paddingRight: '0px',
               paddingTop: '4px',
-              height: '100%',
+
+
             }}
           >
             <Box paddingTop={2} paddingLeft={2} paddingRight={0} sx={{ color: 'white' }}>
@@ -136,7 +140,7 @@ const SidePanel = () => {
                 </FormControl>
               </div>
               {/* Step 4: Pass the selected node's data to the right panel */}
-              <DetailPanel data={getIntereactions(selected)} />
+              <DetailPanel data={getIntereactions(selected)} node={selected}/>
             </Box>
           </Panel>
 	)

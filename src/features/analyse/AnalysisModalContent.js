@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import { Button, Paper } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { useRawData } from 'features/listingRaw/useRawData';
+import { useRawData } from 'features/featureDiscovery/useRawData';
 import { useFileController } from 'contexts/FileContext';
 import SwipeableViews from 'react-swipeable-views';
 import MobileStepper from '@mui/material/MobileStepper';

@@ -36,10 +36,11 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 React layouts
+import React from "react";
 import Dashboard from "layouts/dashboard";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import Tables from "layouts/tables";
+
 
 // import Billing from "layouts/billing";
 // import Notifications from "layouts/notifications";
@@ -48,10 +49,19 @@ import Visualizer from "features/visualize";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import SchemaIcon from '@mui/icons-material/Schema';
 
 import FileManagementLayout from "pages/FileManagementLayout";
-import RawDataList from "features/listingRaw/RawDataList";
+import { lazy, Suspense } from 'react';
+import LinearProgress from '@mui/material/LinearProgress'
+import MDTypography from "components/MDTypography";
 
+
+// ...
+import MDBox from "components/MDBox";
+import ClusterIntegration from "features/k8/ClusterIntegration";
+
+const FeatureDiscovery = lazy(() => import('features/featureDiscovery'));
 
 const routes = [
   {
@@ -64,14 +74,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Feature Discovery",
-    key: "feature-discovery",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/feature-discovery",
-    component: <RawDataList /> ,
-  },
-  {
-    type: "collapse",
     name: "File Upload",
     key: "fileUpload",
     icon: <Icon fontSize="small">file_upload</Icon>,
@@ -80,11 +82,37 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Visualizer",
+    name: "Feature Discovery",
+    key: "feature-discovery",
+    icon: <Icon fontSize="small">science</Icon>,
+    route: "/feature-discovery",
+    component: 
+	<Suspense fallback={<>
+		<LinearProgress/>
+		<MDBox sx={{mx:'auto'}}>
+		<MDTypography  style={{textAlign:'center' }} variant="h4">
+			Loading, please wait ...
+		</MDTypography>
+		</MDBox>
+	</>}>
+		<FeatureDiscovery />
+	</Suspense> ,
+  },
+  {
+    type: "collapse",
+    name: "Mapping Visualizer",
     key: "visualizer",
-    icon: <Icon fontSize="small">check_circle</Icon>,
+    icon: <Icon fontSize="small">schema</Icon>,
     route: "/visualizer",
     component: <Visualizer/>,
+  },
+  {
+    type: "collapse",
+    name: "Kubernetes Cluster",
+    key: "k8Cluster",
+    icon: <Icon fontSize="small">cloud</Icon>,
+    route: "/k8Cluster",
+    component: <ClusterIntegration/>,
   },
   // {
   //   type: "collapse",

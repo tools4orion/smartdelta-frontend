@@ -22,9 +22,9 @@ const UploadFile = () => {
 
     setIsUploadStarted(true);
     const responseData = await uploadFile(dispatch, formData, setUploadProgress);
-	console.log(responseData);
+	
 
-    if (responseData) { navigate("/visualizer", { state: { result: responseData } });
+    if (responseData) { navigate("/visualizer", { state: { result: responseData.result } });
 	dispatch({ type: "RESET_STATUS", payload: false })
   }
 

@@ -5,7 +5,7 @@ export function useRawData(directions, searchQuery, filterKeywords, sortDirectio
     if (!directions) {
       return { edgeProperties: [], tableData: [] };
     }
-
+	console.log(directions);
     const edgePropertiesSet = new Set();
     const filteredTableData = [];
 

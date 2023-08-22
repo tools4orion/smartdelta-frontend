@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useCallback, useEffect } from 'react';
-import { AutoSizer, Table, Column } from 'react-virtualized';
+import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { useFileController } from '../../contexts/FileContext';
 import { useRawData } from './useRawData';
 import SortIcon from '@mui/icons-material/Sort';
@@ -11,23 +9,25 @@ import {
   Zoom,
   IconButton,
   Tooltip,
-  Stack,
   Box,
+  Fade
 } from '@mui/material';
 import 'react-virtualized/styles.css';
 import './index.css';
-import SearchBar from './SearchBar';
-import FilterSideBar from './FilterSideBar/index';
-import ChipsArray from './ChipsArray';
+import SearchBar from './components/SearchBar';
+import FilterSideBar from './components/FilterSideBar/index';
+
+import ChipsArray from './components/ChipsArray';
 import MDTypography from 'components/MDTypography';
-import MDBox from 'components/MDBox';
-import HeaderRenderer from './components/HeaderRenderer';
-import CellRenderer from './components/CellRenderer';
+
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
+import RawDataSkeleton from './components/Skeleton/RawDataSkeleton';
+import RawTable from './components/RawTable';
+import { useLocation } from 'react-router-dom';
 
-import AnalysisModalContent from 'features/analyse/AnalysisModalContent';
 
+const AnalysisModalContent = lazy(() => import('features/analyse/AnalysisModalContent'));
 
 const style = {
   position: 'absolute',
@@ -35,20 +35,21 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '60vw',
-  height: 542,
-  minHeight: 542,
-  bgcolor: 'background.paper',
-
-
+  height: '33.875rem',
+  minHeight: '33.875rem',
+  bgcolor: '#f0f2f5',
 };
 
 const isKeywordValid = (keyword) => {
   return keyword !== null && keyword !== '';
 };
 
-const RawDataList = () => {
+const FeatureDiscovery = () => {
+  const location = useLocation();
+  const { state: routeState } = location;
   const { fileStateToView } = useFileController().state;
   const { directions, fileName } = fileStateToView || {};
+
   const [searchQuery, setSearchQuery] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
   const [filterKeywords, setFilterKeywords] = useState({});
@@ -59,6 +60,11 @@ const RawDataList = () => {
     filterKeywords,
     sortDirection
   );
+  const [isVisible, setIsVisible] = React.useState(false);
+ 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const toggleFilterIcon = () => {
     setIsFilterIconClicked(!isFilterIconClicked);
@@ -78,20 +84,27 @@ const RawDataList = () => {
   }, {});
 
   useEffect(() => {
-    setFilterKeywords(initialFilterKeywords);
-  }, []);
+    // Only set the initial filter keywords if fileStateToView is null
+    if (!fileStateToView) {
+      setFilterKeywords(initialFilterKeywords);
+    }
+	setIsVisible(fileStateToView );
+  }, [fileStateToView]);
 
+  useEffect(() => {
+    if (routeState && routeState.filterData) {
+      // Set the filterKeywords state based on the passed state
+      setFilterKeywords(routeState.filterData);
+    }else{
+		setFilterKeywords(initialFilterKeywords);
+	}
+    setIsVisible(fileStateToView);
+  }, [routeState, fileStateToView]);
+
+ 
   const chipsData = Object.entries(filterKeywords)
     .filter(([column, keyword]) => isKeywordValid(keyword))
     .map(([column, keyword]) => ({ column, keyword }));
-
-  const columnStyle = {
-    fontSize: '14px',
-  };
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     <>
@@ -100,10 +113,16 @@ const RawDataList = () => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-		keepMounted 
+        keepMounted
       >
         <Box sx={style}>
-          <AnalysisModalContent />
+          <Suspense fallback={<div>Loading...</div>}>
+		  <Fade in={open} appear='false' timeout={1200}>
+		  <div>
+            <AnalysisModalContent />
+			</div>
+			</Fade>
+          </Suspense>
         </Box>
       </Modal>
       <Box sx={{ position: 'fixed', left: 1, top: 5 }}>
@@ -128,50 +147,41 @@ const RawDataList = () => {
         <Button onClick={handleOpen}>Analysis Report</Button>
       </Box>
       <ChipsArray data={chipsData} setFilterKeywords={setFilterKeywords} />
-      <MDTypography sx={{ position: 'fixed', top: 6, left: 520, color: '#EDF2F7' }} variant="h5" color="success">
+
+      {fileStateToView ? (
+		<>
+		<Fade in={isVisible} appear='false' timeout={1200}>
+		<div>
+        <RawTable tableData={tableData} edgeProperties={edgeProperties} />
+		<MDTypography sx={{ position: 'fixed',  top: '0.375rem',
+  left: '32.5rem',  color: '#EDF2F7' }} variant="h5" color="success">
         {fileName}
       </MDTypography>
-      <MDTypography sx={{ position: 'fixed', top: 40, left: 535, color: '#BEE3F8' }} variant="h6">
-        {tableData.length} items found
-      </MDTypography>
-      <FilterSideBar
+	  <MDTypography
+      sx={{
+        position: 'fixed',
+        top: '2.5rem', // Equivalent to 40px
+        left: '33.4375rem', // Equivalent to 535px
+        color: '#BEE3F8',
+      }}
+      variant="h6"
+    >
+      {tableData.length} items found
+    </MDTypography>
+		<FilterSideBar
         isOpen={isFilterIconClicked}
         edgeProperties={edgeProperties}
         filterKeywords={filterKeywords}
         setFilterKeywords={setFilterKeywords}
       />
-      <Stack>
-        <MDBox style={{ width: '290vw', height: 800, overflow: 'auto', marginTop: 90 }}>
-          <AutoSizer>
-            {({ width, height }) => (
-              <Table
-                width={width}
-                height={height}
-                headerHeight={60}
-                rowHeight={80}
-                rowCount={tableData.length}
-                rowGetter={({ index }) => tableData[index]}
-                style={columnStyle}
-              >
-                {edgeProperties.map((property) => (
-                  <Column
-                    style={{ display: 'flex', alignItems: 'center', boxSizing: 'border-box' }}
-                    key={property}
-                    headerRenderer={HeaderRenderer}
-                    cellRenderer={CellRenderer}
-                    label={property}
-                    dataKey={property}
-                    width={350}
-                    flexGrow={1}
-                  />
-                ))}
-              </Table>
-            )}
-          </AutoSizer>
-        </MDBox>
-      </Stack>
+	  </div>
+		</Fade>
+		</>
+      ) : (
+       <RawDataSkeleton/>
+      )}
     </>
   );
 };
 
-export default RawDataList;
+export default FeatureDiscovery;

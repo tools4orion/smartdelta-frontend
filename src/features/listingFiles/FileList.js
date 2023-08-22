@@ -1,5 +1,4 @@
-import DataTable from '../../examples/Tables/DataTable';
-import React, {useEffect} from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { useFileController } from "../../contexts/FileContext";
 
 import Grid from "@mui/material/Grid";
@@ -9,7 +8,11 @@ import Card from "@mui/material/Card";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import { getFileTableData } from './FileTableData';
-
+const DataTable = lazy(() => {
+	console.log("Lazy loading DataTable component...");
+	return import('../../examples/Tables/DataTable');
+  });
+  
 const FileList = () => {
   const { state, fetchFiles }  = useFileController();
 
@@ -54,13 +57,15 @@ const FileList = () => {
 				</MDBox>
 			  </MDBox>
 			  <MDBox pt={3}>
+			  <Suspense fallback={<div>Loading...</div>}>
 				<DataTable
-				  table={{ columns, rows }}
-				  isSorted={false}
-				  entriesPerPage={false}
-				  showTotalEntries={false}
-				  noEndBorder
-				/>
+				 table={{ columns, rows }}
+				 isSorted={false}
+				 entriesPerPage={false}
+				 showTotalEntries={false}
+				 noEndBorder
+  			/>
+			</Suspense>
 			  </MDBox>
 			</Card>
 		  </Grid>
