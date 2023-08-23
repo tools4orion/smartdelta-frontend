@@ -33,7 +33,7 @@ function a11yProps(index) {
 
 export function VerticalTabs({ usedProtocols, errorRate, statusCodePercentages }) {
   const [value, setValue] = React.useState(0);
-  const chipColor = errorRate === 0 ? 'success' : 'error';
+  const chipColor = errorRate == 0 ? 'success' : 'error';
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

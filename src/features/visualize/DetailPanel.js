@@ -4,14 +4,8 @@ import SendIcon from '@mui/icons-material/Send';
 import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 
 import {
-  Box,
-  CardContent,
-  Typography,
-  Stack,
-  Tooltip,
-  Fade
+  Box
 } from '@mui/material';
-import FadeIn from 'hooks/FadeIn';
 import { useFileController } from 'contexts/FileContext';
 import { useRawData } from 'features/featureDiscovery/useRawData';
 import TabPanel from './detailCard/TabPanel';
@@ -21,16 +15,17 @@ import {
 } from 'features/analyse/reports/DistributionErrorRate';
 import { useNavigate } from 'react-router-dom';
 import { getUniqueProtocols } from 'features/analyse/reports/getUniqueProtocols';
-import { VerticalTabs } from './detailCard/VerticalTabs';
+
 import {
-  AnimatedDashedLine,
   CardContainer,
-  CardItem,
   CustomTabs,
-  DetailIcon,
-  RotateIcon
 } from './detailCard/CardComponent';
-import MDTypography from 'components/MDTypography';
+
+import DetailCardItem from './detailCard/DetailCardItem';
+import useCardState from './detailCard/useCardState';
+
+const SENT_TAB_INDEX = 0;
+const INCOMING_TAB_INDEX = 1;
 
 export default function DetailPanel({ data, node }) {
   const [value, setValue] = useState(0);
@@ -38,11 +33,12 @@ export default function DetailPanel({ data, node }) {
   const [filterKeywords, setFilterKeywords] = useState({});
   const { incomingMessages, sentMessages } = data || {};
 
+  // Manage cards states
   const [expandedTarget, setExpandedTarget] = useState('');
   const selectedArrayLength = value === 0 ? sentMessages.length : incomingMessages.length;
-  const [hovered, setHovered] = useState(Array(selectedArrayLength).fill(false));
-  const [expandedCards, setExpandedCards] = useState(Array(selectedArrayLength).fill(false));
+  const { hovered, expandedCards, setHovered, setExpandedCards } = useCardState(selectedArrayLength);
 
+  // Getting raw interaction data
   const { state } = useFileController();
   const { fileStateToView } = state ?? {};
   const directions = fileStateToView?.directions;
@@ -83,26 +79,15 @@ export default function DetailPanel({ data, node }) {
     });
   };
 
-  const handleChange = (event, newValue) => {
+  const handleTabChange = (event, newValue) => {
     setValue(newValue);
     setExpandedCards(Array(selectedArrayLength).fill(false));
     setExpandedTarget('');
   };
 
-  function getTerminatingMSValue() {
-    if (value === 0 && expandedTarget) return expandedTarget;
-    return node;
-  }
-
-  function getOriginatingMSValue() {
-    if (value === 0) return node;
-    if (expandedTarget) return expandedTarget;
-    return '';
-  }
-
-  function getDefaultValue() {
-    return '';
-  }
+  const getTerminatingMSValue = () => (value === SENT_TAB_INDEX && expandedTarget) ? expandedTarget : node;
+  const getOriginatingMSValue = () => (value === SENT_TAB_INDEX ) ? node : (expandedTarget || '');
+  const getDefaultValue = () => '';
 
   const initialFilterKeywords = Object.fromEntries(
     edgeProperties.map(key =>
@@ -118,148 +103,72 @@ export default function DetailPanel({ data, node }) {
     errorRatePercentage,
     statusCodePercentages
   } = calculateErrorRateAndStatusPercentages(tableData);
-  console.log(statusCodePercentages);
+  
   const {
     errorStatusCodePercentages,
     successStatusCodePercentages
   } = statusCodePercentages;
-  const RateChips =
-    errorRatePercentage === 0
-      ? successStatusCodePercentages
-      : errorStatusCodePercentages;
-  const usedProtocols = getUniqueProtocols(tableData);
-  console.log(usedProtocols);
+  
+  const getRateChips = () => {
+	return errorRatePercentage == 0 ? successStatusCodePercentages : errorStatusCodePercentages;
+  };
 
+  const usedProtocols = getUniqueProtocols(tableData);
+
+  const sentMessageItems = sentMessages.map((message, index) => (
+	<DetailCardItem
+	  key={index}
+	  label="Target"
+	  message={message}
+	  index={index}
+	  hovered={hovered}
+	  expanded={expandedCards[index]}
+	  borderColor={message.style.stroke}
+	  handleHover={handleHover}
+	  handleExpandCard={handleExpandCard}
+	  navigateToDetail={navigateToDetail}
+	  RateChips={getRateChips()}
+	  errorRatePercentage={errorRatePercentage}
+	  usedProtocols={usedProtocols}
+	/>
+  ));
+
+  const incomingMessageItems = incomingMessages.map((message, index) => (
+	<DetailCardItem
+	  key={index}
+	  label="From"
+	  message={message}
+	  index={index}
+	  hovered={hovered}
+	  expanded={expandedCards[index]}
+	  borderColor={message.style.stroke}
+	  handleHover={handleHover}
+	  handleExpandCard={handleExpandCard}
+	  navigateToDetail={navigateToDetail}
+	  RateChips={getRateChips()}
+	  errorRatePercentage={errorRatePercentage}
+	  usedProtocols={usedProtocols}
+	/>
+  ));
+  
   useEffect(() => {
-    // Only set the initial filter keywords if fileStateToView is null
     setFilterKeywords(initialFilterKeywords);
   }, [node, expandedTarget]);
 
   return (
     <Box paddingLeft={1} paddingRight={1}>
-      <CustomTabs value={value} onChange={handleChange}>
+      <CustomTabs value={value} onChange={handleTabChange}>
         <Tab icon={<SendIcon />} iconPosition="top" label="Sent" />
         <Tab icon={<MoveToInboxIcon />} label="Incoming" />
       </CustomTabs>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={SENT_TAB_INDEX}>
         <CardContainer>
-          {sentMessages.map((message, index) => (
-            <CardItem
-              key={index}
-              borderColor={message.style.stroke}
-              hovered={hovered[index]}
-              isExpanded={expandedCards[index]}
-              onMouseEnter={() => handleHover(index, true)}
-              onMouseLeave={() => handleHover(index, false)}
-              className={expandedCards[index] ? 'expanded' : ''}
-            >
-              <CardContent>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Typography variant="h6">Target: {message.target}</Typography>
-                  <RotateIcon
-                    hovered={hovered[index]}
-                    expanded={expandedCards[index]}
-                    onClick={() => handleExpandCard(index, message.target)}
-                  />
-                  <Tooltip
-                    title={'Discover'}
-                    placement="left"
-                    TransitionComponent={Fade}
-                  >
-                    <DetailIcon
-                      hovered={hovered[index]}
-                      expanded={expandedCards[index]}
-                      onClick={() => navigateToDetail()}
-                    />
-                  </Tooltip>
-                </div>
-                <Stack>
-                  <Typography variant="h6">
-                    {message.style.strokeWidth * 10} Calls
-                  </Typography>
-                  <AnimatedDashedLine color={message.style.stroke} />
-                  {expandedCards[index] && (
-                    <FadeIn>
-                      <div>
-                        <VerticalTabs
-                          statusCodePercentages={RateChips}
-                          errorRate={errorRatePercentage}
-                          usedProtocols={usedProtocols}
-                        />
-                      </div>
-                    </FadeIn>
-                  )}
-                </Stack>
-              </CardContent>
-            </CardItem>
-          ))}
+          {sentMessageItems}
         </CardContainer>
       </TabPanel>
-
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={INCOMING_TAB_INDEX}>
         <CardContainer>
-          {incomingMessages.map((message, index) => (
-            <CardItem
-              hovered={hovered[index]}
-              isExpanded={expandedCards[index]}
-              onMouseEnter={() => handleHover(index, true)}
-              onMouseLeave={() => handleHover(index, false)}
-              className={expandedCards[index] ? 'expanded' : ''}
-              key={index}
-              borderColor={message.style.stroke}
-            >
-              <CardContent>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <MDTypography variant="h6">From: {message.source}</MDTypography>
-                  <RotateIcon
-                    hovered={hovered[index]}
-                    expanded={expandedCards[index]}
-                    onClick={() => handleExpandCard(index, message.source)}
-                  />
-                  <Tooltip
-                    title={'Discover'}
-                    placement="left"
-                    TransitionComponent={Fade}
-                  >
-                    <DetailIcon
-                      hovered={hovered[index]}
-                      expanded={expandedCards[index]}
-                      onClick={() => navigateToDetail()}
-                    />
-                  </Tooltip>
-                </div>
-                <Stack>
-                  <Typography variant="h6">
-                    {message.style.strokeWidth * 10} Calls
-                  </Typography>
-                  <AnimatedDashedLine color={message.style.stroke} />
-                  {expandedCards[index] && (
-                    <FadeIn>
-                      <div>
-                        <VerticalTabs
-                          statusCodePercentages={RateChips}
-                          errorRate={errorRatePercentage}
-                          usedProtocols={usedProtocols}
-                        />
-                      </div>
-                    </FadeIn>
-                  )}
-                </Stack>
-              </CardContent>
-            </CardItem>
-          ))}
+          {incomingMessageItems}
         </CardContainer>
       </TabPanel>
     </Box>
