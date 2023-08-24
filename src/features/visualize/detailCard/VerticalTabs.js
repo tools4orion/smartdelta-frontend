@@ -8,11 +8,15 @@ import {
   Chip,
 } from '@mui/material';
 import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import MDTypography from 'components/MDTypography';
 import CellTowerIcon from '@mui/icons-material/CellTower';
 import MDBox from 'components/MDBox';
 import { protocolComponents } from './ProtocolComponents';
 import TabPanel from './TabPanel';
+import { calculateErrorRateAndStatusPercentages } from 'features/analyse/reports/DistributionErrorRate';
+import { getUniqueProtocols } from 'features/analyse/reports/getUniqueProtocols';
+
 
 const StyledMDBox = styled(Stack)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -31,13 +35,51 @@ function a11yProps(index) {
   };
 }
 
-export function VerticalTabs({ usedProtocols, errorRate, statusCodePercentages }) {
+export function VerticalTabs({tableData}) {
+  
+  //
+  const {
+    errorRatePercentage,
+    statusCodePercentages
+  } = calculateErrorRateAndStatusPercentages(tableData);
   const [value, setValue] = React.useState(0);
-  const chipColor = errorRate == 0 ? 'success' : 'error';
+  const chipColor = errorRatePercentage == 0 ? 'success' : 'error';
+  const isZeroErrorRate = errorRatePercentage == 0;
+
+  
+  const {
+    errorStatusCodePercentages,
+    successStatusCodePercentages
+  } = statusCodePercentages;
+  
+  const getRateChips = () => {
+	return errorRatePercentage == 0 ? successStatusCodePercentages : errorStatusCodePercentages;
+  };
+console.log(getRateChips());
+  const usedProtocols = getUniqueProtocols(tableData);
+
+  //
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  function getStatusIconAndLabel() {
+	if (isZeroErrorRate) {
+	  return {
+		icon: <CheckCircleOutlineIcon color="success" />,
+		label: 'Success Rate',
+		value: '100%',
+	  };
+	} else {
+	  return {
+		icon: <RunningWithErrorsIcon color="error" />,
+		label: 'Error Rate',
+		value: `${errorRatePercentage}%`,
+	  };
+	}
+  }
+  
 
   return (
     <Box
@@ -71,12 +113,16 @@ export function VerticalTabs({ usedProtocols, errorRate, statusCodePercentages }
           label={(
             <StyledMDBox sx={{ width: '120px' }}>
               <MDBox>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <RunningWithErrorsIcon color="error" />
-                  <MDTypography variant="h6">{errorRate}%</MDTypography>
-                </div>
-                <MDTypography variant="h6">Error Rate</MDTypography>
-              </MDBox>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {getStatusIconAndLabel().icon}
+          <MDTypography variant="h6">
+            {getStatusIconAndLabel().value}
+          </MDTypography>
+        </div>
+        <MDTypography variant="h6">
+          {getStatusIconAndLabel().label}
+        </MDTypography>
+      </MDBox>
             </StyledMDBox>
           )}
           {...a11yProps(1)}
@@ -95,7 +141,7 @@ export function VerticalTabs({ usedProtocols, errorRate, statusCodePercentages }
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
-          {statusCodePercentages.map((status) => (
+          { getRateChips().map((status) => (
             <div
               key={status.code}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}

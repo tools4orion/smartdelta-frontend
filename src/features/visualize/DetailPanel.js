@@ -10,11 +10,8 @@ import { useFileController } from 'contexts/FileContext';
 import { useRawData } from 'features/featureDiscovery/useRawData';
 import TabPanel from './detailCard/TabPanel';
 
-import {
-  calculateErrorRateAndStatusPercentages
-} from 'features/analyse/reports/DistributionErrorRate';
+
 import { useNavigate } from 'react-router-dom';
-import { getUniqueProtocols } from 'features/analyse/reports/getUniqueProtocols';
 
 import {
   CardContainer,
@@ -99,22 +96,6 @@ export default function DetailPanel({ data, node }) {
     )
   );
 
-  const {
-    errorRatePercentage,
-    statusCodePercentages
-  } = calculateErrorRateAndStatusPercentages(tableData);
-  
-  const {
-    errorStatusCodePercentages,
-    successStatusCodePercentages
-  } = statusCodePercentages;
-  
-  const getRateChips = () => {
-	return errorRatePercentage == 0 ? successStatusCodePercentages : errorStatusCodePercentages;
-  };
-
-  const usedProtocols = getUniqueProtocols(tableData);
-
   const sentMessageItems = sentMessages.map((message, index) => (
 	<DetailCardItem
 	  key={index}
@@ -127,9 +108,7 @@ export default function DetailPanel({ data, node }) {
 	  handleHover={handleHover}
 	  handleExpandCard={handleExpandCard}
 	  navigateToDetail={navigateToDetail}
-	  RateChips={getRateChips()}
-	  errorRatePercentage={errorRatePercentage}
-	  usedProtocols={usedProtocols}
+	  tableData={tableData}
 	/>
   ));
 
@@ -145,9 +124,7 @@ export default function DetailPanel({ data, node }) {
 	  handleHover={handleHover}
 	  handleExpandCard={handleExpandCard}
 	  navigateToDetail={navigateToDetail}
-	  RateChips={getRateChips()}
-	  errorRatePercentage={errorRatePercentage}
-	  usedProtocols={usedProtocols}
+	  tableData={tableData}
 	/>
   ));
   
@@ -155,6 +132,7 @@ export default function DetailPanel({ data, node }) {
     setFilterKeywords(initialFilterKeywords);
   }, [node, expandedTarget]);
 
+ 
   return (
     <Box paddingLeft={1} paddingRight={1}>
       <CustomTabs value={value} onChange={handleTabChange}>

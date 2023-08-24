@@ -17,6 +17,7 @@ import {
 import { VerticalTabs } from './VerticalTabs';
 import FadeIn from 'hooks/FadeIn';
 import MDTypography from 'components/MDTypography';
+import { getExistedVersions } from 'features/analyse/reports/getExistedVersions';
 
 function DetailCardItem({
   label,
@@ -28,13 +29,20 @@ function DetailCardItem({
   handleHover,
   handleExpandCard,
   navigateToDetail,
-  RateChips,
-  errorRatePercentage,
-  usedProtocols,
+  tableData
 }) {
 
   const getMessageProperty = ({target,source}) => label === 'Target' ? target : source;
-
+  const versions = getExistedVersions(tableData);
+  
+  const displayVersions = () => {
+	if (versions.length === 0) {
+	  return '';
+	}
+  
+	return ` ${versions.map(version => `v${version}`).join(', ')}`;
+  };
+  
   return (
     <CardItem
       hovered={hovered[index]}
@@ -71,17 +79,13 @@ function DetailCardItem({
         </div>
         <Stack>
           <MDTypography variant="h6">
-            {message.style.strokeWidth * 10} Calls
+            {message.style.strokeWidth * 10} Calls <span>{displayVersions()}</span>
           </MDTypography>
           <AnimatedDashedLine color={message.style.stroke} />
           {expanded && (
             <FadeIn>
               <div>
-                <VerticalTabs
-                  statusCodePercentages={RateChips}
-                  errorRate={errorRatePercentage}
-                  usedProtocols={usedProtocols}
-                />
+                <VerticalTabs tableData={tableData} />
               </div>
             </FadeIn>
           )}
@@ -101,9 +105,7 @@ DetailCardItem.propTypes = {
   handleHover: PropTypes.func.isRequired,
   handleExpandCard: PropTypes.func.isRequired,
   navigateToDetail: PropTypes.func.isRequired,
-  RateChips: PropTypes.array.isRequired,
-  errorRatePercentage: PropTypes.number.isRequired,
-  usedProtocols: PropTypes.array.isRequired,
+  tableData: PropTypes.array.isRequired,	
 };
 
 export default DetailCardItem;

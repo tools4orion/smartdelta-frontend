@@ -8,6 +8,7 @@ import MDInput from "../../components/MDInput";
 import MDBox from "components/MDBox";
 import { Card } from "@mui/material";
 import MDTypography from "../../components/MDTypography";
+import { viewFile } from "contexts/FileContext/fileActions";
 
 const UploadFile = () => {
   const { state, uploadFile, dispatch } = useFileController();
@@ -24,8 +25,12 @@ const UploadFile = () => {
     const responseData = await uploadFile(dispatch, formData, setUploadProgress);
 	
 
-    if (responseData) { navigate("/visualizer", { state: { result: responseData.result } });
+    if (responseData) { 
+		console.log("Viewing file: ", responseData.result.path);
+	viewFile(dispatch, responseData.result.path)
+	navigate("/visualizer", { state: { result: responseData.result } });
 	dispatch({ type: "RESET_STATUS", payload: false })
+	;
   }
 
     setIsUploadStarted(false);
