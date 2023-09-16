@@ -1,12 +1,27 @@
 import { useMemo } from 'react';
 
+export function useEdgeProperties(directions) {
+	const edgePropertiesSet = new Set();
+  
+	for (const direction of directions) {
+	  for (const edge of direction.edges) {
+		for (const property in edge) {
+		  edgePropertiesSet.add(property);
+		}
+		// Exit the loops after processing the first edge
+		return Array.from(edgePropertiesSet);
+	  }
+	}
+  
+  }
+
+
 export function useRawData(directions, searchQuery, filterKeywords, sortDirection) {
-  const { edgeProperties, tableData } = useMemo(() => {
+  const { tableData } = useMemo(() => {
     if (!directions) {
       return { edgeProperties: [], tableData: [] };
     }
 	console.log(directions);
-    const edgePropertiesSet = new Set();
     const filteredTableData = [];
 
     for (const direction of directions) {
@@ -16,13 +31,10 @@ export function useRawData(directions, searchQuery, filterKeywords, sortDirectio
           ...edge,
         });
 
-        for (const property in edge) {
-          edgePropertiesSet.add(property);
-        }
       }
     }
 
-    const edgeProperties = Array.from(edgePropertiesSet);
+
     let filteredData = filteredTableData.filter((row) => {
       const values = Object.values(row);
       return values.some((value) =>
@@ -49,8 +61,8 @@ export function useRawData(directions, searchQuery, filterKeywords, sortDirectio
       return sortDirection === 'asc' ? timeStampA - timeStampB : timeStampB - timeStampA;
     });
 
-    return { edgeProperties, tableData: filteredData };
+    return { tableData: filteredData };
   }, [directions, searchQuery, filterKeywords, sortDirection]);
 
-  return { edgeProperties, tableData };
+  return { tableData };
 }

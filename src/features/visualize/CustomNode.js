@@ -6,11 +6,26 @@ import MenuItem from '@mui/material/MenuItem';
 import PaletteIcon from '@mui/icons-material/Palette';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useVisualizerController } from 'contexts/VisualizerContext';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
+const LightTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+	[`& .${tooltipClasses.tooltip}`]: {
+		background:'linear-gradient(120deg, #182848 0%,  #4b6cb7 100%)'
+		
+	 
+	},
+	[`& .${tooltipClasses.arrow}`]: {
+		color: '#4b6cb7'
+	},
+  }));
 
 export default memo(({ data }) => {
 	const { getEdges } = useReactFlow();
- const {state,dispatch,toggleSidePanel, selectNode} = useVisualizerController();
+ const { state,dispatch,toggleSidePanel,  toggleLatencySidebar, selectNode} = useVisualizerController();
  const {isSidePanelOpen, isAnyNodeSelected} = state;
  console.log(isSidePanelOpen);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,6 +61,14 @@ export default memo(({ data }) => {
 	return { sentMessages, incomingMessages }
   };
 
+  const handleLatencySidebar = () => {
+	setMenuOpen(false);
+	setAnchorEl(null);
+  
+	toggleLatencySidebar(dispatch, true); // Toggle the LatencySidebar
+	selectNode(dispatch, data);
+  };
+
   const handleSidePanel = () => {
     setMenuOpen(false);
     setAnchorEl(null);
@@ -77,25 +100,28 @@ export default memo(({ data }) => {
             'aria-labelledby': 'basic-button',
           }}
         >
+		 <LightTooltip placement="left" title="Inspect Sent and Incoming Interactions for This Node">
           <StyledMenuItem onClick={handleSidePanel}>
             <StyledIcon>
               <AssessmentIcon fontSize="medium" /> {/* Adjust the fontSize here */}
             </StyledIcon>
-            <StyledText>Details</StyledText>
+            <StyledText>View Interaction Details</StyledText>
           </StyledMenuItem>
+		  </LightTooltip>
+		   <LightTooltip placement="left" title="Explore Request Latency Metrics and Insights">
+		  <StyledMenuItem onClick={handleLatencySidebar}>
+            <StyledIcon>
+              <AccessTimeIcon fontSize="medium" /> {/* Adjust the fontSize here */}
+            </StyledIcon>
+            <StyledText>Analyze Latency</StyledText>
+          </StyledMenuItem>
+		  </LightTooltip>
           <StyledMenuItem onClick={handleMenuClose}>
             <StyledIcon>
               <PaletteIcon fontSize="medium" />
             </StyledIcon>
-            <StyledText>Customize</StyledText>
+            <StyledText>Customization Options</StyledText>
           </StyledMenuItem>
-		  <StyledMenuItem onClick={handleMenuClose}>
-       
-		  <StyledIcon>
-		  <FileDownloadIcon fontSize="medium" /> 
-		  </StyledIcon>
-		  <StyledText>Export as csv</StyledText> 
-		  </StyledMenuItem>
         </Menu>
       </div>
     </>

@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useMemo } from "react";
 import visualizerReducer from "./visualizerReducer";
 import PropTypes from "prop-types";
-import { toggleSidePanel, selectNode } from "./visualizerActions";
+import { toggleSidePanel, selectNode, toggleLatencySidebar } from "./visualizerActions";
 
 
 
@@ -10,10 +10,9 @@ VisualizerContext.displayName = "VisualizerContext";
 
 function VisualizerControllerProvider({ children }){
 	const initialState = {
-		// Define  initial visualizer-related state here
 		isSidePanelOpen: false,
-		isAnyNodeSelected: null
-
+		isAnyNodeSelected: null,
+		isLatencySidebarOpen: false
 	  };
 	  const [controller, dispatch] = useReducer(visualizerReducer, initialState);
   
@@ -35,6 +34,7 @@ function useVisualizerController() {
 		state,
 		dispatch,
 		toggleSidePanel : (dispatch,value) => toggleSidePanel(dispatch, value),
+		toggleLatencySidebar:(dispatch,value) => toggleLatencySidebar(dispatch, value),
 		selectNode : (dispatch,value) => selectNode(dispatch, value)
 	  };
   }

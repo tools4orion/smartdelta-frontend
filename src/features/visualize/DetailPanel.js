@@ -20,6 +20,7 @@ import {
 
 import DetailCardItem from './detailCard/DetailCardItem';
 import useCardState from './detailCard/useCardState';
+import { useEdgeProperties } from 'features/featureDiscovery/useRawData';
 
 const SENT_TAB_INDEX = 0;
 const INCOMING_TAB_INDEX = 1;
@@ -27,7 +28,6 @@ const INCOMING_TAB_INDEX = 1;
 export default function DetailPanel({ data, node }) {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
-  const [filterKeywords, setFilterKeywords] = useState({});
   const { incomingMessages, sentMessages } = data || {};
 
   // Manage cards states
@@ -39,8 +39,22 @@ export default function DetailPanel({ data, node }) {
   const { state } = useFileController();
   const { fileStateToView } = state ?? {};
   const directions = fileStateToView?.directions;
+  const  edgeProperties  = useEdgeProperties(directions);
+  const getTerminatingMSValue = () => (value === SENT_TAB_INDEX && expandedTarget) ? expandedTarget : node;
+  const getOriginatingMSValue = () => (value === SENT_TAB_INDEX ) ? node : (expandedTarget || '');
+  const getDefaultValue = () => '';
 
-  const { edgeProperties, tableData } = useRawData(
+  const filterKeywords =  Object.fromEntries(
+    edgeProperties.map(key =>
+      key === 'originatingMS'
+        ? [key, getOriginatingMSValue()]
+        : key === 'terminatingMS'
+        ? [key, getTerminatingMSValue()]
+        : [key, getDefaultValue()]
+    )
+  );
+
+  const { tableData } = useRawData(
     directions,
     '',
     filterKeywords,
@@ -82,20 +96,8 @@ export default function DetailPanel({ data, node }) {
     setExpandedTarget('');
   };
 
-  const getTerminatingMSValue = () => (value === SENT_TAB_INDEX && expandedTarget) ? expandedTarget : node;
-  const getOriginatingMSValue = () => (value === SENT_TAB_INDEX ) ? node : (expandedTarget || '');
-  const getDefaultValue = () => '';
 
-  const initialFilterKeywords = Object.fromEntries(
-    edgeProperties.map(key =>
-      key === 'originatingMS'
-        ? [key, getOriginatingMSValue()]
-        : key === 'terminatingMS'
-        ? [key, getTerminatingMSValue()]
-        : [key, getDefaultValue()]
-    )
-  );
-
+  
   const sentMessageItems = sentMessages.map((message, index) => (
 	<DetailCardItem
 	  key={index}
@@ -129,12 +131,14 @@ export default function DetailPanel({ data, node }) {
   ));
   
   useEffect(() => {
-    setFilterKeywords(initialFilterKeywords);
+    
   }, [node, expandedTarget]);
 
  
   return (
-    <Box paddingLeft={1} paddingRight={1}>
+    <Box paddingLeft={1} paddingRight={1} style={{position:'sticky', overflowY:'auto',
+	overflowX:'none',
+	 height:'56vh'}}>
       <CustomTabs value={value} onChange={handleTabChange}>
         <Tab icon={<SendIcon />} iconPosition="top" label="Sent" />
         <Tab icon={<MoveToInboxIcon />} label="Incoming" />

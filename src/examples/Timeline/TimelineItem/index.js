@@ -49,7 +49,7 @@ function TimelineItem({ color, icon, title, dateTime, description, lastItem }) {
         zIndex={2}
         sx={{ fontSize: ({ typography: { size } }) => size.sm }}
       >
-        <Icon fontSize="inherit">{icon}</Icon>
+        <Icon fontSize="small">{icon}</Icon>
       </MDBox>
       <MDBox ml={5.75} pt={description ? 0.7 : 0.5} lineHeight={0} maxWidth="30rem">
         <MDTypography variant="button" fontWeight="medium" color={isDark ? "white" : "dark"}>

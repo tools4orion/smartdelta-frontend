@@ -33,6 +33,7 @@ import FormControl from '@mui/material/FormControl';
 
 import { useVisualizerController } from 'contexts/VisualizerContext';
 import SidePanel from './SidePanel';
+import LatencySidebar from './latency/LatencySidebar';
 
 // Define default viewport
 const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
@@ -67,7 +68,7 @@ function ForceLayoutTopology({ csvData }) {
   sortedNodes.sort((a, b) => a.id.localeCompare(b.id));
 
   const { state } = useVisualizerController();
-  const { isSidePanelOpen } = state;
+  const { isSidePanelOpen, isLatencySidebarOpen } = state;
 
 
   // Zoom handlers
@@ -107,7 +108,7 @@ const handleZoomOut = () => {
         id: node.id,
         type: 'default',
         position: { x, y },
-        data: { label: <CustomNode data={node.data.label} /> },
+        data: { label: <CustomNode data={node.data.label} /> }
       };
     });
   };
@@ -211,6 +212,9 @@ const handleZoomOut = () => {
         </Stack>
 		
         <MiniMap zoomStep={8} />
+		{ isLatencySidebarOpen && (
+			<LatencySidebar/>
+		)}
 	  {isSidePanelOpen && (
         <SidePanel/>
         )}

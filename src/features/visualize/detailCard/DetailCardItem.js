@@ -6,12 +6,14 @@ import {
   Stack,
   Tooltip,
   Fade,
+  Chip,
 } from '@mui/material';
 import {
   RotateIcon,
   DetailIcon,
   AnimatedDashedLine,
   CardItem,
+  MoreIcon,
 } from './CardComponent';
 
 import { VerticalTabs } from './VerticalTabs';
@@ -69,6 +71,7 @@ function DetailCardItem({
             expanded={expanded}
             onClick={() => handleExpandCard(index, getMessageProperty(message))}
           />
+		
           <Tooltip title={'Discover'} placement="left" TransitionComponent={Fade}>
             <DetailIcon
               hovered={hovered[index]}
@@ -79,7 +82,8 @@ function DetailCardItem({
         </div>
         <Stack>
           <MDTypography variant="h6">
-            {message.style.strokeWidth * 10} Calls <span>{displayVersions()}</span>
+            {message.style.strokeWidth * 10} Calls 
+			<Chip label={<span style={{color:'#AAB2B9', fontSize:'0.9em'}}>{displayVersions()}</span>} size="small" variant='outline' />
           </MDTypography>
           <AnimatedDashedLine color={message.style.stroke} />
           {expanded && (

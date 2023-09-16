@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { useFileController } from '../../contexts/FileContext';
-import { useRawData } from './useRawData';
+import { useEdgeProperties, useRawData } from './useRawData';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -52,9 +52,17 @@ const FeatureDiscovery = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
-  const [filterKeywords, setFilterKeywords] = useState({});
+
   const [isFilterIconClicked, setIsFilterIconClicked] = useState(false);
-  const { edgeProperties, tableData } = useRawData(
+  const  edgeProperties  =  useEdgeProperties(directions);
+  const initialFilterKeywords = edgeProperties.reduce((acc, property) => {
+    return {
+      ...acc,
+      [property]: '',
+    };
+  }, {});
+  const [filterKeywords, setFilterKeywords] = useState(initialFilterKeywords);
+  const { tableData } = useRawData(
     directions,
     searchQuery,
     filterKeywords,
@@ -76,21 +84,8 @@ const FeatureDiscovery = () => {
     );
   }, []);
 
-  const initialFilterKeywords = edgeProperties.reduce((acc, property) => {
-    return {
-      ...acc,
-      [property]: '',
-    };
-  }, {});
-
-  useEffect(() => {
-    // Only set the initial filter keywords if fileStateToView is null
-    if (!fileStateToView) {
-      setFilterKeywords(initialFilterKeywords);
-    }
-	setIsVisible(fileStateToView );
-  }, [fileStateToView]);
-
+  
+  
   useEffect(() => {
     if (routeState && routeState.filterData) {
       // Set the filterKeywords state based on the passed state
