@@ -7,19 +7,22 @@ const visualizerReducer = (state, action) => {
 		  return {
 			...state,
 			isSidePanelOpen: action.payload,
-			isLatencySidebarOpen: action.payload === true ? false : false
+			isLatencySidebarOpen: false,
+            isResourceSidebarOpen: false
 		  };
 	  case TOGGLE_LATENCY_SIDEBAR:
 		  return {
 			...state,
 			isLatencySidebarOpen: action.payload,
-			isSidePanelOpen: action.payload === true ? false : false
+			isSidePanelOpen: false,
+			isResourceSidebarOpen: false, 
 		  };
 	  case TOGGLE_RESOURCE_SIDEBAR:
 			return {
 			  ...state,
 			  isResourceSidebarOpen: action.payload,
-			  isSidePanelOpen: action.payload === true ? false : false
+			  isSidePanelOpen: false,
+			  isLatencySidebarOpen: false
 			};
 	  case SELECT_NODE:
 		  return {
