@@ -6,6 +6,7 @@ import {
   Slider,
   Stack,
   Typography,
+  IconButton
 } from '@mui/material';
 
 import ReactFlow, {
@@ -28,12 +29,14 @@ import 'reactflow/dist/style.css';
 import { generateRandomColor } from './helpers/generateRandomColors';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import RemoveIcon from '@mui/icons-material/Remove';
-
 import FormControl from '@mui/material/FormControl';
 
 import { useVisualizerController } from 'contexts/VisualizerContext';
 import SidePanel from './SidePanel';
 import LatencySidebar from './latency/LatencySidebar';
+
+import UserGuideTour from 'features/userTours/UserGuideTour';
+import ResourceSidebar from './resource/ResourceSidebar';
 
 // Define default viewport
 const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
@@ -61,6 +64,7 @@ function ForceLayoutTopology({ csvData }) {
   const [distance, setDistance] = useState(350);
   const [simulationFrozen, setSimulationFrozen] = useState(false);
  
+ 
   const  currentZoom  = useStore((store) => store.transform[2]);
 
   // Sort nodes 
@@ -68,11 +72,9 @@ function ForceLayoutTopology({ csvData }) {
   sortedNodes.sort((a, b) => a.id.localeCompare(b.id));
 
   const { state } = useVisualizerController();
-  const { isSidePanelOpen, isLatencySidebarOpen } = state;
-
-
+  const { isSidePanelOpen, isLatencySidebarOpen, isResourceSidebarOpen, isUserGuideOpen } = state;
+console.log("isResourceSidebarOpen:" + isResourceSidebarOpen)
   // Zoom handlers
-
   const handleZoomIn = () => {
     zoomIn({ duration: 800 });
   };
@@ -112,6 +114,7 @@ const handleZoomOut = () => {
       };
     });
   };
+
 
   const calculateEdges = () => {
     return csvData.directions.map((direction) => ({
@@ -154,6 +157,7 @@ const handleZoomOut = () => {
 
   return (
     <div style={{ height: '500px' }}>
+      <UserGuideTour isUserGuideOpen={isUserGuideOpen} guideKey='visualizer-tools' />
       <ReactFlow
         minZoom={0.3}
         defaultNodes={nodes}
@@ -176,6 +180,7 @@ const handleZoomOut = () => {
                   </FormLabel>
                 </FormControl>
                 <Slider
+				className='strength' 
                   size="small"
                   value={strength}
 				  onChange={handleStrengthChange}
@@ -189,13 +194,14 @@ const handleZoomOut = () => {
               </Box>
             </Grid>
             <Grid item>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box  sx={{ display: 'flex', alignItems: 'center' }}>
                 <FormControl>
                   <FormLabel component="legend">
                     <Typography variant="subtitle2">Distance</Typography>
                   </FormLabel>
                 </FormControl>
                 <Slider
+				className='distance'
                   size="small"
                   value={distance}
 				  onChange={handleDistanceChange}
@@ -210,14 +216,10 @@ const handleZoomOut = () => {
             </Grid>
           </Grid>
         </Stack>
-		
         <MiniMap zoomStep={8} />
-		{ isLatencySidebarOpen && (
-			<LatencySidebar/>
-		)}
-	  {isSidePanelOpen && (
-        <SidePanel/>
-        )}
+		{ isLatencySidebarOpen && <LatencySidebar/> }
+		{isResourceSidebarOpen && <ResourceSidebar/> }
+		{isSidePanelOpen && <SidePanel/> }
         <Controls>
 		<ControlButton onClick={handleZoomIn} title="another action">
 		<AddTwoToneIcon fontSize='large' />
@@ -227,11 +229,13 @@ const handleZoomOut = () => {
       </ControlButton>
 		</Controls>
       </ReactFlow>
+	 
     </div>
   );
 }
 
 function ReactFlowWrapper(props) {
+
   return (
     <ReactFlowProvider>
       <ForceLayoutTopology {...props} />

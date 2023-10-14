@@ -4,7 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export const AnimatedDashedLine = ({ color }) => (
-  <svg width="100%" height="3" viewBox="0 0 100 3" xmlns="http://www.w3.org/2000/svg">
+  <svg className='dashed-line' width="100%" height="3" viewBox="0 0 100 3" xmlns="http://www.w3.org/2000/svg">
     <line
       x1="0"
       y1="1.5"

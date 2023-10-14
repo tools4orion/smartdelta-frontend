@@ -1,3 +1,4 @@
+import { TOGGLE_APP_SIDEBAR } from "./actionTypes";
 // Context module functions
 const setMiniSidenav = (dispatch, value) => dispatch({ type: "MINI_SIDENAV", value });
 
@@ -8,6 +9,7 @@ const setOpenConfigurator = (dispatch, value) => dispatch({ type: "OPEN_CONFIGUR
 const setDirection = (dispatch, value) => dispatch({ type: "DIRECTION", value });
 const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
 const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
+const setToggleAppSidebar = (dispatch, value) => dispatch({ type:TOGGLE_APP_SIDEBAR, value });
 
 export {
 	setMiniSidenav,
@@ -18,4 +20,5 @@ export {
 	setDirection,
 	setLayout,
 	setDarkMode,
+	setToggleAppSidebar
   };

@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // react-router-dom components
 import { useLocation, NavLink } from "react-router-dom";
@@ -37,14 +37,21 @@ import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
-
+import dıa4m from "assets/svgs/dıa4m.svg";
+import dıa4m2 from "assets/svgs/dıa4m2.svg";
+import dıa4m3 from "assets/svgs/dıa4m_last.svg";
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "contexts/UIContext";
 import {  setMiniSidenav, setWhiteSidenav } from "contexts/UIContext/uiActions";
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import { IconButton } from "@mui/material";
+import { setToggleAppSidebar } from "contexts/UIContext/uiActions";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, whiteSidenav, darkMode } = controller;
+  const { miniSidenav, whiteSidenav, darkMode, expanded  } = controller;
+
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
 console.log(location.pathname)
@@ -97,11 +104,12 @@ console.log(location.pathname)
             icon={icon}
             active={key === collapseName}
             noCollapse={noCollapse}
+			isExpanded={expanded}
           />
         </Link>
       ) : (
         <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          <SidenavCollapse isExpanded={expanded} name={name} icon={icon} active={key === collapseName} />
         </NavLink>
       );
     } else if (type === "title") {
@@ -129,9 +137,9 @@ console.log(location.pathname)
 
     return returnValue;
   });
-
+const sidenavWidth = expanded ? '10rem' : '4.4rem';
   return (
-    <SidenavRoot {...rest} variant="permanent" ownerState={{ whiteSidenav, miniSidenav, darkMode }}>
+    <SidenavRoot {...rest} variant="permanent" ownerState={{ whiteSidenav, miniSidenav, darkMode }} isExpanded={expanded} >
       <MDBox pt={3} pb={1} px={4} textAlign="center">
         <MDBox
           display={{ xs: "block", xl: "none" }}
@@ -140,24 +148,36 @@ console.log(location.pathname)
           right={0}
           p={1.625}
           onClick={closeSidenav}
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer", width:sidenavWidth }}
         >
           <MDTypography variant="h6" color="secondary">
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </MDTypography>
         </MDBox>
         <MDBox component={NavLink} to="/" display="flex" alignItems="center">
-          {brand && <MDBox component="img" src={brand} alt="Brand" width="2rem" />}
+          {brand && (<MDBox component="img" src={brand} alt="Brand" width={expanded ? "2rem" : '1rem' } />
+		  )
+		 }
           <MDBox
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
           >
-            <MDTypography component="h6" variant="button" fontWeight="medium" color={textColor}>
+		  {expanded && (
+			<MDTypography component="h6" variant="button" fontWeight="medium" color={textColor}>
               {brandName}
             </MDTypography>
+		  )}
+
           </MDBox>
+
+		
         </MDBox>
+		
       </MDBox>
+	  <MDBox sx={{ml:!expanded ? 1 : 4 }} component="img" src={dıa4m3} alt="Brand" width={expanded ? "5.5rem" : '2.75rem'} />
+	  <IconButton onClick={()=>setToggleAppSidebar(dispatch, !expanded)} sx={{position:'absolute', top:0, right: expanded ? 5 : '', left:!expanded ? 2 : ''}}  >
+		 	{expanded ? <FirstPageIcon color='white'/> :  <LastPageIcon color='white'/>  }
+		  </IconButton>
       <Divider light={(!darkMode && !whiteSidenav) || (darkMode && whiteSidenav)} />
       <List>{renderRoutes}</List>
     </SidenavRoot>

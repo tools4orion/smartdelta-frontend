@@ -103,7 +103,7 @@ const routes = [
     name: "Mapping Visualizer",
     key: "visualizer",
     icon: <Icon fontSize="small">schema</Icon>,
-    route: "/visualizer",
+	route: "/visualizer",
     component: <Visualizer/>,
   },
   {

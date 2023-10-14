@@ -26,7 +26,6 @@ const UploadFile = () => {
 	
 
     if (responseData) { 
-		console.log("Viewing file: ", responseData.result.path);
 	viewFile(dispatch, responseData.result.path)
 	navigate("/visualizer", { state: { result: responseData.result } });
 	dispatch({ type: "RESET_STATUS", payload: false })

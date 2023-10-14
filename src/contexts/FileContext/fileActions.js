@@ -1,6 +1,5 @@
 import attachmentEndpoints from "../../network/endpoints/attachment";
-import {UPLOAD_FILE, LIST_FILES, DELETE_FILE,VIEW_FILE, GET_CSV} from "./actionTypes";
-
+import {UPLOAD_FILE, LIST_FILES, VIEW_FILE, GET_CSV} from "./actionTypes";
 
 const fetchFiles = async (dispatch) => {
   try {

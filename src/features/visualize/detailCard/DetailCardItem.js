@@ -51,7 +51,7 @@ function DetailCardItem({
       isExpanded={expanded}
       onMouseEnter={() => handleHover(index, true)}
       onMouseLeave={() => handleHover(index, false)}
-      className={expanded ? 'expanded' : ''}
+      className={expanded ? ' expanded' : ''}
       key={index}
       borderColor={borderColor}
     >
@@ -62,6 +62,7 @@ function DetailCardItem({
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
+		  className='card-item'
         >
           <MDTypography variant="h6">
             { label }: { getMessageProperty(message)}

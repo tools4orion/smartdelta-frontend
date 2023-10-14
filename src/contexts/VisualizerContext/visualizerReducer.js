@@ -1,4 +1,4 @@
-import { SELECT_NODE, TOGGLE_LATENCY_SIDEBAR, TOGGLE_SIDE_PANEL} from "./actionTypes";
+import { SELECT_NODE, TOGGLE_LATENCY_SIDEBAR, TOGGLE_RESOURCE_SIDEBAR, TOGGLE_SIDE_PANEL} from "./actionTypes";
 
 const visualizerReducer = (state, action) => {
 	switch (action.type) {
@@ -15,10 +15,21 @@ const visualizerReducer = (state, action) => {
 			isLatencySidebarOpen: action.payload,
 			isSidePanelOpen: action.payload === true ? false : false
 		  };
+	  case TOGGLE_RESOURCE_SIDEBAR:
+			return {
+			  ...state,
+			  isResourceSidebarOpen: action.payload,
+			  isSidePanelOpen: action.payload === true ? false : false
+			};
 	  case SELECT_NODE:
 		  return {
 			...state,
 			isAnyNodeSelected: action.payload,
+		  };
+	  case "SHOW_USER_GUIDE":
+		  return {
+			...state,
+			isUserGuideOpen: action.payload,
 		  };
 	  default:
 		return state;

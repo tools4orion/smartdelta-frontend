@@ -35,10 +35,11 @@ import {
 
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "contexts/UIContext";
+import { Tooltip } from "@mui/material";
 
-function SidenavCollapse({ icon, name, active, ...rest }) {
+function SidenavCollapse({ icon, name, isExpanded, active, ...rest }) {
   const [controller] = useMaterialUIController();
-  const { miniSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
+  const { miniSidenav, whiteSidenav, darkMode, sidenavColor, expanded } = controller;
 
   return (
     <ListItem component="li">
@@ -53,15 +54,17 @@ function SidenavCollapse({ icon, name, active, ...rest }) {
           })
         }
       >
-        <ListItemIcon sx={(theme) => collapseIconBox(theme, { whiteSidenav, darkMode, active })}>
+	  <Tooltip title={name} placement="right">
+        <ListItemIcon sx={(theme) => collapseIconBox(theme, { whiteSidenav, darkMode, active, expanded })}>
           {typeof icon === "string" ? (
             <Icon sx={(theme) => collapseIcon(theme, { active })}>{icon}</Icon>
           ) : (
             icon
           )}
+		  
         </ListItemIcon>
-
-        <ListItemText
+		</Tooltip>
+			{isExpanded ? <ListItemText
           primary={name}
           sx={(theme) =>
             collapseText(theme, {
@@ -70,7 +73,8 @@ function SidenavCollapse({ icon, name, active, ...rest }) {
               active,
             })
           }
-        />
+        /> : ''}
+        
       </MDBox>
     </ListItem>
   );

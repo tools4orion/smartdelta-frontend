@@ -11,6 +11,7 @@ import {
 import VersionControlIcon from '../../../assets/svgs/version-control.svg';
 import CorrelationIcon from '../../../assets/svgs/correlation.svg';
 import OverviewIcon from '../../../assets/svgs/analysis.svg';
+import UserGuideTour from 'features/userTours/UserGuideTour';
 
 const CustomListItemText = styled(ListItemText)(({ theme }) => ({
   '& .MuiTypography-root': {
@@ -52,7 +53,7 @@ const SidebarOptions = ({ onClick }) => {
       <nav aria-label="main mailbox folders">
         <List>
           {options.map((option, index) => (
-            <ListItem key={index}>
+            <ListItem className={option.value} key={index}>
               <ListItemButton onClick={() => onClick(option.value)}>
                 <ListItemIcon>
                   <img src={option.icon} width={option.iconWidth} alt={option.alt} />
@@ -63,6 +64,7 @@ const SidebarOptions = ({ onClick }) => {
           ))}
         </List>
       </nav>
+	 <UserGuideTour guideKey='latency-menu'/>
     </Box>
   );
 };

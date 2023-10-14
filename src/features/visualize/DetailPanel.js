@@ -21,6 +21,8 @@ import {
 import DetailCardItem from './detailCard/DetailCardItem';
 import useCardState from './detailCard/useCardState';
 import { useEdgeProperties } from 'features/featureDiscovery/useRawData';
+import UserGuideTour from 'features/userTours/UserGuideTour';
+import { useVisualizerController } from 'contexts/VisualizerContext';
 
 const SENT_TAB_INDEX = 0;
 const INCOMING_TAB_INDEX = 1;
@@ -43,6 +45,8 @@ export default function DetailPanel({ data, node }) {
   const getTerminatingMSValue = () => (value === SENT_TAB_INDEX && expandedTarget) ? expandedTarget : node;
   const getOriginatingMSValue = () => (value === SENT_TAB_INDEX ) ? node : (expandedTarget || '');
   const getDefaultValue = () => '';
+  const  stateVis  = useVisualizerController().state;
+  const {  isUserGuideOpen } = stateVis;
 
   const filterKeywords =  Object.fromEntries(
     edgeProperties.map(key =>
@@ -96,8 +100,6 @@ export default function DetailPanel({ data, node }) {
     setExpandedTarget('');
   };
 
-
-  
   const sentMessageItems = sentMessages.map((message, index) => (
 	<DetailCardItem
 	  key={index}
@@ -139,6 +141,7 @@ export default function DetailPanel({ data, node }) {
     <Box paddingLeft={1} paddingRight={1} style={{position:'sticky', overflowY:'auto',
 	overflowX:'none',
 	 height:'56vh'}}>
+	 	  <UserGuideTour isUserGuideOpen={isUserGuideOpen} guideKey='interaction-panel' />
       <CustomTabs value={value} onChange={handleTabChange}>
         <Tab icon={<SendIcon />} iconPosition="top" label="Sent" />
         <Tab icon={<MoveToInboxIcon />} label="Incoming" />
@@ -153,6 +156,7 @@ export default function DetailPanel({ data, node }) {
           {incomingMessageItems}
         </CardContainer>
       </TabPanel>
+
     </Box>
   );
 }

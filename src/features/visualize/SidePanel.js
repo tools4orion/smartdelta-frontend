@@ -87,6 +87,7 @@ const SidePanel = () => {
         paddingTop: '4px',
       }}
     >
+
       <Box paddingTop={2} paddingLeft={2} paddingRight={0} sx={{ color: 'white' }}>
         <IconButton onClick={handleCloseSidePanel} sx={{ position: 'absolute', right: 1 }}>
           <KeyboardTabIcon color='white' />
@@ -124,6 +125,7 @@ const SidePanel = () => {
             </FormHelperText>
           </FormControl>
         </div>
+		
         <DetailPanel data={getIntereactions(selected)} node={selected} />
       </Box>
     </Panel>

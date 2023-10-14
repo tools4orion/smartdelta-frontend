@@ -7,3 +7,4 @@ export const OPEN_CONFIGURATOR = "OPEN_CONFIGURATOR";
 export const DIRECTION = "DIRECTION";
 export const LAYOUT = "LAYOUT";
 export const DARKMODE = "DARKMODE";
+export const TOGGLE_APP_SIDEBAR = "TOGGLE_APP_SIDEBAR";

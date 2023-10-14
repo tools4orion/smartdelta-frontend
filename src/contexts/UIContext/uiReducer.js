@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
 
-const { MINI_SIDENAV, WHITE_SIDENAV, SIDENAV_COLOR, FIXED_NAVBAR, OPEN_CONFIGURATOR, DIRECTION, LAYOUT, DARKMODE } = actionTypes;
+const { MINI_SIDENAV, WHITE_SIDENAV, SIDENAV_COLOR, FIXED_NAVBAR, OPEN_CONFIGURATOR, DIRECTION, LAYOUT, DARKMODE, TOGGLE_APP_SIDEBAR  } = actionTypes;
 
 const uiReducer = (state, action) => {
 	const { type, value } = action;
@@ -15,6 +15,7 @@ const uiReducer = (state, action) => {
 	  [DIRECTION]: { direction: value },
 	  [LAYOUT]: { layout: value },
 	  [DARKMODE]: { darkMode: value },
+	  [TOGGLE_APP_SIDEBAR]: { expanded: value }
 	};
 
 	//Check if the action type exists in the stateUpdates object and apply the corresponding state update

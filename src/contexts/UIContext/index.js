@@ -23,6 +23,7 @@ function MaterialUIControllerProvider({ children }) {
 	  direction: "ltr",
 	  layout: "dashboard",
 	  darkMode: false,
+	  expanded: true
 	};
   
 	const [controller, dispatch] = useReducer(uiReducer, initialState);

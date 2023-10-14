@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PaletteIcon from '@mui/icons-material/Palette';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useVisualizerController } from 'contexts/VisualizerContext';
@@ -133,7 +132,8 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   alignItems: 'center',
   '& .MuiSvgIcon-root': {
     marginRight: theme.spacing(1),
-  },
+  }
+
 }));
 
 const StyledIcon = styled('div')({

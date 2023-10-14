@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 function collapseItem(theme, ownerState) {
   const { palette, transitions, breakpoints, boxShadows, borders, functions } = theme;
-  const { active, whiteSidenav, darkMode, sidenavColor } = ownerState;
+  const { active, whiteSidenav, darkMode, sidenavColor, expanded } = ownerState;
 
   const { white, transparent, dark, grey, gradients } = palette;
   const { md } = boxShadows;
@@ -61,14 +61,14 @@ function collapseItem(theme, ownerState) {
 
 function collapseIconBox(theme, ownerState) {
   const { palette, transitions, borders, functions } = theme;
-  const { whiteSidenav, active } = ownerState;
+  const { whiteSidenav, active} = ownerState;
 
   const { white, dark } = palette;
   const { borderRadius } = borders;
   const { pxToRem } = functions;
-
+ 
   return {
-    minWidth: pxToRem(32),
+    minWidth: pxToRem(8),
     minHeight: pxToRem(32),
     color: whiteSidenav && !active ? dark.main : white.main,
     borderRadius: borderRadius.md,
@@ -86,7 +86,7 @@ function collapseIconBox(theme, ownerState) {
 }
 
 const collapseIcon = ({ palette: { white, gradients } }, { active }) => ({
-  color: active ? white.main : gradients.dark.state,
+  color: active ? white.main : gradients.dark.state
 });
 
 function collapseText(theme, ownerState) {
