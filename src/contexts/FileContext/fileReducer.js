@@ -1,4 +1,4 @@
-import { LIST_FILES, DELETE_FILE, UPLOAD_FILE, RESET_STATUS, VIEW_FILE} from "./actionTypes";
+import { LIST_FILES, DELETE_FILE, UPLOAD_FILE, RESET_STATUS, VIEW_FILE, SELECT_TO_COMPARE, REMOVE_COMPARE_FILE, TOGGLE_COMPARISON_BOX } from "./actionTypes";
 
 const fileReducer = (state, action) => {
 	switch (action.type) {
@@ -26,6 +26,23 @@ const fileReducer = (state, action) => {
 		  ...state,
 		  isUploading: action.payload,
 		};
+	  case SELECT_TO_COMPARE:
+		return {
+		  ...state,
+		  selectedFilesToCompare: state.selectedFilesToCompare.concat(action.payload),
+		  isPairReady: state.selectedFilesToCompare.length === 2 ? true : false,
+		  lastSelectedName:action.payload?.fileName || null
+		};
+		case REMOVE_COMPARE_FILE:
+			return {
+			  ...state,
+			  selectedFilesToCompare: state.selectedFilesToCompare.filter(file => file.fileName !== action.payload),
+			};
+		case TOGGLE_COMPARISON_BOX:
+			return {
+			  ...state,
+			  isComparisonBoxVisible: action.payload
+			};
 	  default:
 		return state;
 	}

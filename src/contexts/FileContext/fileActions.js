@@ -1,5 +1,5 @@
 import attachmentEndpoints from "../../network/endpoints/attachment";
-import {UPLOAD_FILE, LIST_FILES, VIEW_FILE, GET_CSV} from "./actionTypes";
+import {UPLOAD_FILE, LIST_FILES, VIEW_FILE, GET_CSV, SELECT_TO_COMPARE, REMOVE_COMPARE_FILE, TOGGLE_COMPARISON_BOX} from "./actionTypes";
 
 const fetchFiles = async (dispatch) => {
   try {
@@ -50,4 +50,18 @@ const viewFile = async (dispatch, name) => {
 	dispatch({ type: VIEW_FILE, payload: dataToView  });
  }
 
-export { fetchFiles, uploadFile, viewFile, getCsv};
+ const selectToCompare = async (dispatch, name) => {
+	const response = await attachmentEndpoints.getMeta(name);
+    const dataToView = response.data;
+	dispatch({ type: SELECT_TO_COMPARE, payload: dataToView  });
+ }
+
+ const removeCompareFile = (dispatch, name) => {
+	dispatch({ type: REMOVE_COMPARE_FILE, payload: name });
+ };
+ 
+ const toggleComparisonBox = (dispatch, value) => {
+	dispatch({ type: TOGGLE_COMPARISON_BOX , payload:value});
+ };
+
+export { fetchFiles, uploadFile, viewFile, selectToCompare, getCsv, removeCompareFile, toggleComparisonBox };

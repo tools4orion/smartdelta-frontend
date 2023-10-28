@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 export function useEdgeProperties(directions) {
+	if(!directions) return [];
 	const edgePropertiesSet = new Set();
   
 	for (const direction of directions) {

@@ -27,6 +27,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -48,12 +49,17 @@ import {
 // Material Dashboard 2 React context
 import { useMaterialUIController} from "contexts/UIContext";
 import {setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActions";
-
+import { Badge, Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useFileController } from "contexts/FileContext";
 function DashboardNavbar({ absolute, light, isMini, searchAction }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
+  const { state, toggleComparisonBox, dispatch:fileControllerDispatch } = useFileController();
+  const {selectedFilesToCompare} = state;
   const [openMenu, setOpenMenu] = useState(false);
+  const navigate = useNavigate();
   const route = useLocation().pathname.split("/").slice(1);
 
   useEffect(() => {
@@ -63,13 +69,19 @@ function DashboardNavbar({ absolute, light, isMini, searchAction }) {
     } else {
       setNavbarType("static");
     }
-  }, [dispatch, fixedNavbar]);
+  }, [dispatch, fixedNavbar ]);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-
+  const handleCompareIconClick = ()=>{
+	if(route.pathname === '/file-upload') return;
+	navigate('/file-upload');
+	toggleComparisonBox(fileControllerDispatch, true);
+  }
+   
+const tooltipTextComparison =  selectedFilesToCompare.length === 1 ? `${selectedFilesToCompare[0]?.fileName} Selected  Pair Up for Comparison!` : 'Compare Now';
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -134,6 +146,13 @@ function DashboardNavbar({ absolute, light, isMini, searchAction }) {
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
+			  <Tooltip title={tooltipTextComparison} >
+				  <Badge badgeContent={selectedFilesToCompare.length} color="primary">
+		       <IconButton onClick={handleCompareIconClick} >
+                 <CompareArrowsIcon fontSize='medium' color="white" />
+	           </IconButton>
+    </Badge>
+		  </Tooltip>
               <IconButton
                 size="small"
                 disableRipple

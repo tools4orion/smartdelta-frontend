@@ -16,7 +16,6 @@ const userGuideSteps = {
 		placement: 'bottom',
 	  },
 	],
-  
 	'latency-menu': [
 	  {
 		target: '.VersionServiceLatency',
@@ -52,6 +51,13 @@ const userGuideSteps = {
 		placement: 'bottom',
 	  },
 	],
+	'compare': [
+		{
+		  target: '.compare',
+		  content: 'In this column, Click the icon of a  log file to compare',
+		  placement: 'right',
+		}
+	  ],
   };
   
   const getSteps = (guideKey) => {

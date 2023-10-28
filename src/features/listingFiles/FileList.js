@@ -1,6 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { useFileController } from "../../contexts/FileContext";
-
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 
@@ -8,6 +7,8 @@ import Card from "@mui/material/Card";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import { getFileTableData } from './FileTableData';
+import ComparisonDialog from 'features/compare/ComparisonDialog';
+
 const DataTable = lazy(() => {
 	console.log("Lazy loading DataTable component...");
 	return import('../../examples/Tables/DataTable');
@@ -15,8 +16,7 @@ const DataTable = lazy(() => {
   
 const FileList = () => {
   const { state, fetchFiles }  = useFileController();
-
-  const {attachments,isUploading, sumOfSize}= state;
+  const {attachments,isComparisonBoxVisible, sumOfSize }= state;
   const { columns, rows } = getFileTableData(attachments);
 
   const quotaInMB = 3072;
@@ -70,6 +70,7 @@ const FileList = () => {
 			</Card>
 		  </Grid>
 		</Grid>
+		{isComparisonBoxVisible && <ComparisonDialog/>}
 	  </MDBox>
 	);
 }
