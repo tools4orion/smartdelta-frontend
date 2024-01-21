@@ -48,7 +48,6 @@ export default styled(Drawer)(({ theme, ownerState, isExpanded }) => {
       marginBottom: "inherit",
       left: "0",
       width:  isExpanded ? sidebarWidth : pxToRem(64),
-
       transform: "translateX(0)",
       transition: transitions.create(["width", "background-color"], {
         easing: transitions.easing.sharp,

@@ -42,6 +42,7 @@ export function VerticalTabs({tableData}) {
     errorRatePercentage,
     statusCodePercentages
   } = calculateErrorRateAndStatusPercentages(tableData);
+
   const [value, setValue] = React.useState(0);
   const chipColor = errorRatePercentage == 0 ? 'success' : 'error';
   const isZeroErrorRate = errorRatePercentage == 0;

@@ -37,6 +37,7 @@ MDInput.propTypes = {
   error: PropTypes.bool,
   success: PropTypes.bool,
   disabled: PropTypes.bool,
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
 export default MDInput;

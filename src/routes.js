@@ -40,6 +40,7 @@ import React from "react";
 import Dashboard from "layouts/dashboard";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import elastic from './assets/svgs/elastic.svg';
 
 
 // import Billing from "layouts/billing";
@@ -60,6 +61,9 @@ import MDTypography from "components/MDTypography";
 // ...
 import MDBox from "components/MDBox";
 import ClusterIntegration from "features/k8/ClusterIntegration";
+import ApexChart from "features/featureDiscovery/summarizeServices/ServicesSummary";
+import ElasticIntegration from "features/elastic/ElasticIntegration";
+import ElasticDashboard from "features/elastic/ElasticDashboard";
 
 const FeatureDiscovery = lazy(() => import('features/featureDiscovery'));
 
@@ -108,13 +112,36 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Services Summary",
+    key: "servicesSummary",
+    icon: <Icon fontSize="small">bar_chart</Icon>,
+	route: "/services-summary",
+    component: <ApexChart/>,
+  },
+  {
+    type: "collapse",
     name: "Kubernetes Cluster",
     key: "k8Cluster",
     icon: <Icon fontSize="small">cloud</Icon>,
     route: "/k8Cluster",
     component: <ClusterIntegration/>,
   },
-
+  {
+    type: "collapse",
+    name: "Elastic Cloud",
+    key: "elasticCloud",
+    icon: <img src={elastic}  />,
+    route: "/elastic",
+    component: <ElasticIntegration/>,
+  },
+  {
+    type: "collapse",
+    name: "Elastic Dashboard",
+    key: "elasticDashboard",
+    icon: <img src={elastic}  />,
+    route: "/elastic-dashboard",
+    component: <ElasticDashboard/>,
+  },
   // {
   //   type: "collapse",
   //   name: "Billing",
@@ -146,15 +173,7 @@ const routes = [
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
-  },
-  {
-    type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/sign-up",
-    component: <SignUp />,
-  },
+  }
 ];
 
 export default routes;

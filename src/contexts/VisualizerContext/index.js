@@ -3,8 +3,6 @@ import visualizerReducer from "./visualizerReducer";
 import PropTypes from "prop-types";
 import { toggleSidePanel, selectNode, toggleLatencySidebar, showUserGuide, toggleResourceSidebar } from "./visualizerActions";
 
-
-
 const VisualizerContext = createContext();
 VisualizerContext.displayName = "VisualizerContext";
 

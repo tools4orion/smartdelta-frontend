@@ -8,6 +8,7 @@ import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import { getFileTableData } from './FileTableData';
 import ComparisonDialog from 'features/compare/ComparisonDialog';
+import elasticApmEndpoints from 'network/endpoints/elasticApm';
 
 const DataTable = lazy(() => {
 	console.log("Lazy loading DataTable component...");
@@ -22,9 +23,15 @@ const FileList = () => {
   const quotaInMB = 3072;
   const freeSpaceInMB = quotaInMB - sumOfSize;
   const freeSpaceInGB = parseFloat((freeSpaceInMB / 1024).toFixed(2));
+  const fetchLogs = async() =>{
+	const logData = await elasticApmEndpoints.getLogs();
+	console.log(logData)
+  }
+
 
    useEffect(() => {
 		fetchFiles();
+		fetchLogs();
 	  }, []);
 
 	return (

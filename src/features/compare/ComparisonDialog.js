@@ -23,10 +23,14 @@ import { useFileController } from 'contexts/FileContext';
 import MDTypography from 'components/MDTypography';
 import FadeIn from 'hooks/FadeIn';
 import ComparisonCheckboxes from './ComparisonCheckboxes';
+import { useRawData } from 'features/featureDiscovery/useRawData';
+import analysisEndpoints from 'network/endpoints/analysis';
 
 const ComparisonDialog = () => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -34,14 +38,24 @@ const ComparisonDialog = () => {
   const { selectedFilesToCompare, isComparisonBoxVisible } = state;
   const dialogText = isLoading
     ? null
-    : selectedFilesToCompare.length === 2
-    ? `Compare ${selectedFilesToCompare[1].fileName} vs ${selectedFilesToCompare[0].fileName}`
-    : selectedFilesToCompare.length === 1
+    : selectedFilesToCompare.length == 2
+    ? `Compare ${selectedFilesToCompare[0].fileName} vs ${selectedFilesToCompare[1].fileName}`
+    : selectedFilesToCompare.length == 1
     ? 'Choose a log file to pair with "' + selectedFilesToCompare[0].fileName + '"'
     : 'Please select a pair of log files from the file list to compare';
-
-  const handleClose = () => {
+	const file1Rows= useRawData(selectedFilesToCompare[0]?.directions || null, '', {}, 'asc');
+	console.log(file1Rows);
+	const file2Rows =  useRawData(selectedFilesToCompare[1]?.directions || null, '', {}, 'asc');
+	console.log(file2Rows);
+  const handleClose = async() => {
     toggleComparisonBox(dispatch, false);
+	const comparisonData = {
+		filePath1: selectedFilesToCompare[0]?.path,
+		filePath2: selectedFilesToCompare[1]?.path,
+	  };
+	 const { data } = await analysisEndpoints.compareFiles(comparisonData);
+	 console.log(data);
+
   };
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -59,6 +73,7 @@ const ComparisonDialog = () => {
     background: 'linear-gradient(to right, #0b8793, #360033)',
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   };
+
 
   return (
     <Dialog
@@ -155,7 +170,7 @@ const ComparisonDialog = () => {
       </DialogContent>
       <DialogActions sx={bgStyles}>
         <MDButton onClick={handleClose} autoFocus>
-          Ok
+          Compare
         </MDButton>
       </DialogActions>
     </Dialog>

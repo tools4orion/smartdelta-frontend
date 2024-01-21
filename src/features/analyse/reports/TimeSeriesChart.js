@@ -23,7 +23,7 @@ const MessagingTimeSeriesChart = ({ tableData }) => {
 	const status400 = tableData.filter((item) => item.statusCode ==='400');
 	const status404 = tableData.filter((item) => item.statusCode === '404');
 
-	 // Creating an array of data points for the chart
+	// Creating an array of data points for the chart
 	 const chartData = {
 		labels: timestamps,
 		datasets: [

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from "react-router-dom";
 
+
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -21,6 +22,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { useVisualizerController } from 'contexts/VisualizerContext';
 import { useNavigate } from 'react-router-dom';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -103,13 +105,18 @@ background: 'linear-gradient(to right, #0b8793, #360033)' /* W3C, IE 10+/ Edge, 
 				>
                   {breadcrumbs}
 				</Breadcrumbs>
+				<Tooltip title='Services Summary'>
+		<IconButton onClick={ clickResourcePrediction } sx={{position:'absolute', left:2, bottom:5 }}>
+			<SummarizeIcon color='white'/>
+		</IconButton>
+		</Tooltip>
 				<Tooltip title='Help'>
-					<IconButton onClick={ handleClickOpen } sx={{position:'absolute', left:2, bottom:5 }}>
+					<IconButton onClick={ handleClickOpen } sx={{position:'absolute', left:32, bottom:5 }}>
 					<HelpOutlineIcon color='white'/>
 					</IconButton>
 				</Tooltip>
 		<Tooltip title='Resource Usage'>
-		<IconButton onClick={ clickResourcePrediction } sx={{position:'absolute', left:32, bottom:5 }}>
+		<IconButton onClick={ clickResourcePrediction } sx={{position:'absolute', left:62, bottom:5 }}>
 			<InsightsIcon color='white'/>
 		</IconButton>
 		</Tooltip>

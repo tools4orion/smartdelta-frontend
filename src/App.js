@@ -47,6 +47,7 @@ import {  setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActio
 import brandWhite from "assets/images/sd-white-logo.png"; // brand logo
 import brandDark from "assets/images/sd-black-logo.png";
 import { useFileController } from "contexts/FileContext";
+import elasticApmEndpoints from "network/endpoints/elasticApm";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -122,6 +123,8 @@ export default function App() {
       </Icon>
     </MDBox>
   );
+
+ 
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>

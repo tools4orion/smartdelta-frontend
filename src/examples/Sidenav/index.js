@@ -37,8 +37,7 @@ import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
-import dıa4m from "assets/svgs/dıa4m.svg";
-import dıa4m2 from "assets/svgs/dıa4m2.svg";
+
 import dıa4m3 from "assets/svgs/dıa4m_last.svg";
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "contexts/UIContext";

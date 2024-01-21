@@ -8,7 +8,20 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useVisualizerController } from 'contexts/VisualizerContext';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Popover from '@mui/material/Popover';
+import MDTypography from 'components/MDTypography';
+import MDBox from 'components/MDBox';
+import InfoIcon from '@mui/icons-material/Info';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import CircleIcon from '@mui/icons-material/Circle';
+import { getServiceData } from 'features/analyse/reports/DistributionErrorRate';
+import { calculateMicroserviceMetrics } from 'features/analyse/reports/DistributionErrorRate';
+const bgStyles ={
+		background: '#360033',  /* fallback for old browsers */
+background: '-webkit-linear-gradient(to right, #0b8793, #360033)', /* Chrome 10-25, Safari 5.1-6 */
+background: 'linear-gradient(to right, #0b8793, #360033)' /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+	  }
 const LightTooltip = styled(({ className, ...props }) => (
 	<Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -22,13 +35,25 @@ const LightTooltip = styled(({ className, ...props }) => (
 	},
   }));
 
-export default memo(({ data }) => {
+export default memo(({ data, tableData }) => {
 	const { getEdges } = useReactFlow();
  const { state,dispatch,toggleSidePanel,  toggleLatencySidebar, selectNode} = useVisualizerController();
  const {isSidePanelOpen, isAnyNodeSelected} = state;
  console.log(isSidePanelOpen);
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  //
+ 
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  //
 
 
   const handleNodeContextMenu = (event) => {
@@ -80,9 +105,50 @@ export default memo(({ data }) => {
 
   };
 
+  console.log("DATA");
+  console.log(data);
+// call a function that gets service summary array as input and filter relevaant service summary based on the node label data so that popover display the relevant service summary
+const servicesData =calculateMicroserviceMetrics(tableData);
+const serviceData = getServiceData(servicesData, data);
+console.log("serviceData");
+console.log(serviceData);
+
   return (
     <>
-      <div onContextMenu={handleNodeContextMenu}>
+		 <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+		
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      ><MDBox p={1} mt={4} sx={bgStyles}>
+        <MDTypography variant='h6' sx={{ p: 1 }}>Anomaly Detection 	 <InfoIcon fontSize="small" /> </MDTypography>
+	
+		<MDTypography variant='body2' sx={{ p: 1 }}><CircleIcon sx={{color:'orange'}}  fontSize='small' /> Score(max): 84 </MDTypography>
+		<MDTypography variant='body2' sx={{ p: 1 }}>Trans.per minute(avg): {serviceData?.tpmAvg || null}</MDTypography>
+		<MDTypography variant='body2' sx={{ p: 1 }}>Req. per min(avg): 334 rpm</MDTypography>
+		<MDTypography variant='body2' sx={{ p: 1 }}>Trans. error rate(avg): {serviceData?.latestErrorRate || null}</MDTypography>
+		<MDTypography variant='body2' sx={{ p: 1 }}>CPU usage: 21%</MDTypography>
+		<MDTypography variant='body2' sx={{ p: 1 }}>Memory usage: 21%</MDTypography>
+		</MDBox>
+      </Popover>
+      <div   aria-owns={open ? 'mouse-over-popover' : undefined}
+        aria-haspopup="true"
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose} onContextMenu={handleNodeContextMenu}>
+
         {data}
 
         {/* Your node content goes here */}

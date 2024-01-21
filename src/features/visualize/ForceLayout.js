@@ -37,6 +37,8 @@ import LatencySidebar from './latency/LatencySidebar';
 
 import UserGuideTour from 'features/userTours/UserGuideTour';
 import ResourceSidebar from './resource/ResourceSidebar';
+import { useFileController } from 'contexts/FileContext';
+import { useRawData } from 'features/featureDiscovery/useRawData';
 
 // Define default viewport
 const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
@@ -63,7 +65,14 @@ function ForceLayoutTopology({ csvData }) {
   const [strength, setStrength] = useState(-1000);
   const [distance, setDistance] = useState(350);
   const [simulationFrozen, setSimulationFrozen] = useState(false);
- 
+ //
+ const { state:stateFile } = useFileController();
+ const { fileStateToView } = stateFile ?? {};
+ const directions = fileStateToView?.directions;
+ const { tableData } = useRawData(directions, '', '', '');
+
+
+ //
  
   const  currentZoom  = useStore((store) => store.transform[2]);
 
@@ -110,7 +119,7 @@ const handleZoomOut = () => {
         id: node.id,
         type: 'default',
         position: { x, y },
-        data: { label: <CustomNode data={node.data.label} /> }
+        data: { label: <CustomNode data={node.data.label} tableData={tableData}/> }
       };
     });
   };
