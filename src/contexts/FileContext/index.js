@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useMemo } from "react";
 import PropTypes from "prop-types";
 
-import {  fetchFiles, getCsv, removeCompareFile, selectToCompare, toggleComparisonBox, uploadFile, viewFile } from "./fileActions";
+import {  displayComparisonResult, fetchFiles, getCsv, removeCompareFile, selectToCompare, toggleComparisonBox, uploadFile, viewFile } from "./fileActions";
 import fileReducer from "./fileReducer";
 
 
@@ -18,7 +18,8 @@ function FileControllerProvider({ children }) {
 	  selectedFilesToCompare: [],
 	  isPairReady: false,
 	  lastSelectedName: null,
-	  isComparisonBoxVisible: false
+	  isComparisonBoxVisible: false,
+	  comparisonResult: null
 	};
   
 	const [controller, dispatch] = useReducer(fileReducer, initialState);
@@ -46,7 +47,8 @@ function FileControllerProvider({ children }) {
 		selectToCompare: (dispatch, filePath) => selectToCompare(dispatch, filePath),
 		getCsv: (dispatch, name) => getCsv(dispatch, name),
 		removeCompareFile: (dispatch, name) => removeCompareFile(dispatch, name),
-		toggleComparisonBox: (dispatch, value) => toggleComparisonBox(dispatch, value)
+		toggleComparisonBox: (dispatch, value) => toggleComparisonBox(dispatch, value),
+		displayComparisonResult: (dispatch, value) => displayComparisonResult(dispatch, value)
 	  };
   }
   

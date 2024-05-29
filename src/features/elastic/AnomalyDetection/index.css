@@ -1,0 +1,28 @@
+.tooltip {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	color: #333;
+	font-family: "Roboto","Helvetica","Arial",sans-serif;
+	font-size: 14px;
+	padding: 12px;
+	max-width: 200px;
+
+  }
+  
+  .tooltip li {
+	list-style: none;
+	margin-bottom: 5px;
+	padding:4px;
+  }
+  
+  .tooltip li b {
+	color: #555;
+  }
+  
+  .tooltip .bold {
+	font-weight: bold;
+  }
+  
+  

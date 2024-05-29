@@ -18,6 +18,7 @@ import PropTypes from "prop-types";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import FadeIn from "hooks/FadeIn";
 
 function DataTableBodyCell({ noBorder, align, children }) {
   return (
@@ -31,6 +32,9 @@ function DataTableBodyCell({ noBorder, align, children }) {
         borderBottom: noBorder ? "none" : `${borderWidth[1]} solid ${light.main}`,
       })}
     >
+	<FadeIn>
+	<div>
+	
       <MDBox
         display="inline-block"
         width="max-content"
@@ -39,6 +43,10 @@ function DataTableBodyCell({ noBorder, align, children }) {
       >
         {children}
       </MDBox>
+	  
+	  </div>
+	  </FadeIn>
+
     </MDBox>
   );
 }

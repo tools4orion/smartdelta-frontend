@@ -6,6 +6,7 @@ export const formatDate = (dateString) => {
 	  day: 'numeric',
 	  hour: 'numeric',
 	  minute: 'numeric',
+	  second: 'numeric',
 	  hour12: true,
 	};
 	const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);

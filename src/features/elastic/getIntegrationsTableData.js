@@ -1,4 +1,5 @@
 import MDTypography from "../../components/MDTypography";
+import IntegrationAction from "./IntegrationItem/action";
 
 export const getTableData = (integrations) => {
   const columns = [
@@ -12,9 +13,11 @@ export const getTableData = (integrations) => {
   let integrationData = [];
   integrationData = [...integrationData, integrations];
 
+
   const rows = integrationData?.map((integration) => {
-    const { cloud, version, name } = integration || {};
-    const { region, provider } = cloud || {};
+    const { version, name, region, provider  } = integration || {};
+	console.log(integration);
+
 
     return {
       deployment: (
@@ -38,9 +41,7 @@ export const getTableData = (integrations) => {
         </MDTypography>
       ),
       actions: (
-        <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-          Open
-        </MDTypography>
+		<IntegrationAction/>
       ),
     };
   }) || [];

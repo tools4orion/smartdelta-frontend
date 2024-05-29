@@ -40,7 +40,7 @@ const style = {
   bgcolor: '#f0f2f5',
 };
 
-const isKeywordValid = (keyword) => {
+export const isKeywordValid = (keyword) => {
   return keyword !== null && keyword !== '';
 };
 

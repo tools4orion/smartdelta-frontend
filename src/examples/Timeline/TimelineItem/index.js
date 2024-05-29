@@ -28,11 +28,14 @@ import { useTimeline } from "examples/Timeline/context";
 
 // Custom styles for the TimelineItem
 import timelineItem from "examples/Timeline/TimelineItem/styles";
+import FadeIn from "hooks/FadeIn";
 
 function TimelineItem({ color, icon, title, dateTime, description, lastItem }) {
   const isDark = useTimeline();
 
   return (
+	<FadeIn>
+	<div>
     <MDBox position="relative" mb={3} sx={(theme) => timelineItem(theme, { lastItem, isDark })}>
       <MDBox
         display="flex"
@@ -69,6 +72,8 @@ function TimelineItem({ color, icon, title, dateTime, description, lastItem }) {
         </MDBox>
       </MDBox>
     </MDBox>
+	</div>
+	</FadeIn>
   );
 }
 

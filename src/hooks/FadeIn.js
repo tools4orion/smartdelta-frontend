@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Fade from "@mui/material/Fade";
 
-function FadeIn({ children, delay = 100, duration = 1200 }) {
+function FadeIn({ children, delay = 100, duration = 500 }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

@@ -30,8 +30,8 @@ const useAuthentication = () => {
 
       if (isAuthenticated) {
         setTimeout(() => {
-          navigate("/elastic-dashboard");
-        }, 1000);
+          navigate("/dashboard");
+        }, 500);
       }
     } finally {
       setLoading(false);

@@ -26,6 +26,7 @@ import ComparisonCheckboxes from './ComparisonCheckboxes';
 import { useRawData } from 'features/featureDiscovery/useRawData';
 import analysisEndpoints from 'network/endpoints/analysis';
 
+
 const ComparisonDialog = () => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -34,7 +35,7 @@ const ComparisonDialog = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { dispatch, toggleComparisonBox, removeCompareFile, state } = useFileController();
+  const { dispatch, toggleComparisonBox, displayComparisonResult , removeCompareFile, state } = useFileController();
   const { selectedFilesToCompare, isComparisonBoxVisible } = state;
   const dialogText = isLoading
     ? null
@@ -54,7 +55,8 @@ const ComparisonDialog = () => {
 		filePath2: selectedFilesToCompare[1]?.path,
 	  };
 	 const { data } = await analysisEndpoints.compareFiles(comparisonData);
-	 console.log(data);
+	 displayComparisonResult(dispatch, data);
+	 
 
   };
   const handleMouseEnter = () => {

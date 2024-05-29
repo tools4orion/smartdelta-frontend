@@ -11,7 +11,7 @@ const useIntegrationCheck = () => {
     try {
       const { data } = await listIntegrations();
       console.log(data);
-      if (data.cloud.id) {
+      if (data.credentials.cloud.id) {
         setIsAnyIntegrationExist(true);
         setIntegratedData(data);
       }

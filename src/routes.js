@@ -56,7 +56,7 @@ import FileManagementLayout from "pages/FileManagementLayout";
 import { lazy, Suspense } from 'react';
 import LinearProgress from '@mui/material/LinearProgress'
 import MDTypography from "components/MDTypography";
-
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 // ...
 import MDBox from "components/MDBox";
@@ -64,6 +64,9 @@ import ClusterIntegration from "features/k8/ClusterIntegration";
 import ApexChart from "features/featureDiscovery/summarizeServices/ServicesSummary";
 import ElasticIntegration from "features/elastic/ElasticIntegration";
 import ElasticDashboard from "features/elastic/ElasticDashboard";
+import Services from "features/elastic/Services";
+import Anomalies from "features/elastic/AnomalyDetection";
+import ComparisonResult from "features/compare";
 
 const FeatureDiscovery = lazy(() => import('features/featureDiscovery'));
 
@@ -120,12 +123,21 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Comparison Result",
+    key: "comparisonRes",
+    icon: <CompareArrowsIcon/>,
+    route: "/comparison-result",
+    component: <ComparisonResult/>
+  },
+ 
+/*  {
+    type: "collapse",
     name: "Kubernetes Cluster",
     key: "k8Cluster",
     icon: <Icon fontSize="small">cloud</Icon>,
     route: "/k8Cluster",
     component: <ClusterIntegration/>,
-  },
+  },*/
   {
     type: "collapse",
     name: "Elastic Cloud",
@@ -139,9 +151,18 @@ const routes = [
     name: "Elastic Dashboard",
     key: "elasticDashboard",
     icon: <img src={elastic}  />,
-    route: "/elastic-dashboard",
+    route: "/elastic-dashboard/:serviceName",
     component: <ElasticDashboard/>,
   },
+  {
+    type: "collapse",
+    name: "Elastic Anomalies",
+    key: "elasticAnomalies",
+    icon: <img src={elastic}  />,
+    route: "/elastic-anomalies",
+    component: <Anomalies/>
+  },
+ 
   // {
   //   type: "collapse",
   //   name: "Billing",
@@ -166,14 +187,22 @@ const routes = [
   //   route: "/profile",
   //   component: <Profile />,
   // },
-  {
+/*  {
     type: "collapse",
     name: "Sign In",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
-  }
+  },*/
+  {
+    type: "subRoute",
+    name: "Elastic Services",
+    key: "elasticServices",
+    icon: <img src={elastic}  />,
+    route: "/elastic-services",
+    component: <Services/>
+  },
 ];
 
 export default routes;
