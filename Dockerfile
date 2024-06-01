@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to run the app in development
-CMD ["npm", "start"]
+CMD ["npm", "start-watch"]
