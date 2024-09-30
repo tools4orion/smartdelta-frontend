@@ -41,19 +41,30 @@ import routes from "routes";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "contexts/UIContext";
-import {  setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActions";
+import {
+  setMiniSidenav,
+  setOpenConfigurator,
+} from "contexts/UIContext/uiActions";
 
 // Images
 import brandWhite from "assets/images/sd-white-logo.png"; // brand logo
 import brandDark from "assets/images/sd-black-logo.png";
 import { useFileController } from "contexts/FileContext";
 import elasticApmEndpoints from "network/endpoints/elasticApm";
+import ElasticDashboard from "features/elastic/ElasticDashboard";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { fileStateToView } = useFileController().state;
-  const { miniSidenav, direction, layout, openConfigurator, sidenavColor, whiteSidenav, darkMode } =
-    controller;
+  const {
+    miniSidenav,
+    direction,
+    layout,
+    openConfigurator,
+    sidenavColor,
+    whiteSidenav,
+    darkMode,
+  } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
 
@@ -74,7 +85,8 @@ export default function App() {
   };
 
   // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () =>
+    setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -94,7 +106,14 @@ export default function App() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
       }
 
       return null;
@@ -124,8 +143,6 @@ export default function App() {
     </MDBox>
   );
 
- 
-
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
@@ -145,6 +162,10 @@ export default function App() {
       )}
       <Routes>
         {getRoutes(routes)}
+        <Route
+          path="/elastic-dashboard/:serviceName"
+          element={<ElasticDashboard />}
+        />
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </ThemeProvider>

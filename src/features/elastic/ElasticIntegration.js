@@ -12,7 +12,8 @@ import useAuthentication from "./useAuthentication";
 import ElasticAuthUI from "./AuthUI";
 
 const ElasticIntegration = () => {
-  const { isAnyIntegrationExist, integratedData, loading } = useIntegrationCheck();
+  const { isAnyIntegrationExist, integratedData, loading } =
+    useIntegrationCheck();
 
   const {
     inputRefUsername,

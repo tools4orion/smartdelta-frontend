@@ -40,8 +40,7 @@ import React from "react";
 import Dashboard from "layouts/dashboard";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import elastic from './assets/svgs/elastic.svg';
-
+import elastic from "./assets/svgs/elastic.svg";
 
 // import Billing from "layouts/billing";
 // import Notifications from "layouts/notifications";
@@ -50,13 +49,13 @@ import Visualizer from "features/visualize";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
-import SchemaIcon from '@mui/icons-material/Schema';
+import SchemaIcon from "@mui/icons-material/Schema";
 
 import FileManagementLayout from "pages/FileManagementLayout";
-import { lazy, Suspense } from 'react';
-import LinearProgress from '@mui/material/LinearProgress'
+import { lazy, Suspense } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
 import MDTypography from "components/MDTypography";
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
 // ...
 import MDBox from "components/MDBox";
@@ -68,7 +67,7 @@ import Services from "features/elastic/Services";
 import Anomalies from "features/elastic/AnomalyDetection";
 import ComparisonResult from "features/compare";
 
-const FeatureDiscovery = lazy(() => import('features/featureDiscovery'));
+const FeatureDiscovery = lazy(() => import("features/featureDiscovery"));
 
 const routes = [
   {
@@ -93,44 +92,49 @@ const routes = [
     key: "feature-discovery",
     icon: <Icon fontSize="small">science</Icon>,
     route: "/feature-discovery",
-    component: 
-	<Suspense fallback={<>
-		<LinearProgress/>
-		<MDBox sx={{mx:'auto'}}>
-		<MDTypography  style={{textAlign:'center' }} variant="h4">
-			Loading, please wait ...
-		</MDTypography>
-		</MDBox>
-	</>}>
-		<FeatureDiscovery />
-	</Suspense> ,
+    component: (
+      <Suspense
+        fallback={
+          <>
+            <LinearProgress />
+            <MDBox sx={{ mx: "auto" }}>
+              <MDTypography style={{ textAlign: "center" }} variant="h4">
+                Loading, please wait ...
+              </MDTypography>
+            </MDBox>
+          </>
+        }
+      >
+        <FeatureDiscovery />
+      </Suspense>
+    ),
   },
   {
     type: "collapse",
     name: "Mapping Visualizer",
     key: "visualizer",
     icon: <Icon fontSize="small">schema</Icon>,
-	route: "/visualizer",
-    component: <Visualizer/>,
+    route: "/visualizer",
+    component: <Visualizer />,
   },
   {
     type: "collapse",
     name: "Services Summary",
     key: "servicesSummary",
     icon: <Icon fontSize="small">bar_chart</Icon>,
-	route: "/services-summary",
-    component: <ApexChart/>,
+    route: "/services-summary",
+    component: <ApexChart />,
   },
   {
     type: "collapse",
     name: "Comparison Result",
     key: "comparisonRes",
-    icon: <CompareArrowsIcon/>,
+    icon: <CompareArrowsIcon />,
     route: "/comparison-result",
-    component: <ComparisonResult/>
+    component: <ComparisonResult />,
   },
- 
-/*  {
+
+  /*  {
     type: "collapse",
     name: "Kubernetes Cluster",
     key: "k8Cluster",
@@ -142,27 +146,27 @@ const routes = [
     type: "collapse",
     name: "Elastic Cloud",
     key: "elasticCloud",
-    icon: <img src={elastic}  />,
+    icon: <img src={elastic} />,
     route: "/elastic",
-    component: <ElasticIntegration/>,
+    component: <ElasticIntegration />,
   },
-  {
-    type: "collapse",
-    name: "Elastic Dashboard",
-    key: "elasticDashboard",
-    icon: <img src={elastic}  />,
-    route: "/elastic-dashboard/:serviceName",
-    component: <ElasticDashboard/>,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Elastic Dashboard",
+  //   key: "elasticDashboard",
+  //   icon: <img src={elastic} />,
+  //   route: "/elastic-dashboard/:serviceName",
+  //   component: <ElasticDashboard />,
+  // },
   {
     type: "collapse",
     name: "Elastic Anomalies",
     key: "elasticAnomalies",
-    icon: <img src={elastic}  />,
+    icon: <img src={elastic} />,
     route: "/elastic-anomalies",
-    component: <Anomalies/>
+    component: <Anomalies />,
   },
- 
+
   // {
   //   type: "collapse",
   //   name: "Billing",
@@ -187,7 +191,7 @@ const routes = [
   //   route: "/profile",
   //   component: <Profile />,
   // },
-/*  {
+  /*  {
     type: "collapse",
     name: "Sign In",
     key: "sign-in",
@@ -199,9 +203,9 @@ const routes = [
     type: "subRoute",
     name: "Elastic Services",
     key: "elasticServices",
-    icon: <img src={elastic}  />,
+    icon: <img src={elastic} />,
     route: "/elastic-services",
-    component: <Services/>
+    component: <Services />,
   },
 ];
 
