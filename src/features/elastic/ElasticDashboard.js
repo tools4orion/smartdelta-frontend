@@ -68,7 +68,7 @@ function a11yProps(index) {
 }
 
 const ElasticDashboard = () => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const lastPartOfUrl = useLastPartOfUrl();
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const handleChange = (event, newValue) => {
@@ -205,7 +205,7 @@ const ElasticDashboard = () => {
               <Grid item>
                 <MDBox height="100%" mt={0.5} lineHeight={1}>
                   <MDTypography variant="h5" fontWeight="medium">
-                    FloraVisionCloudStack-SensorDataProcessor2B2527C2-J9n7oWuGMSNJ
+                    {lastPartOfUrl}
                   </MDTypography>
                   <MDButton onClick={handleMlSetup} variant="text" color="info">
                     SETUP ML
