@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import PropTypes from "prop-types";
+import { useMaterialUIController } from "contexts/UIContext";
 
 import Box from "@mui/material/Box";
 import {
@@ -117,6 +118,10 @@ export default function TextMobileStepper({ steps }) {
   const maxSteps = steps?.length ?? null;
 
   const [value, setValue] = React.useState(0);
+
+  const [controller, dispatch] = useMaterialUIController();
+  const { darkMode } = controller;
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -204,59 +209,98 @@ export default function TextMobileStepper({ steps }) {
                 <ListItem>
                   <ListItemText
                     primary="Agent ID Status"
+                    primaryTypographyProps={{
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     secondary={
                       steps[activeStep]?.metadata?.event?.agent_id_status ??
                       "unknown"
                     }
+                    secondaryTypographyProps={{
+                      style: darkMode ? { color: "#344767" } : {},
+                    }}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Ingested"
+                    primaryTypographyProps={{
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     secondary={
                       steps[activeStep]?.metadata?.event?.ingested ?? "unknown"
                     }
+                    secondaryTypographyProps={{
+                      style: darkMode ? { color: "#344767" } : {},
+                    }}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Outcome"
+                    primaryTypographyProps={{
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     secondary={
                       steps[activeStep]?.metadata?.event?.outcome ?? "unknown"
                     }
+                    secondaryTypographyProps={{
+                      style: darkMode ? { color: "#344767" } : {},
+                    }}
                   />
                 </ListItem>
                 <Divider />
                 <ListItem>
                   <ListItemText
-                    primaryTypographyProps={{ variant: "h6" }}
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     primary="Host"
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Hostname"
+                    primaryTypographyProps={{
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     secondary={
                       steps[activeStep]?.metadata?.host?.hostname ?? "unknown"
                     }
+                    secondaryTypographyProps={{
+                      style: darkMode ? { color: "#344767" } : {},
+                    }}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Architecture"
+                    primaryTypographyProps={{
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     secondary={
                       steps[activeStep]?.metadata?.host?.architecture ??
                       "unknown"
                     }
+                    secondaryTypographyProps={{
+                      style: darkMode ? { color: "#344767" } : {},
+                    }}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="IP"
+                    primaryTypographyProps={{
+                      style: darkMode ? { color: "#FFFFFF" } : {},
+                    }}
                     secondary={
                       steps[activeStep]?.metadata?.host?.ip?.join(", ") ??
                       "unknown"
                     }
+                    secondaryTypographyProps={{
+                      style: darkMode ? { color: "#344767" } : {},
+                    }}
                   />
                 </ListItem>
               </List>
