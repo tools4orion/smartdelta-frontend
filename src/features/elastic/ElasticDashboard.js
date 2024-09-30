@@ -4,6 +4,7 @@ import WaterfallChartIcon from "@mui/icons-material/WaterfallChart";
 import StackedLineChart from "@mui/icons-material/StackedLineChart";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import { useMaterialUIController } from "contexts/UIContext";
 
 import Box from "@mui/material/Box";
 import {
@@ -96,6 +97,8 @@ const ElasticDashboard = () => {
 
   const open = Boolean(anchorEl);
 
+  const [controller, dispatch] = useMaterialUIController();
+
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
     function handleTabsOrientation() {
@@ -130,6 +133,8 @@ const ElasticDashboard = () => {
     fetchMetrics();
   }, []);
 
+  const { darkMode } = controller;
+
   const renderSparklineChart = (data, title, yaxisLabel) => {
     const seriesData = data.map((entry) => ({
       x: new Date(entry.timestamp).getTime(),
@@ -157,6 +162,16 @@ const ElasticDashboard = () => {
       yaxis: {
         title: {
           text: yaxisLabel,
+          style: {
+            color: darkMode ? "#FFFFFF" : "#000000",
+          },
+        },
+        labels: {
+          style: {
+            colors: darkMode ? "#FFFFFF" : "#000000",
+            fontSize: "12px",
+            fontWeight: "normal",
+          },
         },
       },
       tooltip: {
@@ -174,7 +189,11 @@ const ElasticDashboard = () => {
 
     return (
       <Card>
-        <Typography variant="h6" gutterBottom>
+        <Typography
+          variant="h6"
+          gutterBottom
+          style={{ color: darkMode ? "#FFFFFF" : "#000000" }}
+        >
           {title}
         </Typography>
         <ReactApexChart
