@@ -13,48 +13,66 @@ const TransactionsChart = () => {
   const [controller, dispatch] = useMaterialUIController();
   const lastPartOfUrl = useLastPartOfUrl();
 
-  useEffect(async () => {
-    const transactions = await getServiceTransactions(lastPartOfUrl);
+  useEffect(() => {
+    const fetchData = async () => {
+      const transactions = await getServiceTransactions(lastPartOfUrl);
 
-    const durs = transactions
-      .map((item) => item.span?.duration?.us ?? item.transaction?.duration?.us)
-      .filter((duration) => duration !== undefined);
+      const durs = transactions
+        .map(
+          (item) => item.span?.duration?.us ?? item.transaction?.duration?.us
+        )
+        .filter((duration) => duration !== undefined);
 
-    setDurations(durs);
-    const tims = transactions.map((item) =>
-      new Date(item["@timestamp"]).getTime()
-    );
-    setTimestamps(tims);
+      setDurations(durs);
+      const tims = transactions.map((item) =>
+        new Date(item["@timestamp"]).getTime()
+      );
+      setTimestamps(tims);
 
-    console.log("Index DURATIONS:");
-    console.log(durs);
-    console.log("ındec TIMESTAMPS:");
-    console.log(tims);
-    const steps = transactions.map(
-      (
-        { destination, span, http, agent, data_stream, event, host, timestamp },
-        index
-      ) => ({
-        label: `Transaction ${index + 1}`,
-        transactionInfo: {
-          destination,
-          span,
-          http,
-        },
-        metadata: {
-          agent,
-          data_stream,
-          event,
-          host,
-          timestamp,
-        },
-      })
-    );
+      console.log("Index DURATIONS:");
+      console.log(durs);
+      console.log("Index TIMESTAMPS:");
+      console.log(tims);
+      const steps = transactions.map(
+        (
+          {
+            destination,
+            span,
+            http,
+            agent,
+            data_stream,
+            event,
+            host,
+            timestamp,
+          },
+          index
+        ) => ({
+          label: `Transaction ${index + 1}`,
+          transactionInfo: {
+            destination,
+            span,
+            http,
+          },
+          metadata: {
+            agent,
+            data_stream,
+            event,
+            host,
+            timestamp,
+          },
+        })
+      );
 
-    console.log(" STEPS:");
+      console.log("STEPS:");
+      console.log(steps);
 
-    setStepperData(steps);
-  }, [stepperData]);
+      setStepperData(steps);
+    };
+
+    if (!stepperData) {
+      fetchData();
+    }
+  }, [stepperData, lastPartOfUrl]);
 
   const { darkMode } = controller;
 
