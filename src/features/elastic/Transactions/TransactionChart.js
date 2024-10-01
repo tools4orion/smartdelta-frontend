@@ -7,66 +7,66 @@ import useLastPartOfUrl from "hooks/useLastPartOfUrl";
 import { useMaterialUIController } from "contexts/UIContext";
 
 const TransactionsChart = () => {
-  const [durations, setDurations] = useState(null);
-  const [timestamps, setTimestamps] = useState(null);
+  const [durations, setDurations] = useState([]);
+  const [timestamps, setTimestamps] = useState([]);
   const [stepperData, setStepperData] = useState(null);
-  const [controller, dispatch] = useMaterialUIController();
+  const [controller] = useMaterialUIController();
   const lastPartOfUrl = useLastPartOfUrl();
 
   useEffect(() => {
     const fetchData = async () => {
-      const transactions = await getServiceTransactions(lastPartOfUrl);
+      try {
+        const transactions = await getServiceTransactions(lastPartOfUrl);
 
-      const durs = transactions
-        .map(
-          (item) => item.span?.duration?.us ?? item.transaction?.duration?.us
-        )
-        .filter((duration) => duration !== undefined);
+        const durs = transactions
+          .map(
+            (item) => item.span?.duration?.us ?? item.transaction?.duration?.us
+          )
+          .filter((duration) => duration !== undefined);
 
-      setDurations(durs);
-      const tims = transactions.map((item) =>
-        new Date(item["@timestamp"]).getTime()
-      );
-      setTimestamps(tims);
+        const tims = transactions
+          .map((item) => new Date(item["@timestamp"]).getTime())
+          .filter((timestamp) => !isNaN(timestamp));
 
-      console.log("Index DURATIONS:");
-      console.log(durs);
-      console.log("Index TIMESTAMPS:");
-      console.log(tims);
-      const steps = transactions.map(
-        (
-          {
-            destination,
-            span,
-            http,
-            agent,
-            data_stream,
-            event,
-            host,
-            timestamp,
-          },
-          index
-        ) => ({
-          label: `Transaction ${index + 1}`,
-          transactionInfo: {
-            destination,
-            span,
-            http,
-          },
-          metadata: {
-            agent,
-            data_stream,
-            event,
-            host,
-            timestamp,
-          },
-        })
-      );
+        if (durs.length > 0 && tims.length > 0) {
+          setDurations(durs);
+          setTimestamps(tims);
+        }
 
-      console.log("STEPS:");
-      console.log(steps);
+        const steps = transactions.map(
+          (
+            {
+              destination,
+              span,
+              http,
+              agent,
+              data_stream,
+              event,
+              host,
+              timestamp,
+            },
+            index
+          ) => ({
+            label: `Transaction ${index + 1}`,
+            transactionInfo: {
+              destination,
+              span,
+              http,
+            },
+            metadata: {
+              agent,
+              data_stream,
+              event,
+              host,
+              timestamp,
+            },
+          })
+        );
 
-      setStepperData(steps);
+        setStepperData(steps);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
     };
 
     if (!stepperData) {
@@ -88,7 +88,6 @@ const TransactionsChart = () => {
     stroke: {
       curve: "straight",
     },
-
     title: {
       text: "Transaction Analysis",
       align: "left",
@@ -105,6 +104,7 @@ const TransactionsChart = () => {
     },
     xaxis: {
       type: "datetime",
+      categories: timestamps,
     },
     yaxis: {
       opposite: true,
@@ -116,6 +116,19 @@ const TransactionsChart = () => {
         },
       },
     },
+    tooltip: {
+      enabled: true,
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        if (
+          series &&
+          series[seriesIndex] &&
+          series[seriesIndex][dataPointIndex] !== undefined
+        ) {
+          return `<div class="tooltip">${series[seriesIndex][dataPointIndex]}</div>`;
+        }
+        return `<div class="tooltip">No Data</div>`;
+      },
+    },
     legend: {
       horizontalAlign: "left",
     },
@@ -124,15 +137,12 @@ const TransactionsChart = () => {
   return (
     <div id="chart-span">
       <ReactApexChart
-        options={{
-          ...options,
-          xaxis: { ...options.xaxis, categories: timestamps },
-        }}
+        options={options}
         series={[{ name: "span duration", data: durations }]}
         type="area"
         height={180}
       />
-      <TextMobileStepper steps={stepperData} />
+      {stepperData && <TextMobileStepper steps={stepperData} />}
     </div>
   );
 };

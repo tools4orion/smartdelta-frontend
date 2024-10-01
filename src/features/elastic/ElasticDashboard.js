@@ -336,7 +336,7 @@ const ElasticDashboard = () => {
           <Grid item xs={12} md={4}>
             {dataState &&
               renderSparklineChart(
-                dataState.sparklineData.functionDuration,
+                dataState?.sparklineData?.functionDuration,
                 "Function Duration",
                 "Duration"
               )}
@@ -344,7 +344,7 @@ const ElasticDashboard = () => {
           <Grid item xs={12} md={4}>
             {dataState &&
               renderSparklineChart(
-                dataState.sparklineData.billedDuration,
+                dataState?.sparklineData?.billedDuration,
                 "Billed Duration",
                 "Billed Duration"
               )}
@@ -352,7 +352,7 @@ const ElasticDashboard = () => {
           <Grid item xs={12} md={4}>
             {dataState &&
               renderSparklineChart(
-                dataState.sparklineData.memoryUsage,
+                dataState?.sparklineData?.memoryUsage,
                 "Memory Usage",
                 "Free Memory"
               )}
