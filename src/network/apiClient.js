@@ -1,8 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 const axiosClient = axios.create({
-	baseURL: `http://localhost:5001`,
-  });
+  baseURL: process.env.NODEJS_API_URL || "http://localhost:5001",
+});
 
-  export {
-	axiosClient
-  };
+export { axiosClient };
