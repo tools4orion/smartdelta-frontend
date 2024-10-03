@@ -158,6 +158,11 @@ const ElasticDashboard = () => {
       },
       xaxis: {
         type: "datetime",
+        labels: {
+          style: {
+            colors: darkMode ? "#FFFFFF" : "#000000",
+          },
+        },
       },
       yaxis: {
         title: {
