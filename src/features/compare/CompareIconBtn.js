@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { IconButton } from "@mui/material";
 import { navbarIconButton } from "examples/Navbars/DashboardNavbar/styles";
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { useFileController } from 'contexts/FileContext';
-import useSnackbar from 'hooks/useSnackbar';
-import MDSnackbar from 'components/MDSnackbar';
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import { useFileController } from "contexts/FileContext";
+import useSnackbar from "hooks/useSnackbar";
+import MDSnackbar from "components/MDSnackbar";
 
-const CompareIconBtn = ({ pathName }) => {
+const CompareIconBtn = ({ pathName, darkMode = false }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { dispatch, selectToCompare, toggleComparisonBox, state } = useFileController();
+  const { dispatch, selectToCompare, toggleComparisonBox, state } =
+    useFileController();
   const { selectedFilesToCompare } = state;
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
@@ -22,7 +23,11 @@ const CompareIconBtn = ({ pathName }) => {
       setIsLoading(false);
     } else {
       setIsLoading(false);
-      snackbar.openSnackbar('Hover on a file icon to delete. Click on trash icon', 'error', 'Please remove one of the files to add this!');
+      snackbar.openSnackbar(
+        "Hover on a file icon to delete. Click on trash icon",
+        "error",
+        "Please remove one of the files to add this!"
+      );
     }
 
     toggleComparisonBox(dispatch, true);
@@ -30,8 +35,12 @@ const CompareIconBtn = ({ pathName }) => {
 
   return (
     <>
-      <IconButton className='compare' sx={navbarIconButton} onClick={handleClickOpen}>
-        <CompareArrowsIcon color='white' />
+      <IconButton
+        className="compare"
+        sx={navbarIconButton}
+        onClick={handleClickOpen}
+      >
+        <CompareArrowsIcon color={darkMode ? "white" : "#344767"} />
       </IconButton>
       <MDSnackbar
         open={isOpen}
@@ -47,6 +56,6 @@ const CompareIconBtn = ({ pathName }) => {
       </MDSnackbar>
     </>
   );
-}
+};
 
 export default CompareIconBtn;
