@@ -22,12 +22,14 @@ import Slide from "@mui/material/Slide";
 import { useVisualizerController } from "contexts/VisualizerContext";
 import { useNavigate } from "react-router-dom";
 import SummarizeIcon from "@mui/icons-material/Summarize";
+import { useMaterialUIController } from "contexts/UIContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function Visualizer() {
+  const [controller, _] = useMaterialUIController();
   const location = useLocation();
 
   const { state } = useFileController();
@@ -38,6 +40,8 @@ function Visualizer() {
   const [open, setOpen] = React.useState(false);
   const { dispatch, showUserGuide, toggleResourceSidebar } =
     useVisualizerController();
+  const { darkMode } = controller;
+
   const clickResourcePrediction = async () => {
     toggleResourceSidebar(dispatch, true);
   };
@@ -113,7 +117,12 @@ function Visualizer() {
                 <Tooltip title="Services Summary">
                   <IconButton
                     onClick={clickResourcePrediction}
-                    sx={{ position: "absolute", left: 2, bottom: 5 }}
+                    sx={{
+                      position: "absolute",
+                      left: 2,
+                      bottom: 5,
+                      color: darkMode ? "#FFFFFF" : "#000000",
+                    }}
                   >
                     <SummarizeIcon />
                   </IconButton>
@@ -121,7 +130,12 @@ function Visualizer() {
                 <Tooltip title="Help">
                   <IconButton
                     onClick={handleClickOpen}
-                    sx={{ position: "absolute", left: 32, bottom: 5 }}
+                    sx={{
+                      position: "absolute",
+                      left: 32,
+                      bottom: 5,
+                      color: darkMode ? "#FFFFFF" : "#000000",
+                    }}
                   >
                     <HelpOutlineIcon />
                   </IconButton>
@@ -129,7 +143,12 @@ function Visualizer() {
                 <Tooltip title="Resource Usage">
                   <IconButton
                     onClick={clickResourcePrediction}
-                    sx={{ position: "absolute", left: 62, bottom: 5 }}
+                    sx={{
+                      position: "absolute",
+                      left: 62,
+                      bottom: 5,
+                      color: darkMode ? "#FFFFFF" : "#000000",
+                    }}
                   >
                     <InsightsIcon />
                   </IconButton>

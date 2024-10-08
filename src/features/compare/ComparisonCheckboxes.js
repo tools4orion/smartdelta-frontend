@@ -41,7 +41,7 @@ const ComparisonCheckboxes = () => {
   const intersection = file1Cols.filter((value) => file2Cols.includes(value));
   const [hoveredCheckbox, setHoveredCheckbox] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [age, setAge] = React.useState("None");
+  const [age, setAge] = useState("None");
   const [selectedTypes, setSelectedTypes] = useState({});
   const [selectedFieldName, setSelectedFieldName] = useState("");
 

@@ -27,7 +27,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -47,17 +47,31 @@ import {
 } from "examples/Navbars/DashboardNavbar/styles";
 
 // Material Dashboard 2 React context
-import { useMaterialUIController} from "contexts/UIContext";
-import {setMiniSidenav, setOpenConfigurator } from "contexts/UIContext/uiActions";
+import { useMaterialUIController } from "contexts/UIContext";
+import {
+  setMiniSidenav,
+  setOpenConfigurator,
+} from "contexts/UIContext/uiActions";
 import { Badge, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useFileController } from "contexts/FileContext";
+
 function DashboardNavbar({ absolute, light, isMini, searchAction }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
-  const { state, toggleComparisonBox, dispatch:fileControllerDispatch } = useFileController();
-  const {selectedFilesToCompare} = state;
+  const {
+    miniSidenav,
+    transparentNavbar,
+    fixedNavbar,
+    openConfigurator,
+    darkMode,
+  } = controller;
+  const {
+    state,
+    toggleComparisonBox,
+    dispatch: fileControllerDispatch,
+  } = useFileController();
+  const { selectedFilesToCompare } = state;
   const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
   const route = useLocation().pathname.split("/").slice(1);
@@ -69,19 +83,23 @@ function DashboardNavbar({ absolute, light, isMini, searchAction }) {
     } else {
       setNavbarType("static");
     }
-  }, [dispatch, fixedNavbar ]);
+  }, [dispatch, fixedNavbar]);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () =>
+    setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-  const handleCompareIconClick = ()=>{
-	if(route.pathname === '/file-upload') return;
-	navigate('/file-upload');
-	toggleComparisonBox(fileControllerDispatch, true);
-  }
-   
-const tooltipTextComparison =  selectedFilesToCompare.length === 1 ? `${selectedFilesToCompare[0]?.fileName} Selected  Pair Up for Comparison!` : 'Compare Now';
+  const handleCompareIconClick = () => {
+    if (route.pathname === "/file-upload") return;
+    navigate("/file-upload");
+    toggleComparisonBox(fileControllerDispatch, true);
+  };
+
+  const tooltipTextComparison =
+    selectedFilesToCompare.length === 1
+      ? `${selectedFilesToCompare[0]?.fileName} Selected  Pair Up for Comparison!`
+      : "Compare Now";
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -96,13 +114,22 @@ const tooltipTextComparison =  selectedFilesToCompare.length === 1 ? `${selected
       sx={{ mt: 2 }}
     >
       <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      <NotificationItem
+        icon={<Icon>podcasts</Icon>}
+        title="Manage Podcast sessions"
+      />
+      <NotificationItem
+        icon={<Icon>shopping_cart</Icon>}
+        title="Payment successfully completed"
+      />
     </Menu>
   );
 
   // Styles for the navbar icons
-  const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
+  const iconsStyle = ({
+    palette: { dark, white, text },
+    functions: { rgba },
+  }) => ({
     color: () => {
       let colorValue = light || darkMode ? white.main : dark.main;
 
@@ -118,11 +145,22 @@ const tooltipTextComparison =  selectedFilesToCompare.length === 1 ? `${selected
     <AppBar
       position={absolute ? "absolute" : navbarType}
       color="inherit"
-      sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
+      sx={(theme) =>
+        navbar(theme, { transparentNavbar, absolute, light, darkMode })
+      }
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
-        <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+        <MDBox
+          color="inherit"
+          mb={{ xs: 1, md: 0 }}
+          sx={(theme) => navbarRow(theme, { isMini })}
+        >
+          <Breadcrumbs
+            icon="home"
+            title={route[route.length - 1]}
+            route={route}
+            light={light}
+          />
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
@@ -146,13 +184,19 @@ const tooltipTextComparison =  selectedFilesToCompare.length === 1 ? `${selected
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
-			  <Tooltip title={tooltipTextComparison} >
-				  <Badge badgeContent={selectedFilesToCompare.length} color="primary">
-		       <IconButton onClick={handleCompareIconClick} >
-                 <CompareArrowsIcon fontSize='medium' color="white" />
-	           </IconButton>
-    </Badge>
-		  </Tooltip>
+              <Tooltip title={tooltipTextComparison}>
+                <Badge
+                  badgeContent={selectedFilesToCompare.length}
+                  color="primary"
+                >
+                  <IconButton onClick={handleCompareIconClick}>
+                    <CompareArrowsIcon
+                      fontSize="medium"
+                      sx={{ color: darkMode ? "#FFFFFF" : "#344767" }}
+                    />
+                  </IconButton>
+                </Badge>
+              </Tooltip>
               <IconButton
                 size="small"
                 disableRipple
