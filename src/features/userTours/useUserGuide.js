@@ -1,42 +1,39 @@
-import { useVisualizerController } from 'contexts/VisualizerContext';
-
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect } from "react";
+import { useVisualizerController } from "contexts/VisualizerContext";
 
 // Custom hook to manage user guides
 const useUserGuide = (guideKey) => {
   const [runGuide, setRunGuide] = useState(false);
-  const {  dispatch, isUserGuideOpen, showUserGuide } = useVisualizerController();
+  const { isUserGuideOpen } = useVisualizerController();
 
   useEffect(() => {
     // Check if the guideKey exists in local storage
-    const guideState = JSON.parse( localStorage.getItem(guideKey));
-	console.log("guideState: ", typeof guideState);
-	
-    if (guideState ) {
-		console.log("Enter IN IF INSIDE ",guideState);
-      setRunGuide(true);
-
+    const guideState = localStorage.getItem(guideKey);
+    if (!guideState) {
+      // If guideState is not set in localStorage, run the guide
+      setRunGuide(isUserGuideOpen);
     }
-
-  }, [guideKey,isUserGuideOpen, showUserGuide] );
+  }, [guideKey, isUserGuideOpen]);
 
   const handleJoyrideCallback = (data) => {
-    // Check if the user completed the tour
-	console.log("handleJoyrideCallback DATA STATUS: ",data.status)
-    if (data.status === 'finished') {
-      // Set the corresponding guideKey in local storage to mark it as seen
-	  console.log('CONSOLE FINISHED IF INSIDE')
-	  console.log('GUIDE KEY: ' + guideKey);
-      localStorage.removeItem(guideKey, false);
-	  
-    }
+    const { status } = data;
 
+    if (status === "finished" || status === "skipped") {
+      // Mark the tour as completed in localStorage
+      localStorage.setItem(guideKey, "true");
+      setRunGuide(false);
+    }
+  };
+
+  const resetUserGuide = () => {
+    localStorage.removeItem(guideKey);
+    setRunGuide(true);
   };
 
   return {
     runGuide,
     handleJoyrideCallback,
+    resetUserGuide,
   };
 };
 

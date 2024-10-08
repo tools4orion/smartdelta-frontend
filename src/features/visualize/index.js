@@ -1,28 +1,33 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { Card, Grid, IconButton, Tooltip } from "@mui/material";
+import {
+  Card,
+  Grid,
+  IconButton,
+  Tooltip,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+} from "@mui/material";
 import MDTypography from "components/MDTypography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InsightsIcon from "@mui/icons-material/Insights";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 import { useFileController } from "contexts/FileContext";
 import ReactFlowWrapper from "./ForceLayout";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
 import { useVisualizerController } from "contexts/VisualizerContext";
 import { useNavigate } from "react-router-dom";
-import SummarizeIcon from "@mui/icons-material/Summarize";
 import { useMaterialUIController } from "contexts/UIContext";
+import useUserGuide from "features/userTours/useUserGuide";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -38,9 +43,15 @@ function Visualizer() {
   const data = location.state?.result || fileStateToView;
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const { dispatch, showUserGuide, toggleResourceSidebar } =
-    useVisualizerController();
+  const { dispatch, toggleResourceSidebar } = useVisualizerController();
   const { darkMode } = controller;
+
+  // Use the resetUserGuide function from the custom hook for each guide key
+  const { resetUserGuide: resetVisualizerTools } =
+    useUserGuide("visualizer-tools");
+  const { resetUserGuide: resetDetailPanel } =
+    useUserGuide("interaction-panel");
+  const { resetUserGuide: resetSidebarOptions } = useUserGuide("latency-menu");
 
   const clickResourcePrediction = async () => {
     toggleResourceSidebar(dispatch, true);
@@ -53,16 +64,14 @@ function Visualizer() {
   const handleClose = () => {
     setOpen(false);
   };
-  localStorage.setItem("interaction-panel", "true");
-  localStorage.setItem("latency-menu", "true");
-  localStorage.setItem("visualizer-tools", "true");
-  const handleYesClose = () => {
-    showUserGuide(dispatch, true);
-    localStorage.setItem("interaction-panel", "true");
-    localStorage.setItem("latency-menu", "true");
-    localStorage.setItem("visualizer-tools", "true");
 
-    navigate("/visualizer");
+  const handleYesClose = () => {
+    // Reset all guides
+    resetVisualizerTools();
+    resetDetailPanel();
+    resetSidebarOptions();
+
+    navigate("/file-upload"); // Optionally reload or trigger a re-render if needed
 
     setOpen(false);
   };
@@ -83,8 +92,6 @@ function Visualizer() {
       {fileName}
     </MDTypography>,
   ];
-  //const { getNodes } = useReactFlow();
-  //console.log(getNodes());
 
   return (
     <DashboardLayout>
@@ -178,7 +185,6 @@ function Visualizer() {
                 </div>
               </MDBox>
               <MDBox pt={3} pl={10} pb={5}>
-                {/* {location.state?.result.owner || `There is no solution, yet`} */}
                 {data ? (
                   <ReactFlowWrapper csvData={data} />
                 ) : (
