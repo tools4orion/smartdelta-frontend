@@ -174,10 +174,7 @@ function ForceLayoutTopology({ csvData }) {
 
   return (
     <div style={{ height: "500px" }}>
-      <UserGuideTour
-        isUserGuideOpen={isUserGuideOpen}
-        guideKey="visualizer-tools"
-      />
+      <UserGuideTour guideKey="visualizer-tools" />
       <ReactFlow
         minZoom={0.3}
         defaultNodes={nodes}

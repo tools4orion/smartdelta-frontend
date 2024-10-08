@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, forwardRef } from "react";
 import { useLocation } from "react-router-dom";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -29,7 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { useMaterialUIController } from "contexts/UIContext";
 import useUserGuide from "features/userTours/useUserGuide";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
@@ -42,7 +42,7 @@ function Visualizer() {
   const { fileName } = fileStateToView || {};
   const data = location.state?.result || fileStateToView;
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { dispatch, toggleResourceSidebar } = useVisualizerController();
   const { darkMode } = controller;
 
@@ -66,12 +66,11 @@ function Visualizer() {
   };
 
   const handleYesClose = () => {
-    // Reset all guides
     resetVisualizerTools();
     resetDetailPanel();
     resetSidebarOptions();
 
-    navigate("/file-upload"); // Optionally reload or trigger a re-render if needed
+    navigate("/file-upload"); // turning back to the file upload, it can be routed to "/visualizer"
 
     setOpen(false);
   };

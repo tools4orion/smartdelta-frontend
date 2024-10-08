@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   InputLabel,
@@ -7,15 +7,16 @@ import {
   FormHelperText,
   FormControl,
   Select,
-} from '@mui/material';
-import { Panel, useReactFlow } from 'reactflow';
-import MDTypography from 'components/MDTypography';
-import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
-import { useVisualizerController } from 'contexts/VisualizerContext';
-import DetailPanel from './DetailPanel';
+} from "@mui/material";
+import { Panel, useReactFlow } from "reactflow";
+import MDTypography from "components/MDTypography";
+import KeyboardTabIcon from "@mui/icons-material/KeyboardTab";
+import { useVisualizerController } from "contexts/VisualizerContext";
+import DetailPanel from "./DetailPanel";
 
 const SidePanel = () => {
-  const { state, dispatch, toggleSidePanel, selectNode } = useVisualizerController();
+  const { state, dispatch, toggleSidePanel, selectNode } =
+    useVisualizerController();
   const { isAnyNodeSelected } = state;
   const { getNodes, getEdges, setViewport } = useReactFlow();
 
@@ -26,9 +27,11 @@ const SidePanel = () => {
     setViewport({ x: x, y: y }, { duration: 800 });
   }, [getNodes, isAnyNodeSelected, setViewport]);
 
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState("");
   const [selectBool, setSelectBool] = useState(false);
-  const [helperText, setHelperText] = useState("Select Node and Display Interaction");
+  const [helperText, setHelperText] = useState(
+    "Select Node and Display Interaction"
+  );
 
   // Sort nodes
   const sortedNodes = [...getNodes()];
@@ -81,16 +84,23 @@ const SidePanel = () => {
     <Panel
       position="top-right"
       style={{
-        backgroundColor: '#1f283e',
-        paddingLeft: '4px',
-        paddingRight: '0px',
-        paddingTop: '4px',
+        backgroundColor: "#1f283e",
+        paddingLeft: "4px",
+        paddingRight: "0px",
+        paddingTop: "4px",
       }}
     >
-
-      <Box paddingTop={2} paddingLeft={2} paddingRight={0} sx={{ color: 'white' }}>
-        <IconButton onClick={handleCloseSidePanel} sx={{ position: 'absolute', right: 1 }}>
-          <KeyboardTabIcon color='white' />
+      <Box
+        paddingTop={2}
+        paddingLeft={2}
+        paddingRight={0}
+        sx={{ color: "white" }}
+      >
+        <IconButton
+          onClick={handleCloseSidePanel}
+          sx={{ position: "absolute", right: 1 }}
+        >
+          <KeyboardTabIcon color="white" />
         </IconButton>
 
         <MDTypography variant="h6" color="white">
@@ -100,7 +110,7 @@ const SidePanel = () => {
           <FormControl sx={{ m: 2, minWidth: 200 }}>
             <InputLabel
               shrink={!!selected}
-              sx={{ color: 'white' }}
+              sx={{ color: "white" }}
               id="demo-simple-select-helper-label"
             >
               Node
@@ -112,7 +122,7 @@ const SidePanel = () => {
               defaultValue={selected}
               label="Node"
               onChange={handleChange}
-              style={{ height: '32px' }}
+              style={{ height: "32px" }}
             >
               {sortedNodes.map((node) => (
                 <MenuItem key={node.id} value={node.id}>
@@ -120,12 +130,12 @@ const SidePanel = () => {
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText sx={{ color: 'white' }} error={selectBool}>
+            <FormHelperText sx={{ color: "#FFFFFF" }} error={selectBool}>
               {helperText}
             </FormHelperText>
           </FormControl>
         </div>
-		
+
         <DetailPanel data={getIntereactions(selected)} node={selected} />
       </Box>
     </Panel>

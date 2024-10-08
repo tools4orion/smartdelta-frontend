@@ -2,7 +2,7 @@ import Joyride from "react-joyride";
 import useUserGuide from "./useUserGuide";
 import getSteps from "./getSteps";
 
-const UserGuideTour = ({ guideKey, isUserGuideOpen }) => {
+const UserGuideTour = ({ guideKey }) => {
   const { runGuide, handleJoyrideCallback } = useUserGuide(guideKey);
 
   return (
@@ -11,8 +11,8 @@ const UserGuideTour = ({ guideKey, isUserGuideOpen }) => {
         steps={getSteps(guideKey)}
         run={runGuide}
         callback={handleJoyrideCallback}
-        continuous={true} // Allow users to proceed through all steps
-        showProgress={true} // Show progress indicator
+        continuous={true} // allow users to proceed through all steps
+        showProgress={true} // show progress indicator
         styles={{
           options: {
             primaryColor: "#007BFF",
