@@ -1,5 +1,4 @@
-import { useState, forwardRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, forwardRef, useEffect } from "react";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -15,6 +14,8 @@ import {
   DialogContentText,
   DialogTitle,
   Slide,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -35,18 +36,17 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 function Visualizer() {
   const [controller, _] = useMaterialUIController();
-  const location = useLocation();
-
-  const { state } = useFileController();
+  const { state, dispatch: dpc, viewFile } = useFileController();
   const { fileStateToView } = state;
   const { fileName } = fileStateToView || {};
-  const data = location.state?.result || fileStateToView;
+
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { dispatch, toggleResourceSidebar } = useVisualizerController();
   const { darkMode } = controller;
 
-  // Use the resetUserGuide function from the custom hook for each guide key
+  // for resetting the user guide for each local storage key
   const { resetUserGuide: resetVisualizerTools } =
     useUserGuide("visualizer-tools");
   const { resetUserGuide: resetDetailPanel } =
@@ -65,15 +65,26 @@ function Visualizer() {
     setOpen(false);
   };
 
-  const handleYesClose = () => {
+  const handleYesClose = async () => {
     resetVisualizerTools();
     resetDetailPanel();
     resetSidebarOptions();
 
-    navigate("/file-upload"); // turning back to the file upload, it can be routed to "/visualizer"
+    setLoading(true);
+
+    const filename = localStorage.getItem("visualizationClickedPath");
+    await viewFile(dpc, filename);
+
+    setLoading(false);
+
+    navigate("/visualizer");
 
     setOpen(false);
   };
+
+  useEffect(() => {
+    setLoading(false); // after state update loading is done for re-render
+  }, [fileStateToView]);
 
   const bgStyles = {
     background: "#360033" /* fallback for old browsers */,
@@ -184,8 +195,12 @@ function Visualizer() {
                 </div>
               </MDBox>
               <MDBox pt={3} pl={10} pb={5}>
-                {data ? (
-                  <ReactFlowWrapper csvData={data} />
+                {loading ? (
+                  <Box display="flex" justifyContent="center" pb={20} pt={20}>
+                    <CircularProgress color="inherit" />
+                  </Box>
+                ) : fileStateToView ? ( // data from the file state
+                  <ReactFlowWrapper csvData={fileStateToView} />
                 ) : (
                   `There is no data to visualize yet`
                 )}

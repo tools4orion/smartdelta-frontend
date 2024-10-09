@@ -10,6 +10,7 @@ const Action = ({ fileName, darkMode }) => {
 
   const navigate = useNavigate();
   const onClickHandler = () => {
+    localStorage.setItem("visualizationClickedPath", fileName); // it is used on the visualizer page
     viewFile(dispatch, fileName);
     navigate("/visualizer");
   };

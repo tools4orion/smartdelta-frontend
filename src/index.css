@@ -1,11 +1,22 @@
 .react-flow__controls-zoomout {
-	display:none;
+  display: none;
 }
 
-.react-flow__controls-zoomout svg{
-	font-size: 64px;
+.react-flow__controls-zoomout svg {
+  font-size: 64px;
 }
 
 .react-flow__controls-zoomin {
-	display:none;
+  display: none;
+}
+
+.react-flow__attribution a {
+  color: #ffffff;
+  background-color: #344767;
+  text-decoration: none;
+}
+
+.react-flow__attribution {
+  font-size: 12px;
+  background-color: #344767;
 }

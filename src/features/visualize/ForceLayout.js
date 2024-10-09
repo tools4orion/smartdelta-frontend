@@ -39,6 +39,7 @@ import UserGuideTour from "features/userTours/UserGuideTour";
 import ResourceSidebar from "./resource/ResourceSidebar";
 import { useFileController } from "contexts/FileContext";
 import { useRawData } from "features/featureDiscovery/useRawData";
+import { useMaterialUIController } from "contexts/UIContext";
 
 // Define default viewport
 const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
@@ -62,6 +63,8 @@ function generateRandomTarget() {
 
 function ForceLayoutTopology({ csvData }) {
   const { setNodes, setEdges, zoomIn, zoomOut, getNodes } = useReactFlow();
+  const [controller, dispatch] = useMaterialUIController();
+  const { darkMode } = controller;
   const [strength, setStrength] = useState(-1000);
   const [distance, setDistance] = useState(350);
   const [simulationFrozen, setSimulationFrozen] = useState(false);
@@ -172,6 +175,14 @@ function ForceLayoutTopology({ csvData }) {
   useForceLayout({ strength, distance, simulationFrozen });
   // Event handler for clicking on the canvas (outside elements)
 
+  const miniMapStyles = {
+    nodeStrokeColor: (node) => (darkMode ? "#1f283e" : "#000000"), // Daha koyu node sınır rengi
+    nodeColor: (node) => (darkMode ? "#1f283e" : "#ffffff"), // Node içi rengi, daha koyu gri
+    maskColor: darkMode ? "#1f283e" : "rgba(255,255,255,0.3)", // Daha koyu ve opak bir mask rengi
+    maskStrokeColor: darkMode ? "#111111" : "#e0e0e0", // Mask sınırı tamamen koyulaştırıldı
+    nodeBorderRadius: 2, // Node köşe yuvarlama
+  };
+
   return (
     <div style={{ height: "500px" }}>
       <UserGuideTour guideKey="visualizer-tools" />
@@ -233,7 +244,16 @@ function ForceLayoutTopology({ csvData }) {
             </Grid>
           </Grid>
         </Stack>
-        <MiniMap zoomStep={8} />
+        <MiniMap
+          nodeStrokeColor={miniMapStyles.nodeStrokeColor}
+          nodeColor={miniMapStyles.nodeColor}
+          maskColor={miniMapStyles.maskColor}
+          maskStrokeColor={miniMapStyles.maskStrokeColor}
+          nodeBorderRadius={miniMapStyles.nodeBorderRadius}
+          style={{
+            background: darkMode ? "#344767" : "#ffffff",
+          }}
+        />
         {isLatencySidebarOpen && <LatencySidebar />}
         {isResourceSidebarOpen && <ResourceSidebar />}
         {isSidePanelOpen && <SidePanel />}
