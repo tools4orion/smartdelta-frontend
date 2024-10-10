@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -27,8 +27,9 @@ import { useRawData } from "features/featureDiscovery/useRawData";
 import analysisEndpoints from "network/endpoints/analysis";
 
 const ComparisonDialog = () => {
-  const [isHovered, setIsHovered] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedFieldsAndTypes, setSelectedFieldsAndTypes] = useState([]);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -56,23 +57,26 @@ const ComparisonDialog = () => {
     {},
     "asc"
   );
-  console.log(file1Rows);
+  console.log(file1Rows, "file1Rows");
   const file2Rows = useRawData(
     selectedFilesToCompare[1]?.directions || null,
     "",
     {},
     "asc"
   );
-  console.log(file2Rows);
+  console.log(file2Rows, "file2Rows");
+
   const handleClose = async () => {
     toggleComparisonBox(dispatch, false);
     const comparisonData = {
       filePath1: selectedFilesToCompare[0]?.path,
       filePath2: selectedFilesToCompare[1]?.path,
+      selectedCommonFields: selectedFieldsAndTypes,
     };
     const { data } = await analysisEndpoints.compareFiles(comparisonData);
     displayComparisonResult(dispatch, data);
   };
+
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -94,7 +98,10 @@ const ComparisonDialog = () => {
     <Dialog
       fullScreen={fullScreen}
       open={isComparisonBoxVisible}
-      onClose={handleClose}
+      onClose={() => {
+        setSelectedFieldsAndTypes([]);
+        toggleComparisonBox(dispatch, false);
+      }}
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle sx={bgStyles} id="responsive-dialog-title">
@@ -197,7 +204,10 @@ const ComparisonDialog = () => {
             </div>
           </div>
         )}
-        <ComparisonCheckboxes />
+        <ComparisonCheckboxes
+          selectedFieldsAndTypes={selectedFieldsAndTypes}
+          setSelectedFieldsAndTypes={setSelectedFieldsAndTypes}
+        />
         {selectedFilesToCompare.length === 2 && (
           <FormControl
             style={{

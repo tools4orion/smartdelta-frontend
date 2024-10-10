@@ -21,7 +21,10 @@ import MDTypography from "components/MDTypography";
 import Select from "@mui/material/Select";
 import { useRawData } from "features/featureDiscovery/useRawData";
 
-const ComparisonCheckboxes = () => {
+const ComparisonCheckboxes = ({
+  selectedFieldsAndTypes,
+  setSelectedFieldsAndTypes,
+}) => {
   const { state } = useFileController();
   const { selectedFilesToCompare } = state;
   const file1Cols = useEdgeProperties(
@@ -41,8 +44,7 @@ const ComparisonCheckboxes = () => {
   const intersection = file1Cols.filter((value) => file2Cols.includes(value));
   const [hoveredCheckbox, setHoveredCheckbox] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [age, setAge] = useState("None");
-  const [selectedTypes, setSelectedTypes] = useState({});
+  const [age, setAge] = useState("");
   const [selectedFieldName, setSelectedFieldName] = useState("");
 
   const handleChange = (event) => {
@@ -59,10 +61,17 @@ const ComparisonCheckboxes = () => {
   };
 
   const handleSaveType = () => {
-    setSelectedTypes((prevSelectedTypes) => ({
-      ...prevSelectedTypes,
-      [selectedFieldName]: age,
-    }));
+    setSelectedFieldsAndTypes((prevSelectedTypes) => {
+      const updatedTypes = prevSelectedTypes.map((item) =>
+        item.fieldName === selectedFieldName
+          ? { ...item, selectedType: age }
+          : item
+      );
+      if (!updatedTypes.find((item) => item.fieldName === selectedFieldName)) {
+        updatedTypes.push({ fieldName: selectedFieldName, selectedType: age });
+      }
+      return updatedTypes;
+    });
     handleDialogClose();
   };
   const bgStyles = {
@@ -83,6 +92,8 @@ const ComparisonCheckboxes = () => {
     Exception: "#FF8A65",
   };
 
+  console.log("selectedFieldsAndTypes:: ", selectedFieldsAndTypes);
+
   return (
     <div
       style={{
@@ -101,7 +112,24 @@ const ComparisonCheckboxes = () => {
               onMouseLeave={() => setHoveredCheckbox(null)}
             >
               <FormControlLabel
-                control={<Checkbox />}
+                control={
+                  <Checkbox
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedFieldsAndTypes((prevSelectedTypes) => [
+                          ...prevSelectedTypes,
+                          { fieldName: columnName, selectedType: null },
+                        ]);
+                      } else {
+                        setSelectedFieldsAndTypes((prevSelectedTypes) =>
+                          prevSelectedTypes.filter(
+                            (item) => item.fieldName !== columnName
+                          )
+                        );
+                      }
+                    }}
+                  />
+                }
                 label={columnName}
                 sx={{
                   "& .MuiFormControlLabel-label": {
@@ -109,40 +137,67 @@ const ComparisonCheckboxes = () => {
                   },
                 }}
               />
-              {selectedTypes[columnName] && (
+              {selectedFieldsAndTypes.find(
+                (item) => item.fieldName === columnName
+              )?.selectedType && (
                 <Chip
-                  label={selectedTypes[columnName]}
+                  label={
+                    selectedFieldsAndTypes.find(
+                      (item) => item.fieldName === columnName
+                    )?.selectedType
+                  }
                   onDelete={() => {
-                    setSelectedTypes((prevSelectedTypes) => ({
-                      ...prevSelectedTypes,
-                      [columnName]: "",
-                    }));
+                    setSelectedFieldsAndTypes((prevSelectedTypes) =>
+                      prevSelectedTypes.map((item) =>
+                        item.fieldName === columnName
+                          ? { ...item, selectedType: null }
+                          : item
+                      )
+                    );
                   }}
                   style={{
                     position: "absolute",
-                    top: 0,
-                    left: -98,
+                    top: 3,
+                    left:
+                      selectedFieldsAndTypes.find(
+                        (item) => item.fieldName === columnName
+                      )?.selectedType.length > 7
+                        ? -110
+                        : -90,
                     color: "#333",
-                    backgroundColor: typeToColor[selectedTypes[columnName]],
+                    backgroundColor:
+                      typeToColor[
+                        selectedFieldsAndTypes.find(
+                          (item) => item.fieldName === columnName
+                        )?.selectedType
+                      ],
                   }}
                 />
               )}
-              {hoveredCheckbox === columnName && (
-                <IconButton
-                  onClick={() => handleDialogOpen(columnName)}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: -44,
-                    color: "white",
-                  }}
-                >
-                  <EditIcon />
-                  <MDTypography variant="h6" color="white">
-                    Add Type
-                  </MDTypography>
-                </IconButton>
-              )}
+              {hoveredCheckbox === columnName &&
+                selectedFieldsAndTypes.find(
+                  (item) => item.fieldName === columnName
+                ) && (
+                  <IconButton
+                    onClick={() => handleDialogOpen(columnName)}
+                    style={{
+                      position: "absolute",
+                      top: -2,
+                      right:
+                        columnName.length > 15
+                          ? -90
+                          : columnName.length > 10
+                          ? -50
+                          : -20,
+                      color: "white",
+                    }}
+                  >
+                    <EditIcon />
+                    <MDTypography variant="h6" color="white">
+                      Add Type
+                    </MDTypography>
+                  </IconButton>
+                )}
             </div>
           ))}
         </FormGroup>
@@ -163,17 +218,16 @@ const ComparisonCheckboxes = () => {
               labelId="demo-select-small-label"
               id="demo-select-small"
               value={age}
-              defaultValue="None"
               label="age"
               onChange={handleChange}
               sx={{
                 height: "32px",
                 "& .MuiSelect-outlined": {
-                  borderColor: "white", // Set the border color to white
+                  borderColor: "#FFFFFF",
                 },
               }}
             >
-              <MenuItem value="">
+              <MenuItem value="" disabled>
                 <em>None</em>
               </MenuItem>
               <MenuItem value={"String"}>String</MenuItem>
@@ -187,10 +241,10 @@ const ComparisonCheckboxes = () => {
           </FormControl>
         </DialogContent>
         <DialogActions sx={bgStyles}>
-          <Button sx={{ color: "white" }} onClick={handleDialogClose}>
+          <Button sx={{ color: "#FFFFFF" }} onClick={handleDialogClose}>
             Cancel
           </Button>
-          <Button sx={{ color: "white" }} onClick={handleSaveType}>
+          <Button sx={{ color: "#FFFFFF" }} onClick={handleSaveType}>
             Save
           </Button>
         </DialogActions>
