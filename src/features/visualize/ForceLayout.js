@@ -1,13 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Box,
-  FormLabel,
-  Grid,
-  Slider,
-  Stack,
-  Typography,
-  IconButton,
-} from "@mui/material";
+import { Box, FormLabel, Grid, Slider, Stack, Typography } from "@mui/material";
 
 import ReactFlow, {
   Background,
@@ -176,11 +168,11 @@ function ForceLayoutTopology({ csvData }) {
   // Event handler for clicking on the canvas (outside elements)
 
   const miniMapStyles = {
-    nodeStrokeColor: (node) => (darkMode ? "#1f283e" : "#000000"), // Daha koyu node sınır rengi
-    nodeColor: (node) => (darkMode ? "#1f283e" : "#ffffff"), // Node içi rengi, daha koyu gri
-    maskColor: darkMode ? "#1f283e" : "rgba(255,255,255,0.3)", // Daha koyu ve opak bir mask rengi
-    maskStrokeColor: darkMode ? "#111111" : "#e0e0e0", // Mask sınırı tamamen koyulaştırıldı
-    nodeBorderRadius: 2, // Node köşe yuvarlama
+    nodeStrokeColor: (node) => (darkMode ? "#1f283e" : "#000000"),
+    nodeColor: (node) => (darkMode ? "#1f283e" : "#ffffff"),
+    maskColor: darkMode ? "#1f283e" : "rgba(255,255,255,0.3)",
+    maskStrokeColor: darkMode ? "#111111" : "#e0e0e0",
+    nodeBorderRadius: 2,
   };
 
   return (

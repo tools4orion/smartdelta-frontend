@@ -48,9 +48,10 @@ function CustomTabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      sx={{ pt: 1 }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
     </Box>
   );
 }
@@ -72,6 +73,7 @@ const ElasticDashboard = () => {
   const [value, setValue] = useState(0);
   const lastPartOfUrl = useLastPartOfUrl();
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
+  const [dataState, setState] = useState(null); // elastic apm data state
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -119,10 +121,9 @@ const ElasticDashboard = () => {
     return () => window.removeEventListener("resize", handleTabsOrientation);
   }, [tabsOrientation]);
 
-  const [dataState, setState] = useState(null);
-
   useEffect(() => {
     const fetchMetrics = async () => {
+      console.log("LAST PART OF URL: ", lastPartOfUrl);
       const { data } = await elasticApmEndpoints.getMetrics(lastPartOfUrl);
       setState(data);
       const logs = await getServiceLogs(lastPartOfUrl);
@@ -131,14 +132,14 @@ const ElasticDashboard = () => {
     };
 
     fetchMetrics();
-  }, []);
+  }, [lastPartOfUrl]);
 
   const { darkMode } = controller;
 
   const renderSparklineChart = (data, title, yaxisLabel) => {
     const seriesData = data.map((entry) => ({
-      x: new Date(entry.timestamp).getTime(),
-      y: entry.duration || entry.billedDuration || entry.freeMemory,
+      x: new Date(entry.timestamp).getTime() || "N/A",
+      y: entry.duration || entry.billedDuration || entry.freeMemory || 0,
       formattedDate: new Date(entry.timestamp).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -176,6 +177,14 @@ const ElasticDashboard = () => {
             colors: darkMode ? "#FFFFFF" : "#000000",
             fontSize: "12px",
             fontWeight: "normal",
+          },
+          formatter: function (val) {
+            if (title === "Billed Duration" || title === "Function Duration") {
+              return `${val} ms`;
+            } else if (title === "Memory Usage") {
+              return `${val} bytes`;
+            }
+            return val;
           },
         },
       },
@@ -336,31 +345,32 @@ const ElasticDashboard = () => {
             </Grid>
           </Card>
         </MDBox>
-
         <CustomTabPanel value={value} index={0}>
-          <Grid item xs={12} md={4}>
-            {dataState &&
-              renderSparklineChart(
-                dataState?.sparklineData?.functionDuration,
-                "Function Duration",
-                "Duration"
-              )}
-          </Grid>
-          <Grid item xs={12} md={4}>
-            {dataState &&
-              renderSparklineChart(
-                dataState?.sparklineData?.billedDuration,
-                "Billed Duration",
-                "Billed Duration"
-              )}
-          </Grid>
-          <Grid item xs={12} md={4}>
-            {dataState &&
-              renderSparklineChart(
-                dataState?.sparklineData?.memoryUsage,
-                "Memory Usage",
-                "Free Memory"
-              )}
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={4}>
+              {dataState &&
+                renderSparklineChart(
+                  dataState?.sparklineData?.functionDuration,
+                  "Function Duration",
+                  "Duration"
+                )}
+            </Grid>
+            <Grid item xs={12} md={4}>
+              {dataState &&
+                renderSparklineChart(
+                  dataState?.sparklineData?.billedDuration,
+                  "Billed Duration",
+                  "Billed Duration"
+                )}
+            </Grid>
+            <Grid item xs={12} md={4}>
+              {dataState &&
+                renderSparklineChart(
+                  dataState?.sparklineData?.memoryUsage,
+                  "Memory Usage",
+                  "Free Memory"
+                )}
+            </Grid>
           </Grid>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
