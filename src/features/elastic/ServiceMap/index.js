@@ -1,62 +1,64 @@
-import { Box, FormControl, FormLabel, Grid, Stack, Typography } from "@mui/material";
-import CustomNode from "features/visualize/CustomNode";
-import FloatingEdge from "features/visualize/FloatingEdge";
-import ReactFlow, { Background, ReactFlowProvider } from "reactflow";
-const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
-const edgeTypes = {
-	floating: FloatingEdge,
-  };
-  
-  const nodeTypes = {
-	selectorNode: CustomNode,
-  };
-const ElasticServiceMap = ({mapData}) =>{
-	
-	return(
-		<div style={{ height: '500px' }}>
-		<ReactFlow
-        minZoom={0.3}
-        //defaultNodes={nodes}
-        //defaultEdges={edges}
-        elementsSelectable={true}
-        edgeTypes={edgeTypes}
-        defaultViewport={defaultViewport}
-        nodeTypes={nodeTypes}
-        snapToGrid={true}
-        //onNodeMouseMove={handleOnNodeMouseMove}
-      >
-	    <Background color="#ccc" variant="dots" />
-        <Stack sx={{ marginTop: '20px', borderRadius: '8px', p: 2 }}>
-		 <Grid container spacing={2} direction="column">
-		  <Grid item>
-		  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <FormControl>
-                  <FormLabel component="legend">
-                    <Typography variant="subtitle2">Strength
-					</Typography>
-                  </FormLabel>
-                </FormControl>
-			</Box>
-
-		  </Grid>
-		 </Grid>
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import MDBox from "components/MDBox";
+import { Card, Grid, Breadcrumbs, IconButton} from "@mui/material"
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Tooltip from "@mui/material/Tooltip";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import InsightsIcon from '@mui/icons-material/Insights';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 
-		</Stack>
-
-	  </ReactFlow>
-	  </div>
-	);
+const  ElasticServiceMap = () => {
+    return(
+    <DashboardLayout> 
+	<DashboardNavbar /> 
+      <MDBox pt={6} pb={3}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+                <Breadcrumbs
+                  separator={<NavigateNextIcon fontSize="small" sx={{color:'#e6ee9c'}} />}
+                  aria-label="breadcrumb"
+				>
+                  {breadcrumbs}
+				</Breadcrumbs>
+				<Tooltip title='Services Summary'>
+		<IconButton onClick={ clickResourcePrediction } sx={{position:'absolute', left:2, bottom:5 }}>
+			<SummarizeIcon color='white'/>
+		</IconButton>
+		</Tooltip>
+				<Tooltip title='Help'>
+					<IconButton onClick={ handleClickOpen } sx={{position:'absolute', left:32, bottom:5 }}>
+					<HelpOutlineIcon color='white'/>
+					</IconButton>
+				</Tooltip>
+		<Tooltip title='Resource Usage'>
+		<IconButton onClick={ clickResourcePrediction } sx={{position:'absolute', left:62, bottom:5 }}>
+			<InsightsIcon color='white'/>
+		</IconButton>
+		</Tooltip>
+              </MDBox>
+              <MDBox pt={3} pl={10} pb={5}>
+                {/* {location.state?.result.owner || `There is no solution, yet`} */}
+                {data ? <ElasticMapReactFlowWrapper mapData={data} /> : `There is no data to visualize yet`}
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+      </MDBox>
+    </DashboardLayout>
+    )
 }
 
-
-function ElasticMapReactFlowWrapper(props) {
-
-	return (
-	  <ReactFlowProvider>
-		<ElasticServiceMap {...props} />
-	  </ReactFlowProvider>
-	);
-  }
-  
-export default ElasticMapReactFlowWrapper;
+export default ElasticServiceMap;
