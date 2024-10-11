@@ -3,11 +3,8 @@ import ReactApexChart from "react-apexcharts";
 import { formatDate } from "utils/formatDate";
 import { useLocation } from "react-router-dom";
 import "./index.css";
-import { useMaterialUIController } from "contexts/UIContext";
 
 const AnomalyChart = ({ data }) => {
-  const [controller, _] = useMaterialUIController();
-  const { darkMode } = controller;
   const today = new Date();
 
   const yesterday = new Date(today);
@@ -34,14 +31,14 @@ const AnomalyChart = ({ data }) => {
         max: maxDate,
         labels: {
           style: {
-            colors: darkMode ? "#FFFFFF" : "#000000",
+            colors: "#49a3f1",
           },
         },
       },
       yaxis: {
         labels: {
           style: {
-            colors: darkMode ? "#FFFFFF" : "#000000",
+            colors: "#49a3f1",
           },
         },
       },
