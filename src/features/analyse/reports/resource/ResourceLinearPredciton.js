@@ -36,14 +36,11 @@ const ResourceLinearPrediction = () => {
   const [loading, setLoading] = useState(true);
 
   const getColorBasedOnProbability = (probability) => {
-    // Adjust these values based on the desired color range
-    const minColor = 30; // Darker orange
-    const maxColor = 200; // Lighter orange
+    const minColor = 30;
+    const maxColor = 200;
 
-    // Map the probability to the color range
     const colorIntensity = minColor + (maxColor - minColor) * probability;
 
-    // Return the rgba string for the color
     return `rgba(255, ${colorIntensity}, 0, 0.5)`;
   };
   const options = {
@@ -52,13 +49,31 @@ const ResourceLinearPrediction = () => {
       x: {
         type: "linear",
         position: "bottom",
+        grid: {
+          color: "rgba(255, 255, 255, 0.2)",
+        },
+        ticks: {
+          color: "#ffffff",
+        },
       },
       y: {
         type: "linear",
         position: "left",
         min: 0,
-        // You may want to adjust the max value based on your data
         max: 100,
+        grid: {
+          color: "rgba(255, 255, 255, 0.2)",
+        },
+        ticks: {
+          color: "#ffffff",
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: "#ffffff",
+        },
       },
     },
   };
@@ -73,9 +88,9 @@ const ResourceLinearPrediction = () => {
         setLoading(false);
         return;
       }
-      const validJsonString = chartData.data[0].replace(/'/g, '"');
-      const jsonData = JSON.parse(validJsonString);
-      console.log(jsonData, "osman");
+      const jsonData = chartData.data.result;
+
+      console.log("jsonData:: ", jsonData);
 
       const rawDataSet = {
         type: "line",
@@ -114,21 +129,17 @@ const ResourceLinearPrediction = () => {
       const warningBoxesDataSet = {
         type: "scatter",
         label: "Warning Probability",
-        backgroundColor: jsonData.warning_distribution.values.map((index) =>
-          getColorBasedOnProbability(
-            jsonData.warning_distribution.values[index]
-          )
+        backgroundColor: jsonData.warning_distribution.values.map((value) =>
+          getColorBasedOnProbability(value)
         ),
         radius: 11,
         borderWidth: 2,
         data: jsonData.warning_distribution.times.map((time, index) => ({
           x: time,
           y: jsonData.WARNING_VALUE,
-          // Adjust the radius as needed
         })),
       };
 
-      // Adding a horizontal line annotation
       const warningLine = {
         type: "line",
         scaleID: "y",
@@ -140,6 +151,7 @@ const ResourceLinearPrediction = () => {
         borderWidth: 2,
         label: "Warning Line",
       };
+
       setChartData({
         datasets: [
           rawDataSet,
@@ -149,32 +161,31 @@ const ResourceLinearPrediction = () => {
           predictionLineDataSet,
         ],
       });
+
       const predictionLineData = jsonData.prediction_line;
 
-      // Find the first index where the value is greater than or equal to 90
       const indexOfFirstValueAbove90 = predictionLineData.values.findIndex(
         (value) => value >= 90
       );
 
-      // If an index is found, get the corresponding time value
       const firstTimeAbove90 =
         indexOfFirstValueAbove90 !== -1
           ? predictionLineData.times[indexOfFirstValueAbove90]
           : null;
+
       setLoading(false);
       setPredictionText(
-        `Prediction: Warning  Level at ${firstTimeAbove90.toFixed(2)}`
+        `Prediction: Warning  Level at ${firstTimeAbove90?.toFixed(2)}`
       );
     } catch (error) {
       console.error("Error:", error);
-      // Handle the error as needed
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, []); // Empty dependency array to run once when the component mounts
+  }, []);
 
   return (
     <Stack spacing={2} sx={{ paddingTop: 2 }}>
@@ -205,7 +216,7 @@ const ResourceLinearPrediction = () => {
               plugins={[{ id: "annotation", options: chartData.annotations }]}
             />
           )}
-          <MDTypography variant="h6" sx={{ paddingTop: 2 }}>
+          <MDTypography variant="h6" sx={{ paddingTop: 2, color: "#ffffff" }}>
             {predictionText}
           </MDTypography>
         </div>
