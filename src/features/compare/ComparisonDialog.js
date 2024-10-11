@@ -6,6 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 import {
   FormControl,
   FormControlLabel,
@@ -32,6 +33,7 @@ const ComparisonDialog = () => {
   const [selectedFieldsAndTypes, setSelectedFieldsAndTypes] = useState([]);
 
   const theme = useTheme();
+  const navigate = useNavigate();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
@@ -75,6 +77,7 @@ const ComparisonDialog = () => {
     };
     const { data } = await analysisEndpoints.compareFiles(comparisonData);
     displayComparisonResult(dispatch, data);
+    navigate("/comparison-result");
   };
 
   const handleMouseEnter = () => {

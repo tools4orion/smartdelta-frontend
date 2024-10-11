@@ -22,6 +22,7 @@ const ComparisonResult = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -40,7 +41,6 @@ const ComparisonResult = () => {
                   Comparison Result
                 </MDTypography>
               </MDBox>
-
               <div
                 style={{
                   display: "flex",
@@ -101,29 +101,31 @@ const ComparisonResult = () => {
                   </MDTypography>
                 </div>
               </div>
-
-              <MDBox
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexWrap="wrap"
-                px={4}
-                py={8}
-              >
-                <DonutComparisonChart fileNo={1} />
-                <DonutComparisonChart fileNo={2} />
-              </MDBox>
-
-              <MDBox
-                display="flex"
-                justifyContent="center"
-                flexWrap="wrap"
-                px={2}
-                py={2}
-              >
-                <NestedList fileNo={1} />
-                <NestedList fileNo={2} />
-              </MDBox>
+              {selectedFilesToCompare.length === 2 && (
+                <>
+                  <MDBox
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    flexWrap="wrap"
+                    px={4}
+                    py={8}
+                  >
+                    <DonutComparisonChart fileNo={1} />
+                    <DonutComparisonChart fileNo={2} />
+                  </MDBox>
+                  <MDBox
+                    display="flex"
+                    justifyContent="center"
+                    flexWrap="wrap"
+                    px={2}
+                    py={2}
+                  >
+                    <NestedList fileNo={1} />
+                    <NestedList fileNo={2} />
+                  </MDBox>
+                </>
+              )}
             </Card>
           </Grid>
         </Grid>

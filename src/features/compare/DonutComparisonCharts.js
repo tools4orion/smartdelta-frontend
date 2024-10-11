@@ -53,7 +53,8 @@ const DonutComparisonChart = ({ fileNo }) => {
       },
       legend: {
         formatter: function (val, opts) {
-          return val + " - " + opts.w.globals.series[opts.seriesIndex];
+          const occurrence = opts.w.globals.series[opts.seriesIndex].toFixed(2);
+          return `${val} - ${occurrence}%`;
         },
         labels: {
           colors: darkMode ? "#ffffff" : "#000000",
@@ -65,6 +66,7 @@ const DonutComparisonChart = ({ fileNo }) => {
           color: darkMode ? "#ffffff" : "#000000",
           fontSize: "16px",
         },
+        offsetY: -1,
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }) {
@@ -117,7 +119,7 @@ const DonutComparisonChart = ({ fileNo }) => {
             options={chartData.options}
             series={chartData.series}
             type="donut"
-            width={420}
+            width={375}
           />
         )}
       </div>

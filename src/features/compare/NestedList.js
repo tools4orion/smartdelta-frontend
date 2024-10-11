@@ -38,69 +38,71 @@ const NestedList = ({ fileNo }) => {
   };
 
   return (
-    <List
-      sx={{ width: "100%", maxWidth: 360 }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            backgroundColor: darkMode ? "#1a2035" : "#f0f2f5",
-            padding: "8px",
-          }}
-        >
-          <MDTypography variant="h6" textAlign="center">
-            {selectedFilesToCompare[fileNo - 1]?.fileName}
-          </MDTypography>
-        </Box>
-      }
-    >
-      {comparisonResult &&
-        comparisonResult?.result[
-          `file${fileNo}`
-        ].clusters[0].message_instances.map((instance, index) => (
-          <React.Fragment key={index}>
-            <ListItemButton onClick={() => handleToggle(index)}>
-              <ListItemIcon>
-                <BubbleChartIcon sx={{ color: getColor(index) }} />
-              </ListItemIcon>
-              <MDTypography
-                variant="button"
-                fontWeight="medium"
-              >{`Occurrence: ${instance.occurrence_percentage.toFixed(
-                2
-              )}%`}</MDTypography>
-              {openStates[index] ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openStates[index]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {instance.fields.map((field, fieldIndex) => (
-                  <ListItemButton key={fieldIndex} sx={{ pl: 4 }}>
-                    <ListItemIcon>
-                      <TripOriginIcon sx={{ color: getColor(index) }} />
-                    </ListItemIcon>
+    comparisonResult && (
+      <List
+        sx={{ width: "100%", maxWidth: 360 }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+              backgroundColor: darkMode ? "#1a2035" : "#f0f2f5",
+              padding: "8px",
+            }}
+          >
+            <MDTypography variant="h6" textAlign="center">
+              {selectedFilesToCompare[fileNo - 1]?.fileName}
+            </MDTypography>
+          </Box>
+        }
+      >
+        {comparisonResult &&
+          comparisonResult?.result[
+            `file${fileNo}`
+          ].clusters[0].message_instances.map((instance, index) => (
+            <React.Fragment key={index}>
+              <ListItemButton onClick={() => handleToggle(index)}>
+                <ListItemIcon>
+                  <BubbleChartIcon sx={{ color: getColor(index) }} />
+                </ListItemIcon>
+                <MDTypography
+                  variant="button"
+                  fontWeight="medium"
+                >{`Occurrence: ${instance.occurrence_percentage.toFixed(
+                  2
+                )}%`}</MDTypography>
+                {openStates[index] ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={openStates[index]} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {instance.fields.map((field, fieldIndex) => (
+                    <ListItemButton key={fieldIndex} sx={{ pl: 4 }}>
+                      <ListItemIcon>
+                        <TripOriginIcon sx={{ color: getColor(index) }} />
+                      </ListItemIcon>
 
-                    <ListItemText
-                      sx={{
-                        fontSize: "0.12rem",
-                        color: darkMode ? "#CCCCFF" : "#000000",
-                        p: 1,
-                        fontFamily: `Roboto,Helvetica,Arial,sans-serif`,
-                      }}
-                      primary={`${Object.keys(field)[0]}: ${
-                        Object.values(field)[0]
-                      }`}
-                    />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </React.Fragment>
-        ))}
-    </List>
+                      <ListItemText
+                        sx={{
+                          fontSize: "0.12rem",
+                          color: darkMode ? "#CCCCFF" : "#000000",
+                          p: 1,
+                          fontFamily: `Roboto,Helvetica,Arial,sans-serif`,
+                        }}
+                        primary={`${Object.keys(field)[0]}: ${
+                          Object.values(field)[0]
+                        }`}
+                      />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </React.Fragment>
+          ))}
+      </List>
+    )
   );
 };
 
