@@ -9,8 +9,8 @@ import MDTypography from "components/MDTypography";
 const TracesAction = ({ name }) => {
   const navigate = useNavigate();
   const onClickHandler = () => {
-    // TODO:: endpoint for traces will be here
-    navigate(`/elastic-services-trace/${name}`, { state: { traceName: name } }); // TODO:: endpoint response data will be sent here
+    // TODO:: endpoint for traces will be here OR YOU CAN DO THE FETCH FROM "TraceVisualizer" INSTEAD OF HERE
+    navigate(`/elastic-services-trace/${name}`, { state: { traceName: name } }); // TODO (if needed):: endpoint response data will be sent here
   };
 
   return (

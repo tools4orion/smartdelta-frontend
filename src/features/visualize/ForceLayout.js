@@ -175,6 +175,8 @@ function ForceLayoutTopology({ csvData }) {
     nodeBorderRadius: 2,
   };
 
+  console.log("CSV DATA for visualizer:: ", csvData);
+
   return (
     <div style={{ height: "500px" }}>
       <UserGuideTour guideKey="visualizer-tools" />

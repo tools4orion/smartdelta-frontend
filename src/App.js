@@ -53,6 +53,7 @@ import { useFileController } from "contexts/FileContext";
 import elasticApmEndpoints from "network/endpoints/elasticApm";
 import ElasticDashboard from "features/elastic/ElasticDashboard";
 import ReactFlowWrapperTrace from "features/visualize/TraceLayout";
+import TraceVisualizer from "features/visualize/TraceVisualizer";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -169,7 +170,8 @@ export default function App() {
         />
         <Route
           path="/elastic-services-trace/:serviceName"
-          element={<ReactFlowWrapperTrace />}
+          // element={<ReactFlowWrapperTrace />}
+          element={<TraceVisualizer />}
         />
         <Route path="*" element={<Navigate to="/dashboard" />} />
         {/* <Route path="/elastic-dashboard-trace" element={<Navigate to="/dashboard" />} /> */}

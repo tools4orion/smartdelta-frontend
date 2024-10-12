@@ -16,7 +16,7 @@ import ReactFlow, {
 } from "reactflow";
 
 function TraceLayoutTopology({ elasticData }) {
-  const responseData = useLocation();
+  const responseData = useLocation(); // OR YOU CAN TAKE THE RESPONSE FROM "TraceVisualizer" INSTEAD OF react-router-dom
   const traceName = responseData.state?.traceName; // just an example (option chaining)
 
   return (
