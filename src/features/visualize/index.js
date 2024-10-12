@@ -202,7 +202,9 @@ function Visualizer() {
                 ) : fileStateToView ? ( // data from the file state
                   <ReactFlowWrapper csvData={fileStateToView} />
                 ) : (
-                  `There is no data to visualize yet`
+                  <Box sx={{ color: darkMode ? "#FFFFFF" : "#000000", p: 3 }}>
+                    There is no data to visualize yet
+                  </Box>
                 )}
               </MDBox>
             </Card>
