@@ -46,6 +46,7 @@ import elastic from "./assets/svgs/elastic.svg";
 // import Notifications from "layouts/notifications";
 // import Profile from "layouts/profile";
 import Visualizer from "features/visualize";
+import ReactFlowWrapperTraceVisualizer from "features/visualize/TraceLayout";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -66,6 +67,7 @@ import ElasticDashboard from "features/elastic/ElasticDashboard";
 import Services from "features/elastic/Services";
 import Anomalies from "features/elastic/AnomalyDetection";
 import ComparisonResult from "features/compare";
+// import ReactFlowWrapperTrace from "features/visualize/TraceLayout";
 
 const FeatureDiscovery = lazy(() => import("features/featureDiscovery"));
 
@@ -117,6 +119,14 @@ const routes = [
     route: "/visualizer",
     component: <Visualizer />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "Elastic Trace Visualizer",
+  //   key: "visualizer",
+  //   icon: <Icon fontSize="small">schema</Icon>,
+  //   route: "/elastic-services-trace/:serviceName",
+  //   component: <ReactFlowWrapperTraceVisualizer />,
+  // },
   {
     type: "collapse",
     name: "Services Summary",

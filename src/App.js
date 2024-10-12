@@ -52,6 +52,7 @@ import brandDark from "assets/images/sd-black-logo.png";
 import { useFileController } from "contexts/FileContext";
 import elasticApmEndpoints from "network/endpoints/elasticApm";
 import ElasticDashboard from "features/elastic/ElasticDashboard";
+import ReactFlowWrapperTrace from "features/visualize/TraceLayout";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -166,7 +167,12 @@ export default function App() {
           path="/elastic-dashboard/:serviceName"
           element={<ElasticDashboard />}
         />
+        <Route
+          path="/elastic-services-trace/:serviceName"
+          element={<ReactFlowWrapperTrace />}
+        />
         <Route path="*" element={<Navigate to="/dashboard" />} />
+        {/* <Route path="/elastic-dashboard-trace" element={<Navigate to="/dashboard" />} /> */}
       </Routes>
     </ThemeProvider>
   );

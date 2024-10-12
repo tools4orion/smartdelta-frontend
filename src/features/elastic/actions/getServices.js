@@ -4,7 +4,7 @@ const getServices = async () => {
   try {
     const res = await elasticApmEndpoints.getServices();
     const { data } = res;
-	console.log(data);
+    console.log("getServicesData", data);
 
     return data;
   } catch (error) {

@@ -131,45 +131,49 @@ function Visualizer() {
                 >
                   {breadcrumbs}
                 </Breadcrumbs>
-                <Tooltip title="Services Summary">
-                  <IconButton
-                    onClick={clickResourcePrediction}
-                    sx={{
-                      position: "absolute",
-                      left: 2,
-                      bottom: 5,
-                      color: darkMode ? "#FFFFFF" : "#000000",
-                    }}
-                  >
-                    <SummarizeIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Help">
-                  <IconButton
-                    onClick={handleClickOpen}
-                    sx={{
-                      position: "absolute",
-                      left: 32,
-                      bottom: 5,
-                      color: darkMode ? "#FFFFFF" : "#000000",
-                    }}
-                  >
-                    <HelpOutlineIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Resource Usage">
-                  <IconButton
-                    onClick={clickResourcePrediction}
-                    sx={{
-                      position: "absolute",
-                      left: 62,
-                      bottom: 5,
-                      color: darkMode ? "#FFFFFF" : "#000000",
-                    }}
-                  >
-                    <InsightsIcon />
-                  </IconButton>
-                </Tooltip>
+                {fileStateToView && (
+                  <>
+                    <Tooltip title="Services Summary">
+                      <IconButton
+                        onClick={clickResourcePrediction}
+                        sx={{
+                          position: "absolute",
+                          left: 2,
+                          bottom: 5,
+                          color: darkMode ? "#FFFFFF" : "#000000",
+                        }}
+                      >
+                        <SummarizeIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Help">
+                      <IconButton
+                        onClick={handleClickOpen}
+                        sx={{
+                          position: "absolute",
+                          left: 32,
+                          bottom: 5,
+                          color: darkMode ? "#FFFFFF" : "#000000",
+                        }}
+                      >
+                        <HelpOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Resource Usage">
+                      <IconButton
+                        onClick={clickResourcePrediction}
+                        sx={{
+                          position: "absolute",
+                          left: 62,
+                          bottom: 5,
+                          color: darkMode ? "#FFFFFF" : "#000000",
+                        }}
+                      >
+                        <InsightsIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
                 <div>
                   <Dialog
                     open={open}
