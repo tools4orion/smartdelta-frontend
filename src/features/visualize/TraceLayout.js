@@ -7,13 +7,17 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   useReactFlow,
+  ControlButton,
 } from "reactflow";
 import "reactflow/dist/style.css";
+
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 
 import CustomNodeForTrace from "./CustomNodeForTrace";
 import FloatingEdgeForTrace from "./FloatingEdgeForTrace";
 import useTraceLayout from "./useTraceLayout";
-import { times } from "lodash";
+import { useMaterialUIController } from "contexts/UIContext";
 
 const edgeTypes = {
   floating: FloatingEdgeForTrace,
@@ -24,14 +28,17 @@ const nodeTypes = {
 };
 
 function TraceLayoutTopology({ traceData }) {
-  // Use useNodesState and useEdgesState to manage the nodes and edges states
+  const [controller, _] = useMaterialUIController();
+  const { zoomIn, zoomOut } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [strength, setStrength] = useState(-1000);
   const [distance, setDistance] = useState(350);
   const [simulationFrozen, setSimulationFrozen] = useState(false);
 
-  // Convert traceData to nodes and edges for React Flow
+  const { darkMode } = controller;
+
+  // it convert traceData to nodes and edges for React Flow
   const convertTraceDataToElements = (traceData) => {
     const nodes = [];
     const edges = [];
@@ -40,8 +47,20 @@ function TraceLayoutTopology({ traceData }) {
       const parentX = (index % 5) * 200;
       const parentY = Math.floor(index / 5) * 200;
 
-      // scenario 1: Handle parent with child spans
+      // parent with child spans
       if (span.type === "parentWithChild") {
+        // unwanted spans
+        if (
+          span.name === "Unknown Parent Span" ||
+          span.childSpans.length === 0 ||
+          span.duration === 0 ||
+          span.faasExecution === null ||
+          span.outcome === "Unknown Outcome" ||
+          span.type === "parentWithoutChild"
+        ) {
+          return;
+        }
+
         const parentNode = {
           id: span.id,
           type: "CustomNodeForTrace",
@@ -81,7 +100,7 @@ function TraceLayoutTopology({ traceData }) {
             };
             nodes.push(childNode);
 
-            // Create edge from parent to child
+            // it creates edge from parent to child
             edges.push({
               id: `edge-${span.id}-${childSpan.id}`,
               source: span.id,
@@ -94,56 +113,6 @@ function TraceLayoutTopology({ traceData }) {
             });
           });
         }
-      }
-
-      // scenario 2: Handle child span with unknown parent (skip unknown parent and only show child)
-      else if (
-        span.name === "Unknown Parent Span" &&
-        span.duration === 0 &&
-        span.faasExecution === null &&
-        span.outcome === "Unknown Outcome"
-      ) {
-        span.childSpans.forEach((childSpan, childIndex) => {
-          const childX = (index % 5) * 200;
-          const childY = Math.floor(index / 5) * 200;
-
-          const childNode = {
-            id: childSpan.id,
-            type: "CustomNodeForTrace",
-            position: { x: childX, y: childY },
-            data: {
-              label: childSpan.destinationServiceAddress,
-              type: "childWithoutParent",
-              duration: childSpan.duration,
-              outcome: childSpan.outcome,
-              timestamp: childSpan.timestamp,
-              httpMethod: childSpan.httpMethod,
-              httpStatus: childSpan.httpStatus,
-              destinationServicePort: childSpan.destinationServicePort,
-            },
-          };
-          nodes.push(childNode);
-        });
-      }
-
-      // scenario 3: Handle parent span without any child
-      else if (span.type === "parentWithoutChild") {
-        const parentNode = {
-          id: span.id,
-          type: "CustomNodeForTrace",
-          position: { x: parentX, y: parentY },
-          data: {
-            label: span.name,
-            type: "parentWithoutChild",
-            duration: span.duration,
-            outcome: span.outcome,
-            timestamp: span.timestamp,
-            cloudProvider: span.cloudProvider,
-            region: span.cloudRegion,
-            coldStart: span.coldStart,
-          },
-        };
-        nodes.push(parentNode);
       }
     });
 
@@ -165,35 +134,61 @@ function TraceLayoutTopology({ traceData }) {
   // call the layout hook with control over simulation freezing
   useTraceLayout({ strength, distance, simulationFrozen });
 
-  // Event handlers for drag start and end to freeze/unfreeze the simulation
-  // const onNodeDragStart = (_, node) => {
-  //   setSimulationFrozen(true);
-  // };
+  const handleZoomIn = () => {
+    zoomIn({ duration: 800 });
+  };
 
-  // const onNodeDragStop = (_, node) => {
-  //   setSimulationFrozen(false);
-  // };
+  const handleZoomOut = () => {
+    zoomOut({ duration: 800 });
+  };
+
+  const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
+
+  const miniMapStyles = {
+    nodeStrokeColor: (node) => (darkMode ? "#1f283e" : "#000000"),
+    nodeColor: (node) => (darkMode ? "#1f283e" : "#ffffff"),
+    maskColor: darkMode ? "#1f283e" : "rgba(255,255,255,0.3)",
+    maskStrokeColor: darkMode ? "#111111" : "#e0e0e0",
+    nodeBorderRadius: 2,
+  };
 
   return (
     <Box sx={{ height: "600px", width: "100%", position: "relative" }}>
       <ReactFlow
+        minZoom={0.3}
         nodes={nodes}
         edges={edges}
+        defaultViewport={defaultViewport}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        // onNodeDragStart={onNodeDragStart} // Freeze simulation on drag start
-        // onNodeDragStop={onNodeDragStop} // Unfreeze simulation on drag stop
         fitView={true}
         panOnDrag={true}
+        // snapToGrid={true}
         nodesDraggable={true}
         elementsSelectable={true}
         nodesConnectable={true}
       >
-        <Background color="#aaa" gap={16} />
-        <MiniMap nodeColor={() => "blue"} />
-        <Controls />
+        <Background color="#ccc" variant="dots" />
+        <MiniMap
+          nodeStrokeColor={miniMapStyles.nodeStrokeColor}
+          nodeColor={miniMapStyles.nodeColor}
+          maskColor={miniMapStyles.maskColor}
+          maskStrokeColor={miniMapStyles.maskStrokeColor}
+          nodeBorderRadius={miniMapStyles.nodeBorderRadius}
+          style={{
+            background: darkMode ? "#344767" : "#ffffff",
+          }}
+        />
+        <Controls>
+          <ControlButton onClick={handleZoomIn} title="another action">
+            <AddTwoToneIcon fontSize="large" />
+          </ControlButton>
+          <ControlButton onClick={handleZoomOut} title="another action">
+            <RemoveIcon fontSize="large" />
+          </ControlButton>
+        </Controls>
       </ReactFlow>
     </Box>
   );

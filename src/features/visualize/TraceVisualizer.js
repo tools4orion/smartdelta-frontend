@@ -1,24 +1,22 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Card,
-  IconButton,
-  Tooltip,
-  CircularProgress,
-} from "@mui/material";
+import { Card, Grid, CircularProgress, Box } from "@mui/material";
+import MDBox from "components/MDBox";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { ReactFlowProvider } from "reactflow";
 import { useLocation } from "react-router-dom";
-import MDTypography from "components/MDTypography";
 import elasticApmEndpoints from "network/endpoints/elasticApm";
 import ReactFlowWrapperTraceVisualizer from "./TraceLayout";
+import { useMaterialUIController } from "contexts/UIContext";
 
 const TraceVisualizer = () => {
   const [traceData, setTraceData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [controller, _] = useMaterialUIController();
 
   const location = useLocation();
   const traceName = location.state?.traceName || "defaultTraceName";
+  const { darkMode } = controller;
 
   useEffect(() => {
     const fetchTraceData = async () => {
@@ -38,43 +36,32 @@ const TraceVisualizer = () => {
   }, [traceName]);
 
   return (
-    <Box pt={6} pb={3}>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <Box
-              mx={2}
-              mt={-3}
-              py={3}
-              px={2}
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="info"
-            >
-              <Tooltip title="Resource Usage">
-                <IconButton>
-                  {/* Add icon or action here if needed */}
-                </IconButton>
-              </Tooltip>
-            </Box>
-            <Box pt={3} pl={10} pb={5}>
-              {loading ? (
-                <Box display="flex" justifyContent="center">
-                  <CircularProgress color="inherit" />
-                </Box>
-              ) : traceData ? (
-                <ReactFlowProvider>
-                  <ReactFlowWrapperTraceVisualizer traceData={traceData} />
-                </ReactFlowProvider>
-              ) : (
-                <div>No data available for this trace.</div>
-              )}
-            </Box>
-          </Card>
+    <DashboardLayout>
+      <DashboardNavbar />
+      <MDBox pt={6} pb={3}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox p={3}>
+                {loading ? (
+                  <Box display="flex" justifyContent="center" sx={{ p: 36 }}>
+                    <CircularProgress color="inherit" />
+                  </Box>
+                ) : traceData ? (
+                  <ReactFlowProvider>
+                    <ReactFlowWrapperTraceVisualizer traceData={traceData} />
+                  </ReactFlowProvider>
+                ) : (
+                  <Box sx={{ color: darkMode ? "#FFFFFF" : "#000000", p: 3 }}>
+                    No data available for this trace.
+                  </Box>
+                )}
+              </MDBox>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </MDBox>
+    </DashboardLayout>
   );
 };
 
