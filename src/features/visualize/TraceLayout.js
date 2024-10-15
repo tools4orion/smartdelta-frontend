@@ -80,8 +80,8 @@ function TraceLayoutTopology({ traceData }) {
 
         if (Array.isArray(span.childSpans)) {
           span.childSpans.forEach((childSpan, childIndex) => {
-            const childX = parentX + 100 + (childIndex % 2) * 150;
-            const childY = parentY + 150 + Math.floor(childIndex / 2) * 150;
+            const childX = parentX + 200 + (childIndex % 2) * 200;
+            const childY = parentY + 450 + Math.floor(childIndex / 2) * 250;
 
             const childNode = {
               id: childSpan.id,
@@ -142,7 +142,7 @@ function TraceLayoutTopology({ traceData }) {
     zoomOut({ duration: 800 });
   };
 
-  const defaultViewport = { x: 200, y: -200, zoom: 0.6 };
+  const defaultViewport = { x: 400, y: 100, zoom: 0.7 };
 
   const miniMapStyles = {
     nodeStrokeColor: (node) => (darkMode ? "#1f283e" : "#000000"),
@@ -158,14 +158,12 @@ function TraceLayoutTopology({ traceData }) {
         minZoom={0.3}
         nodes={nodes}
         edges={edges}
-        defaultViewport={defaultViewport}
+        defaultViewport={defaultViewport} // Set an appropriate viewport that shows nodes spaced out
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        fitView={true}
         panOnDrag={true}
-        // snapToGrid={true}
         nodesDraggable={true}
         elementsSelectable={true}
         nodesConnectable={true}
@@ -182,10 +180,10 @@ function TraceLayoutTopology({ traceData }) {
           }}
         />
         <Controls>
-          <ControlButton onClick={handleZoomIn} title="another action">
+          <ControlButton onClick={handleZoomIn} title="Zoom In">
             <AddTwoToneIcon fontSize="large" />
           </ControlButton>
-          <ControlButton onClick={handleZoomOut} title="another action">
+          <ControlButton onClick={handleZoomOut} title="Zoom Out">
             <RemoveIcon fontSize="large" />
           </ControlButton>
         </Controls>
