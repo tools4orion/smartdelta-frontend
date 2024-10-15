@@ -108,6 +108,7 @@ function TraceLayoutTopology({ traceData }) {
               sourceHandle: "source",
               targetHandle: "target",
               type: "floating",
+              label: `${childSpan.httpMethod} ${childSpan.httpStatus}`, // Set the label
               markerEnd: { type: "arrowclosed" },
               animated: true,
             });
