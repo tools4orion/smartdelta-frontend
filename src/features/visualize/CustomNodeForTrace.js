@@ -2,7 +2,8 @@ import React from "react";
 import { Handle, Position } from "reactflow";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-
+import lambda from "assets/svgs/lambda.svg";
+import dynamoDBlogo from "assets/svgs/dynamoDBlogo.svg";
 const CustomNodeForTrace = ({ id, data }) => {
   console.log("CustomNodeForTrace data", data);
 
@@ -43,6 +44,9 @@ const CustomNodeForTrace = ({ id, data }) => {
               <div>
                 <strong>HTTP Status:</strong> {data.httpStatus}
               </div>
+              <div>
+                <strong>Destination Port:</strong> {data.destinationServicePort}
+              </div>
             </>
           )}
         </div>
@@ -63,17 +67,37 @@ const CustomNodeForTrace = ({ id, data }) => {
           <>
             <strong style={{ textDecoration: "underline" }}>Child Span</strong>
             <br />
-            <h4>{data.label}</h4>
+            <div>
+              <img
+                width="36"
+                height="36"
+                src={dynamoDBlogo}
+                alt="DynamoDB"
+                style={{ paddingRight: "4px", verticalAlign: "middle" }}
+              />
+              <strong style={{ verticalAlign: "middle" }}>{data.label}</strong>
+            </div>
           </>
         ) : (
           <>
             <strong style={{ textDecoration: "underline" }}>Parent Span</strong>
             <br />
-            <strong>
-              {data.label.includes("FloraVisionCloudStack")
-                ? data.label.split(/\d/)[0]
-                : data.label}
-            </strong>
+            <div>
+              {data.label.includes("FloraVisionCloudStack") && (
+                <img
+                  width="36"
+                  height="36"
+                  src={lambda}
+                  alt="AWS Lambda"
+                  style={{ paddingRight: "6px", verticalAlign: "middle" }}
+                />
+              )}
+              <strong style={{ verticalAlign: "middle" }}>
+                {data.label.includes("FloraVisionCloudStack")
+                  ? data.label.split(/\d/)[0]
+                  : data.label}
+              </strong>
+            </div>
           </>
         )}
         <Handle type="source" position={Position.Bottom} id="source" />

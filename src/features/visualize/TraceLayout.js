@@ -76,6 +76,7 @@ function TraceLayoutTopology({ traceData }) {
                 timestamp: childSpan.timestamp,
                 httpMethod: childSpan.httpMethod,
                 httpStatus: childSpan.httpStatus,
+                destinationServicePort: childSpan.destinationServicePort,
               },
             };
             nodes.push(childNode);
@@ -95,7 +96,7 @@ function TraceLayoutTopology({ traceData }) {
         }
       }
 
-      // scenario 2 (buggy): Handle child span with unknown parent (skip unknown parent and only show child)
+      // scenario 2: Handle child span with unknown parent (skip unknown parent and only show child)
       else if (
         span.name === "Unknown Parent Span" &&
         span.duration === 0 &&
@@ -118,11 +119,10 @@ function TraceLayoutTopology({ traceData }) {
               timestamp: childSpan.timestamp,
               httpMethod: childSpan.httpMethod,
               httpStatus: childSpan.httpStatus,
+              destinationServicePort: childSpan.destinationServicePort,
             },
           };
           nodes.push(childNode);
-
-          // (buggy):: remove edge creation, since we don't have a visible parent node
         });
       }
 
