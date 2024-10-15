@@ -23,14 +23,14 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InsightsIcon from "@mui/icons-material/Insights";
 import SummarizeIcon from "@mui/icons-material/Summarize";
-import { useFileController } from "contexts/FileContext";
-import ReactFlowWrapper from "./ForceLayout";
+// import { useFileController } from "contexts/FileContext";
+// import ReactFlowWrapper from "./ForceLayout";
 import { useVisualizerController } from "contexts/VisualizerContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMaterialUIController } from "contexts/UIContext";
-import useUserGuide from "features/userTours/useUserGuide";
 
 import ReactFlowWrapperTraceVisualizer from "./TraceLayout";
+import elasticApmEndpoints from "network/endpoints/elasticApm";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -44,11 +44,35 @@ function TraceVisualizer() {
   //   const { fileStateToView } = state;
   //   const { fileName } = fileStateToView || {};
 
+  // TODO:: you might
+  const [traceData, setTraceData] = useState({});
+
+  const responseData = useLocation(); // OR YOU CAN TAKE THE RESPONSE FROM "TraceVisualizer" INSTEAD OF react-router-dom
+  const traceName = responseData.state?.traceName; // just an example (option chaining)
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { dispatch, toggleResourceSidebar } = useVisualizerController();
   const { darkMode } = controller;
+
+  useEffect(() => {
+    const fetchTraceData = async () => {
+      setLoading(true);
+      try {
+        const response = await elasticApmEndpoints.getTraceSpans(traceName);
+        const { data } = response;
+        console.log("Trace data:", data);
+        setTraceData(data);
+      } catch (error) {
+        console.error("Error fetching trace data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTraceData();
+  }, [traceName]);
 
   const clickResourcePrediction = async () => {
     toggleResourceSidebar(dispatch, true);
@@ -205,7 +229,7 @@ function TraceVisualizer() {
                     There is no data to visualize yet
                   </Box>
                 )} */}
-                <ReactFlowWrapperTraceVisualizer />
+                <ReactFlowWrapperTraceVisualizer traceData={traceData} />
               </MDBox>
             </Card>
           </Grid>
