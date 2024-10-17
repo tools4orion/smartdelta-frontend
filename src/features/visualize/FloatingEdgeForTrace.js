@@ -20,7 +20,8 @@ const FloatingEdgeForTrace = ({
       targetPosition: "top",
     });
 
-    const strokeColor = label.includes("200") ? "green" : "red";
+    const statusCode = parseInt(label.split(" ")[1], 10);
+    const strokeColor = statusCode >= 200 && statusCode < 300 ? "green" : "red";
 
     return (
       <>
