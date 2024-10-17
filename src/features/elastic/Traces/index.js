@@ -12,11 +12,15 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import TracesList from "./TracesList";
 import getTraces from "../actions/getTraces";
 import elasticsearch_logo from "../../../assets/svgs/elasticsearch_logo.svg";
+import { useLocation } from "react-router-dom";
 
 const Traces = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [selectedRange, setSelectedRange] = useState("now-1y");
+
+  const location = useLocation();
+  const traceName = location.state?.traceName || "defaultTraceName";
 
   const options = [
     { label: "Last 5 Minutes", value: "now-5m" },
@@ -29,10 +33,10 @@ const Traces = () => {
     { label: "Last 5 Years", value: "now-5y" },
   ];
 
-  const fetchData = async (range) => {
+  const fetchData = async (traceName, range) => {
     setLoading(true);
     try {
-      const data = await getTraces(range);
+      const data = await getTraces(traceName, range);
       setData(data);
     } catch (error) {
       console.error("Error fetching traces:", error);
@@ -42,10 +46,10 @@ const Traces = () => {
   };
 
   useEffect(() => {
-    if (selectedRange) {
-      fetchData(selectedRange);
+    if (selectedRange && traceName) {
+      fetchData(traceName, selectedRange);
     }
-  }, [selectedRange]);
+  }, [traceName, selectedRange]);
 
   const handleRangeChange = (event, newValue) => {
     if (newValue) {
@@ -73,7 +77,6 @@ const Traces = () => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              // mb={4}
               m={2}
             >
               <Box display="flex" alignItems="center">

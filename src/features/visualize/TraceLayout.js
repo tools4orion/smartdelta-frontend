@@ -54,7 +54,7 @@ function TraceLayoutTopology(traceData) {
         // unwanted spans
         if (
           span === null ||
-          undefined ||
+          span === undefined ||
           span.name === "Unknown Parent Span" ||
           span.childSpans.length === 0 ||
           span.duration === 0 ||

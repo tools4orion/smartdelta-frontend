@@ -1,11 +1,8 @@
 import elasticApmEndpoints from "network/endpoints/elasticApm";
 
-const getTraces = async (dateRange) => {
+const getTraces = async (serviceName, dateRange) => {
   try {
-    const res = await elasticApmEndpoints.getTraceSpans(
-      "traceSpansByDate",
-      dateRange
-    );
+    const res = await elasticApmEndpoints.getTraceSpans(serviceName, dateRange);
     const { data } = res;
     console.log("getTraceSpans", data);
     return data ?? {};

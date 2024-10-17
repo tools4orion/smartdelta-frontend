@@ -5,8 +5,6 @@ import { styled } from "@mui/material/styles";
 import lambda from "assets/svgs/lambda.svg";
 import dynamoDBlogo from "assets/svgs/dynamoDBlogo.svg";
 const CustomNodeForTrace = ({ id, data }) => {
-  console.log("CustomNodeForTrace data", data);
-
   const LightTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({

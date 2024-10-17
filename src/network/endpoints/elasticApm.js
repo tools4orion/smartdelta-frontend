@@ -2,9 +2,9 @@ import { axiosClient } from "../apiClient";
 const elasticApmEndpoints = {
   getLogs: () => axiosClient.get("/elastic/logs"),
   getTraceSpans: (serviceName, dateRange) =>
-    axiosClient.get(`/elastic/trace-spans/${serviceName}`, {
-      params: { dateRange },
-    }),
+    axiosClient.get(
+      `/elastic/trace-spans/${serviceName}?dateRange=${dateRange}`
+    ),
   getServiceLogs: (serviceName) =>
     axiosClient.get(`/elastic/logs/${serviceName}`),
   getServiceTransactions: (serviceName) =>
