@@ -141,6 +141,13 @@ function DashboardNavbar({ absolute, light, isMini, searchAction }) {
     },
   });
 
+  // const extractTitle = (str) => {
+  //   const regex = /^(FloraVisionCloudStack\s\w+)(?=[A-Z]?\d|-)/;
+  //   const match = str.match(regex);
+
+  //   return match ? match[1] : str;
+  // };
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}

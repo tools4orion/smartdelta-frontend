@@ -1,11 +1,9 @@
 import MDTypography from "components/MDTypography";
-
 import { Tooltip } from "@mui/material";
 import ServiceAction from "../actions/ServiceAction";
 // import aws from "assets/svgs/aws-icon.svg";
 import lambda from "assets/svgs/lambda.svg";
-import VisibilitySharpIcon from "@mui/icons-material/VisibilitySharp";
-import TracesAction from "../actions/TracesAction";
+import TracesTableAction from "../actions/TracesTableAction";
 
 const getServicesTable = (services) => {
   const columns = [
@@ -107,7 +105,7 @@ const getServicesTable = (services) => {
             </MDTypography>
           </>
         ),
-        traces: <TracesAction name={name} />,
+        traces: <TracesTableAction name={name} />,
         action: <ServiceAction name={name} />,
       };
     }) || [];

@@ -1,25 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
-import VisibilitySharpIcon from "@mui/icons-material/VisibilitySharp";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 import { IconButton } from "@mui/material";
 import MDTypography from "components/MDTypography";
 
-const TracesAction = ({ name, selectedData }) => {
+const TracesTableAction = ({ name }) => {
   const navigate = useNavigate();
   const onClickHandler = () => {
-    navigate(`/elastic-services-trace-visualize/${name}`, {
-      state: { traceName: name, selectedData: selectedData },
+    navigate(`/elastic-services-traces/${name}`, {
+      state: { traceName: name },
     });
   };
 
   return (
     <IconButton onClick={onClickHandler}>
       <MDTypography variant="caption" color="text" fontWeight="medium">
-        <VisibilitySharpIcon fontSize="medium" />
+        <AnalyticsIcon fontSize="medium" />
       </MDTypography>
     </IconButton>
   );
 };
 
-export default TracesAction;
+export default TracesTableAction;

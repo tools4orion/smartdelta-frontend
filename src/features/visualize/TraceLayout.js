@@ -27,8 +27,9 @@ const nodeTypes = {
   CustomNodeForTrace: CustomNodeForTrace,
 };
 
-function TraceLayoutTopology({ traceData }) {
+function TraceLayoutTopology(traceData) {
   const [controller, _] = useMaterialUIController();
+
   const { zoomIn, zoomOut } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -40,6 +41,7 @@ function TraceLayoutTopology({ traceData }) {
 
   // it convert traceData to nodes and edges for React Flow
   const convertTraceDataToElements = (traceData) => {
+    console.log("trace data came to convertTraceDataToElements", traceData);
     const nodes = [];
     const edges = [];
 
@@ -51,6 +53,8 @@ function TraceLayoutTopology({ traceData }) {
       if (span.type === "parentWithChild") {
         // unwanted spans
         if (
+          span === null ||
+          undefined ||
           span.name === "Unknown Parent Span" ||
           span.childSpans.length === 0 ||
           span.duration === 0 ||
@@ -108,7 +112,7 @@ function TraceLayoutTopology({ traceData }) {
               sourceHandle: "source",
               targetHandle: "target",
               type: "floating",
-              label: `${childSpan.httpMethod} ${childSpan.httpStatus}`, // Set the label
+              label: `${childSpan.httpMethod} ${childSpan.httpStatus}`,
               markerEnd: { type: "arrowclosed" },
               animated: true,
             });
@@ -159,7 +163,7 @@ function TraceLayoutTopology({ traceData }) {
         minZoom={0.3}
         nodes={nodes}
         edges={edges}
-        defaultViewport={defaultViewport} // Set an appropriate viewport that shows nodes spaced out
+        defaultViewport={defaultViewport}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
