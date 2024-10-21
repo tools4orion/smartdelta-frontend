@@ -137,15 +137,33 @@ const ElasticDashboard = () => {
   const { darkMode } = controller;
 
   const renderSparklineChart = (data, title, yaxisLabel) => {
-    const seriesData = data.map((entry) => ({
-      x: new Date(entry.timestamp).getTime() || "N/A",
-      y: entry.duration || entry.billedDuration || entry.freeMemory || 0,
-      formattedDate: new Date(entry.timestamp).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      }),
-    }));
+    const seriesData = data.map((entry, index, array) => {
+      const isMemoryUsage = title === "Memory Usage";
+
+      const getValue = () => {
+        if (isMemoryUsage) {
+          const prev = array[index - 1]
+            ? array[index - 1].freeMemory
+            : entry.freeMemory;
+          const next = array[index + 1]
+            ? array[index + 1].freeMemory
+            : entry.freeMemory;
+          return (prev + entry.freeMemory + next) / 3;
+        } else {
+          return entry.duration || entry.billedDuration || 0;
+        }
+      };
+
+      return {
+        x: new Date(entry.timestamp).getTime() || "N/A",
+        y: getValue(),
+        formattedDate: new Date(entry.timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+      };
+    });
 
     const chartOptions = {
       chart: {
@@ -182,7 +200,7 @@ const ElasticDashboard = () => {
             if (title === "Billed Duration" || title === "Function Duration") {
               return `${val} ms`;
             } else if (title === "Memory Usage") {
-              return `${val} bytes`;
+              return `${Math.round(val)} bytes`;
             }
             return val;
           },
