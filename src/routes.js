@@ -144,14 +144,14 @@ const routes = [
     component: <ComparisonResult />,
   },
 
-  /*  {
+  {
     type: "collapse",
     name: "Kubernetes Cluster",
     key: "k8Cluster",
     icon: <Icon fontSize="small">cloud</Icon>,
     route: "/k8Cluster",
-    component: <ClusterIntegration/>,
-  },*/
+    component: <ClusterIntegration />,
+  },
   {
     type: "collapse",
     name: "Elastic Cloud",
