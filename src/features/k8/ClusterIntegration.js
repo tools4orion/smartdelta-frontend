@@ -12,7 +12,7 @@ import MDSnackbar from "components/MDSnackbar";
 
 import authenticateK8S from "./actions/auth.action";
 import getClusterInfo from "./actions/cluster.action";
-import getPodMetrics from "./actions/podmetrics.action"; 
+import getPodMetrics from "./actions/podmetrics.action";
 import useSnackbar from "hooks/useSnackbar";
 import { useNavigate } from "react-router-dom";
 
@@ -36,40 +36,46 @@ const ClusterIntegration = () => {
     serviceToken: "",
   });
 
-  const [namespace, setNamespace] = useState(""); // New state for namespace
-  const [podMetrics, setPodMetrics] = useState(null); // New state for pod metrics
-
   const submitForm = async () => {
     // authenticate with the provided details
-    const { isAuthenticated, provider, credentials, authMethod } = await authenticateK8S(
-      tabNames[value],
-      formInputs.kubeconfig,
-      formInputs.authMethod,
-      snackbar
-    );
-  
+    const { isAuthenticated, provider, credentials, authMethod } =
+      await authenticateK8S(
+        tabNames[value],
+        formInputs.kubeconfig,
+        formInputs.authMethod,
+        snackbar
+      );
+
     if (isAuthenticated) {
       try {
-        // Fetch cluster information immediately after authentication
-        const clusterInfo = await getClusterInfo(provider, credentials, authMethod);
+        const clusterInfo = await getClusterInfo(
+          provider,
+          credentials,
+          authMethod
+        );
         console.log("Cluster Info:", clusterInfo);
-        snackbar.openSnackbar("Cluster information retrieved successfully", "success");
-  
+
         // fetch pod metrics right after retrieving cluster info
-        const namespace = "default"; // or set this dynamically if needed
-        const podMetrics = await getPodMetrics(provider, credentials, authMethod, namespace);
-        setPodMetrics(podMetrics);
-        snackbar.openSnackbar("Pod metrics retrieved successfully", "success");
+        const namespace = "default"; // to find needed microservices
+        const podMetrics = await getPodMetrics(
+          provider,
+          credentials,
+          authMethod,
+          namespace
+        );
+        console.log("Pod Metrics:", podMetrics);
       } catch (error) {
-        snackbar.openSnackbar("Error fetching cluster info or pod metrics", "error");
+        snackbar.openSnackbar(
+          "Error fetching cluster info or pod metrics",
+          "error"
+        );
       }
-  
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
     }
   };
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -137,7 +143,6 @@ const ClusterIntegration = () => {
                 >
                   Connect To {tabNames[value]}
                 </MDButton>
-
               </MDBox>
             </Card>
           </Grid>

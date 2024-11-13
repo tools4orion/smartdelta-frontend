@@ -2,7 +2,15 @@ import k8sEndpoints from "network/endpoints/k8s";
 
 const getPodMetrics = async (provider, credentials, authMethod, namespace) => {
   try {
-    console.log(`PODMETRICS`, `provider`, provider, `credentials`, credentials, `authMethod`, authMethod);
+    console.log(
+      `PODMETRICS`,
+      `provider`,
+      provider,
+      `credentials`,
+      credentials,
+      `authMethod`,
+      authMethod
+    );
 
     const response = await k8sEndpoints.getPodMetrics({
       provider,
@@ -10,8 +18,9 @@ const getPodMetrics = async (provider, credentials, authMethod, namespace) => {
       authMethod,
       namespace,
     });
-    console.log("Pod Metrics:", response.data);
-    return response.data;
+    const { data } = response;
+    console.log("Pod Metrics Info:", data);
+    return data;
   } catch (error) {
     console.error("Error fetching pod metrics:", error);
     throw error;
