@@ -13,7 +13,7 @@ import Footer from "examples/Footer";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import FadeIn from "hooks/FadeIn";
 import { useEffect } from "react";
-import { getClusterInfo } from "features/k8/actions/cluster.action";
+// import { getClusterInfo } from "features/k8/actions/cluster.action";
 
 // Data
 // import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
@@ -25,10 +25,10 @@ import { getClusterInfo } from "features/k8/actions/cluster.action";
 
 function Dashboard() {
   // const { sales, tasks } = reportsLineChartData;
-  useEffect(() => {
-	const info = getClusterInfo();
-	console.log(info);
-  }, [])
+  // useEffect(() => {
+	// const info = getClusterInfo();
+	// console.log(info);
+  // }, [])
 
   return (
     <DashboardLayout>

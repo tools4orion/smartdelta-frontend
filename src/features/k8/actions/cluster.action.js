@@ -1,8 +1,14 @@
 import k8sEndpoints from "network/endpoints/k8s";
-export const getClusterInfo = async () => {
-  console.log("getClusterInfo");
+
+const getClusterInfo = async (provider, credentials, authMethod) => {
   try {
-    const response = await k8sEndpoints.getClusterInfo();
+    console.log(`CLUSTER`, `provider`, provider, `credentials`, credentials, `authMethod`, authMethod);
+    
+    const response = await k8sEndpoints.getClusterInfo({
+      provider,
+      credentials,
+      authMethod,
+    });
     console.log("Cluster Info:", response.data);
     return response.data;
   } catch (error) {
@@ -10,3 +16,5 @@ export const getClusterInfo = async () => {
     throw error;
   }
 };
+
+export default getClusterInfo;

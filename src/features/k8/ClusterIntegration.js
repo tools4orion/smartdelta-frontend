@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Grid } from "@mui/material";
+import { Card, Grid, TextField } from "@mui/material";
 
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -11,6 +11,8 @@ import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 
 import authenticateK8S from "./actions/auth.action";
+import getClusterInfo from "./actions/cluster.action";
+import getPodMetrics from "./actions/podmetrics.action"; 
 import useSnackbar from "hooks/useSnackbar";
 import { useNavigate } from "react-router-dom";
 
@@ -22,8 +24,7 @@ import bareMetal from "../../assets/svgs/bareMetal.svg";
 import AuthFormInputs from "./components/AuthFormInputs";
 
 const ClusterIntegration = () => {
-  const tabNames = ["GCloud", "AWS", "Azure", "Bare Metal Server"]; // Names corresponding to each tab
-
+  const tabNames = ["GCloud", "AWS", "Azure", "Bare Metal Server"];
   const [value, setValue] = useState(0);
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
@@ -32,24 +33,43 @@ const ClusterIntegration = () => {
   const [formInputs, setFormInputs] = useState({
     authMethod: "kubeconfig",
     kubeconfig: "",
-    serviceToken: "", // why is this here?
+    serviceToken: "",
   });
 
+  const [namespace, setNamespace] = useState(""); // New state for namespace
+  const [podMetrics, setPodMetrics] = useState(null); // New state for pod metrics
+
   const submitForm = async () => {
-    // Call the authentication function
-    const { isAuthenticated } = await authenticateK8S(
+    // authenticate with the provided details
+    const { isAuthenticated, provider, credentials, authMethod } = await authenticateK8S(
       tabNames[value],
       formInputs.kubeconfig,
       formInputs.authMethod,
       snackbar
     );
-
+  
     if (isAuthenticated) {
+      try {
+        // Fetch cluster information immediately after authentication
+        const clusterInfo = await getClusterInfo(provider, credentials, authMethod);
+        console.log("Cluster Info:", clusterInfo);
+        snackbar.openSnackbar("Cluster information retrieved successfully", "success");
+  
+        // fetch pod metrics right after retrieving cluster info
+        const namespace = "default"; // or set this dynamically if needed
+        const podMetrics = await getPodMetrics(provider, credentials, authMethod, namespace);
+        setPodMetrics(podMetrics);
+        snackbar.openSnackbar("Pod metrics retrieved successfully", "success");
+      } catch (error) {
+        snackbar.openSnackbar("Error fetching cluster info or pod metrics", "error");
+      }
+  
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
     }
   };
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -108,16 +128,17 @@ const ClusterIntegration = () => {
                   formInputs={formInputs}
                   handleFormInputChange={handleFormInputChange}
                 />
-                {/* Render the appropriate form inputs based on the selected tab */}
+                <MDButton
+                  variant="outlined"
+                  size="small"
+                  color={"success"}
+                  onClick={submitForm}
+                  style={{ marginTop: "1rem" }}
+                >
+                  Connect To {tabNames[value]}
+                </MDButton>
+
               </MDBox>
-              <MDButton
-                variant="outlined"
-                size="small"
-                color={"success"}
-                onClick={submitForm}
-              >
-                Connect To {tabNames[value]}
-              </MDButton>
             </Card>
           </Grid>
         </Grid>
