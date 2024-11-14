@@ -36,8 +36,22 @@ const AuthFormInputs = ({ selectedTab, formInputs, handleFormInputChange }) => {
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
 
+
+  const getProviderName = () => {
+    const providers = [
+      "Google Cloud",
+      "AWS ECS",
+      "Microsoft Azure AKS",
+      "Bare Metal Server",
+      "Local Server",
+    ];
+    return providers[selectedTab];
+  };
+
   const codeExample =
-    "gcloud container clusters get-credentials ${CLUSTER_NAME}  --zone ${REGION}  && cat ~/.kube/config | xsel -ib";
+    getProviderName() === "Google Cloud"
+      ? "gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${REGION} && cat ~/.kube/config | xsel -ib"
+      : "cat ~/.kube/config | pbcopy";
 
   const gcloudItems = [
     "Copy the command below to get auth credentials",
@@ -63,20 +77,11 @@ const AuthFormInputs = ({ selectedTab, formInputs, handleFormInputChange }) => {
     return copyCommands[operatingSystem] || "xsel -ib";
   };
 
-  const getProviderName = () => {
-    const providers = [
-      "Google Cloud",
-      "AWS ECS",
-      "Microsoft Azure AKS",
-      "Bare Metal Server",
-    ];
-    return providers[selectedTab];
-  };
 
   return (
     <Stack spacing={2}>
       <MDTypography variant="h5">
-        {getProviderName()} Cloud Guide For {getOperatingSystem()}
+        {getProviderName()} Guide For {getOperatingSystem()}
       </MDTypography>
       <Breadcrumbs
         separator={
@@ -96,16 +101,22 @@ const AuthFormInputs = ({ selectedTab, formInputs, handleFormInputChange }) => {
           <Tooltip title="Copy">
             <ContentCopyIcon className="copyIcon" />
           </Tooltip>
+          {getProviderName() === "Google Cloud" ? (
           <CodeBlock>
             <span className="logoBlue"> gcloud </span>
-            container clusters <span className="logoRed">
-              get-credentials
-            </span>{" "}
+            container clusters <span className="logoRed">get-credentials</span>{" "}
             <span className="logoYellow">CLUSTER_NAME</span> --zone{" "}
             <span className="logoYellow">ZONE</span> cat
             <span className="logoGreen"> ~/.kube/config</span> |{" "}
-            <span className="logoBlue">{renderCopyCmd()}</span>
+            <span className="logoBlue">{renderCopyCmd(getOperatingSystem())}</span>
           </CodeBlock>
+        ) : (
+          <CodeBlock>
+            <span className="logoBlue">cat</span> {" "}
+            ~/.kube/config {" "}
+            <span className="logoGreen">| pbcopy</span>
+            </CodeBlock>
+        )}
         </div>
       </CopyToClipboard>
       <TextField

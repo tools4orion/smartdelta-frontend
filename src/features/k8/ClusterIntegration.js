@@ -19,12 +19,13 @@ import { useNavigate } from "react-router-dom";
 import awsEks from "../../assets/svgs/awsEks.svg";
 import google_cloud from "../../assets/svgs/google_cloud.svg";
 import microsoftAzure from "../../assets/svgs/microsoftAzure.png";
+import local from "assets/images/local.png";
 import bareMetal from "../../assets/svgs/bareMetal.svg";
 
 import AuthFormInputs from "./components/AuthFormInputs";
 
 const ClusterIntegration = () => {
-  const tabNames = ["GCloud", "AWS", "Azure", "Bare Metal Server"];
+  const tabNames = ["GCloud", "AWS", "Azure", "Bare Metal Server", "Local"];
   const [value, setValue] = useState(0);
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
@@ -35,6 +36,7 @@ const ClusterIntegration = () => {
     kubeconfig: "",
     serviceToken: "",
   });
+
 
   const submitForm = async () => {
     // authenticate with the provided details
@@ -74,6 +76,7 @@ const ClusterIntegration = () => {
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
+
     }
   };
 
@@ -106,7 +109,7 @@ const ClusterIntegration = () => {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Enable Kubernetes cluster monitoring
+                  Enable Kubernetes Cluster Monitoring
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h6" py={3} px={4}>
@@ -126,6 +129,7 @@ const ClusterIntegration = () => {
                   <Tab
                     icon={<img width="250" height="150" src={bareMetal} />}
                   />
+                  <Tab icon={<img width="50" height="50" src={local} />} />
                 </Tabs>
               </MDBox>
               <MDBox display="flex" flexDirection="column" px={4} py={6}>
