@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Grid, TextField } from "@mui/material";
+import { Card, Grid } from "@mui/material";
 
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -19,8 +19,8 @@ import { useNavigate } from "react-router-dom";
 import awsEks from "../../assets/svgs/awsEks.svg";
 import google_cloud from "../../assets/svgs/google_cloud.svg";
 import microsoftAzure from "../../assets/svgs/microsoftAzure.png";
-import local from "assets/images/local.png";
 import bareMetal from "../../assets/svgs/bareMetal.svg";
+import prometheus from "../../assets/svgs/prometheus_logo.svg";
 
 import AuthFormInputs from "./components/AuthFormInputs";
 
@@ -36,7 +36,6 @@ const ClusterIntegration = () => {
     kubeconfig: "",
     serviceToken: "",
   });
-
 
   const submitForm = async () => {
     // authenticate with the provided details
@@ -76,7 +75,6 @@ const ClusterIntegration = () => {
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
-
     }
   };
 
@@ -129,7 +127,7 @@ const ClusterIntegration = () => {
                   <Tab
                     icon={<img width="250" height="150" src={bareMetal} />}
                   />
-                  <Tab icon={<img width="50" height="50" src={local} />} />
+                  <Tab icon={<img width="50" height="50" src={prometheus} />} />
                 </Tabs>
               </MDBox>
               <MDBox display="flex" flexDirection="column" px={4} py={6}>
@@ -138,15 +136,17 @@ const ClusterIntegration = () => {
                   formInputs={formInputs}
                   handleFormInputChange={handleFormInputChange}
                 />
-                <MDButton
-                  variant="outlined"
-                  size="small"
-                  color={"success"}
-                  onClick={submitForm}
-                  style={{ marginTop: "1rem" }}
-                >
-                  Connect To {tabNames[value]}
-                </MDButton>
+                {tabNames[value] !== "Local" && (
+                  <MDButton
+                    variant="outlined"
+                    size="small"
+                    color={"success"}
+                    onClick={submitForm}
+                    style={{ marginTop: "1rem" }}
+                  >
+                    Connect To {tabNames[value]}
+                  </MDButton>
+                )}
               </MDBox>
             </Card>
           </Grid>
