@@ -52,16 +52,12 @@ const SelectPodsComponent = () => {
           }));
           setPods(podDetails);
           setFilteredPods(podDetails);
-        } else {
-          snackbar.openSnackbar(
-            "Error fetching cluster info or pod metrics",
-            "error"
-          );
         }
       } catch (err) {
         snackbar.openSnackbar(
+          err.message,
+          "error",
           "Error fetching cluster info or pod metrics",
-          "error"
         );
       } finally {
         setLoading(false);
@@ -102,7 +98,7 @@ const SelectPodsComponent = () => {
   const handleConnect = () => {
     console.log("Selected Pods:: ", selectedPods);
     if (selectedPods.length === 0) {
-      snackbar.openSnackbar("Please select at least one pod.", "error");
+      snackbar.openSnackbar("Please select at least one pod.", "error", "Empty selection");
       return;
     }
     navigate("/next-screen", { state: { selectedPods } }); // TODO:: continue here
