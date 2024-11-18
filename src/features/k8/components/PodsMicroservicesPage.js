@@ -19,6 +19,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import MDSnackbar from "components/MDSnackbar";
+import useSnackbar from "hooks/useSnackbar";
 import { useLocation } from "react-router-dom";
 import k8slogo from "../../../assets/svgs/kubernetes-logo.svg";
 import { useMaterialUIController } from "contexts/UIContext";
@@ -43,6 +45,7 @@ const MicroserviceMetrics = () => {
   const { selectedPods } = location.state || { selectedPods: [] };
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
+  const snackbar = useSnackbar();
 
   const [cpuTimeRange, setCpuTimeRange] = useState(timeRanges[0].value);
   const [memoryTimeRange, setMemoryTimeRange] = useState(timeRanges[0].value);
@@ -103,9 +106,10 @@ const MicroserviceMetrics = () => {
           })) || [];
         return values;
       } catch (error) {
-        console.error(
-          `Error fetching ${metric} metrics for pod ${pod}:`,
-          error
+        snackbar.openSnackbar(
+          error.message,
+          "error",
+          `Error fetching ${metric} metrics for pod ${pod}:`
         );
         return [];
       }
@@ -486,6 +490,14 @@ const MicroserviceMetrics = () => {
           </Grid>
         </Grid>
       </MDBox>
+      <MDSnackbar
+        open={snackbar.isOpen}
+        onClose={snackbar.closeSnackbar}
+        message={snackbar.message}
+        title={snackbar.title}
+        icon={snackbar.icon}
+        type={snackbar.type}
+      />
     </DashboardLayout>
   );
 };
