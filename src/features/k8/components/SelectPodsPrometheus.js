@@ -44,7 +44,7 @@ const SelectPodsPrometheus = () => {
         const query = `up{job="kubernetes-pods"}`;
         const response = await axios.get(`${prometheusServer}/api/v1/query`, {
           params: {
-            query: encodeURIComponent(query),
+            query,
           },
         });
         const data = response.data;
