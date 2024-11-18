@@ -4,7 +4,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import MDTypography from "components/MDTypography";
 import { getOperatingSystem } from "utils/getOS";
 import CopyToClipboard from "react-copy-to-clipboard";
-import SelectPodsComponent from "./SelectPodsMicroservices";
+import SelectPodsPrometheus from "./SelectPodsPrometheus";
 import "../index.css";
 
 import useSnackbar from "hooks/useSnackbar";
@@ -137,7 +137,7 @@ const AuthFormInputs = ({ selectedTab, formInputs, handleFormInputChange }) => {
           />
         </>
       ) : (
-        <SelectPodsComponent />
+        <SelectPodsPrometheus />
       )}
       <MDSnackbar
         open={isOpen}

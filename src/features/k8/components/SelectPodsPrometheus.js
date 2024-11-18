@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -18,7 +19,7 @@ import { useMaterialUIController } from "contexts/UIContext";
 import MDSnackbar from "components/MDSnackbar";
 import useSnackbar from "hooks/useSnackbar";
 
-const SelectPodsComponent = () => {
+const SelectPodsPrometheus = () => {
   const [pods, setPods] = useState([]);
   const [filteredPods, setFilteredPods] = useState([]);
   const [selectedPods, setSelectedPods] = useState([]);
@@ -31,20 +32,24 @@ const SelectPodsComponent = () => {
   const prometheusServer = "http://127.0.0.1:9090"; // prometheus' most common server URL and port
   const navigate = useNavigate();
   const snackbar = useSnackbar();
+  const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
   const { darkMode } = controller;
   let debounceTimeout;
 
+  // action network request is not used since this is a third party API
   useEffect(() => {
     const fetchPods = async () => {
       setLoading(true);
       try {
         const query = `up{job="kubernetes-pods"}`;
-        const response = await fetch(
-          `${prometheusServer}/api/v1/query?query=${encodeURIComponent(query)}`
-        );
-        const data = await response.json();
+        const response = await axios.get(`${prometheusServer}/api/v1/query`, {
+          params: {
+            query: encodeURIComponent(query),
+          },
+        });
+        const data = response.data;
 
-        if (response.ok && data.status === "success") {
+        if (response.status === 200 && data.status === "success") {
           const podDetails = data.data.result.map((item) => ({
             pod: item.metric.pod,
             app: item.metric.app || "N/A",
@@ -278,15 +283,19 @@ const SelectPodsComponent = () => {
         </>
       )}
       <MDSnackbar
-        open={snackbar.isOpen}
-        onClose={snackbar.closeSnackbar}
-        message={snackbar.message}
-        title={snackbar.title}
-        icon={snackbar.icon}
-        type={snackbar.type}
-      />
+        open={isOpen}
+        autoHideDuration={3000}
+        onClose={closeSnackbar}
+        message={message}
+        icon={icon}
+        close={closeSnackbar}
+        title={title}
+        color={type}
+      >
+        <p>{snackbar.message}</p>
+      </MDSnackbar>
     </Box>
   );
 };
 
-export default SelectPodsComponent;
+export default SelectPodsPrometheus;

@@ -22,7 +22,7 @@ import MDTypography from "components/MDTypography";
 import MDSnackbar from "components/MDSnackbar";
 import useSnackbar from "hooks/useSnackbar";
 import { useLocation } from "react-router-dom";
-import k8slogo from "../../../assets/svgs/kubernetes-logo.svg";
+import k8slogo from "../../assets/svgs/kubernetes-logo.svg";
 import { useMaterialUIController } from "contexts/UIContext";
 
 const timeRanges = [
@@ -40,12 +40,13 @@ const calculateStep = (timeRange) => {
   return Math.ceil(timeRange / maxPoints);
 };
 
-const MicroserviceMetrics = () => {
+const MicroservicesMonitoring = () => {
   const location = useLocation();
   const { selectedPods } = location.state || { selectedPods: [] };
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const snackbar = useSnackbar();
+  const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
 
   const [cpuTimeRange, setCpuTimeRange] = useState(timeRanges[0].value);
   const [memoryTimeRange, setMemoryTimeRange] = useState(timeRanges[0].value);
@@ -60,6 +61,7 @@ const MicroserviceMetrics = () => {
 
   const prometheusServer = "http://127.0.0.1:9090"; // prometheus' most common server URL and port
 
+  // action network requests is not used since third party API is used for all requests in this component
   const fetchPodMetrics = useCallback(
     async (pod, timeRange, metric) => {
       const endTime = Math.floor(Date.now() / 1000);
@@ -107,9 +109,9 @@ const MicroserviceMetrics = () => {
         return values;
       } catch (error) {
         snackbar.openSnackbar(
-          error.message,
+          `Error fetching ${metric} metrics for pod ${pod}:`,
           "error",
-          `Error fetching ${metric} metrics for pod ${pod}:`
+          error.message
         );
         return [];
       }
@@ -491,15 +493,19 @@ const MicroserviceMetrics = () => {
         </Grid>
       </MDBox>
       <MDSnackbar
-        open={snackbar.isOpen}
-        onClose={snackbar.closeSnackbar}
-        message={snackbar.message}
-        title={snackbar.title}
-        icon={snackbar.icon}
-        type={snackbar.type}
-      />
+        open={isOpen}
+        autoHideDuration={3000}
+        onClose={closeSnackbar}
+        message={message}
+        icon={icon}
+        close={closeSnackbar}
+        title={title}
+        color={type}
+      >
+        <p>{snackbar.message}</p>
+      </MDSnackbar>
     </DashboardLayout>
   );
 };
 
-export default MicroserviceMetrics;
+export default MicroservicesMonitoring;
