@@ -63,7 +63,7 @@ import MDBox from "components/MDBox";
 import ClusterIntegration from "features/k8/ClusterIntegration";
 import ApexChart from "features/featureDiscovery/summarizeServices/ServicesSummary";
 import ElasticIntegration from "features/elastic/ElasticIntegration";
-import ElasticDashboard from "features/elastic/ElasticDashboard";
+// import ElasticDashboard from "features/elastic/ElasticDashboard";
 import Services from "features/elastic/Services";
 import Anomalies from "features/elastic/AnomalyDetection";
 import ComparisonResult from "features/compare";
@@ -143,7 +143,6 @@ const routes = [
     route: "/comparison-result",
     component: <ComparisonResult />,
   },
-
   {
     type: "collapse",
     name: "Kubernetes Cluster",

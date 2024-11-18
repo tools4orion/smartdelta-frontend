@@ -38,7 +38,6 @@ const SelectPodsComponent = () => {
     const fetchPods = async () => {
       setLoading(true);
       try {
-        // TODO:: put them on action + axios
         const query = `up{job="kubernetes-pods"}`;
         const response = await fetch(
           `${prometheusServer}/api/v1/query?query=${encodeURIComponent(query)}`
@@ -57,7 +56,7 @@ const SelectPodsComponent = () => {
         snackbar.openSnackbar(
           err.message,
           "error",
-          "Error fetching cluster info or pod metrics",
+          "Error fetching cluster info or pod metrics"
         );
       } finally {
         setLoading(false);
@@ -98,10 +97,14 @@ const SelectPodsComponent = () => {
   const handleConnect = () => {
     console.log("Selected Pods:: ", selectedPods);
     if (selectedPods.length === 0) {
-      snackbar.openSnackbar("Please select at least one pod.", "error", "Empty selection");
+      snackbar.openSnackbar(
+        "Please select at least one pod.",
+        "error",
+        "Empty selection"
+      );
       return;
     }
-    navigate("/next-screen", { state: { selectedPods } }); // TODO:: continue here
+    navigate("/k8s-cluster-comparisons", { state: { selectedPods } });
   };
 
   const handleItemsPerPageChange = (event) => {

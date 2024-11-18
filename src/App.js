@@ -55,6 +55,7 @@ import ElasticDashboard from "features/elastic/ElasticDashboard";
 import ReactFlowWrapperTrace from "features/visualize/TraceLayout";
 import TraceVisualizer from "features/visualize/TraceVisualizer";
 import Traces from "features/elastic/Traces";
+import MicroserviceMetrics from "features/k8/components/PodsMicroservicesPage";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -176,6 +177,10 @@ export default function App() {
         <Route
           path="/elastic-services-trace-visualize/:serviceName"
           element={<TraceVisualizer />}
+        />
+        <Route
+          path="/k8s-cluster-comparisons"
+          element={<MicroserviceMetrics />}
         />
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
