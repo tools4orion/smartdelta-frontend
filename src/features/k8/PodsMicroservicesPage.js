@@ -40,6 +40,7 @@ const calculateStep = (timeRange) => {
   return Math.ceil(timeRange / maxPoints);
 };
 
+// TODO:: Make this component modular
 const MicroservicesMonitoring = () => {
   const location = useLocation();
   const { selectedPods } = location.state || { selectedPods: [] };
@@ -59,6 +60,7 @@ const MicroservicesMonitoring = () => {
   const [loadingCpu, setLoadingCpu] = useState(false);
   const [loadingMemory, setLoadingMemory] = useState(false);
 
+  // TODO:: take this from user
   const prometheusServer = "http://127.0.0.1:9090"; // prometheus' most common server URL and port
 
   // action network requests is not used since third party API is used for all requests in this component

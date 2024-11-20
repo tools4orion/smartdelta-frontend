@@ -19,6 +19,7 @@ import { useMaterialUIController } from "contexts/UIContext";
 import MDSnackbar from "components/MDSnackbar";
 import useSnackbar from "hooks/useSnackbar";
 
+// TODO:: Make this component modular
 const SelectPodsPrometheus = () => {
   const [pods, setPods] = useState([]);
   const [filteredPods, setFilteredPods] = useState([]);
@@ -29,6 +30,7 @@ const SelectPodsPrometheus = () => {
   const [searching, setSearching] = useState(false);
   const [controller, _] = useMaterialUIController();
 
+  // TODO:: take this from user
   const prometheusServer = "http://127.0.0.1:9090"; // prometheus' most common server URL and port
   const navigate = useNavigate();
   const snackbar = useSnackbar();
