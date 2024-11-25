@@ -37,6 +37,7 @@ const SelectPodsPrometheus = () => {
   );
   const [showCustomPrometheusInput, setShowCustomPrometheusInput] =
     useState(false);
+  const [prometheusFetchTrigger, setPrometheusFetchTrigger] = useState(0);
 
   const navigate = useNavigate();
   const snackbar = useSnackbar();
@@ -75,7 +76,7 @@ const SelectPodsPrometheus = () => {
     };
 
     fetchPods();
-  }, [prometheusServer]);
+  }, [prometheusServer, prometheusFetchTrigger]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -137,7 +138,12 @@ const SelectPodsPrometheus = () => {
     const sanitizedPort = prometheusPort.trim().replace(/[^0-9]/g, "");
 
     if (sanitizedIP && sanitizedPort) {
-      setPrometheusServer(`http://${sanitizedIP}:${sanitizedPort}`);
+      const newServer = `http://${sanitizedIP}:${sanitizedPort}`;
+      setPrometheusServer(newServer);
+      // for retrying the connection 127.0.0.1:9090
+      if (newServer === prometheusServer) {
+        setPrometheusFetchTrigger((prev) => prev + 1);
+      }
       setShowCustomPrometheusInput(false);
     } else {
       snackbar.openSnackbar(
