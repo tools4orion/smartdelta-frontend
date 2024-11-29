@@ -11,6 +11,7 @@ import {
   MenuItem,
   CircularProgress,
   Checkbox,
+  Tooltip,
   FormControlLabel,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -59,6 +60,7 @@ const SelectPodsPrometheus = () => {
           const podDetails = data.data.result.map((item) => ({
             pod: item.metric.pod,
             app: item.metric.app || "N/A",
+            isUp: item.value[1] === "1",
           }));
           setPods(podDetails);
           setFilteredPods(podDetails);
@@ -332,6 +334,26 @@ const SelectPodsPrometheus = () => {
                         }}
                         onClick={() => handleSelectPod(item.pod)}
                       >
+                        <Tooltip
+                          title={
+                            item.isUp
+                              ? "Microservice is up"
+                              : "Microservice is down"
+                          }
+                          arrow
+                        >
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              top: 8,
+                              right: 8,
+                              width: 12,
+                              height: 12,
+                              borderRadius: "50%",
+                              backgroundColor: item.isUp ? "green" : "red",
+                            }}
+                          />
+                        </Tooltip>
                         <img
                           src={k8spm}
                           alt={item.pod + " icon"}
