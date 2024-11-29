@@ -20,7 +20,7 @@ import awsEks from "../../assets/svgs/awsEks.svg";
 import google_cloud from "../../assets/svgs/google_cloud.svg";
 import microsoftAzure from "../../assets/svgs/microsoftAzure.png";
 import bareMetal from "../../assets/svgs/bareMetal.svg";
-import prometheus from "../../assets/svgs/prometheus_logo.svg";
+import local from "../../assets/images/local.png";
 
 import AuthFormInputs from "./components/AuthFormInputs";
 
@@ -127,7 +127,7 @@ const ClusterIntegration = () => {
                   <Tab
                     icon={<img width="250" height="150" src={bareMetal} />}
                   />
-                  <Tab icon={<img width="50" height="50" src={prometheus} />} />
+                  <Tab icon={<img width="50" height="50" src={local} />} />
                 </Tabs>
               </MDBox>
               <MDBox display="flex" flexDirection="column" px={4} py={6}>

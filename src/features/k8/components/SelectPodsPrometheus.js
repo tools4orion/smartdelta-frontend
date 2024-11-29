@@ -20,6 +20,7 @@ import { useMaterialUIController } from "contexts/UIContext";
 import MDSnackbar from "components/MDSnackbar";
 import useSnackbar from "hooks/useSnackbar";
 import ReplayIcon from "@mui/icons-material/Replay";
+import prometheus from "../../../assets/svgs/prometheus_logo.svg";
 
 const SelectPodsPrometheus = () => {
   const [pods, setPods] = useState([]);
@@ -231,12 +232,30 @@ const SelectPodsPrometheus = () => {
               justifyContent: "space-between",
               flexWrap: "wrap",
               mb: 3,
-              gap: 2,
+              gap: 1,
             }}
           >
-            <Typography variant="h5">
-              Kubernetes Cluster Monitoring via Prometheus
-            </Typography>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={prometheus}
+                alt="Prometheus logo"
+                style={{ height: 50, marginRight: 12 }}
+              />
+              <Typography variant="h5" style={{ textAlign: "center" }}>
+                Kubernetes Cluster Monitoring via Prometheus from Local
+              </Typography>
+            </Box>
             <Box
               sx={{
                 display: "flex",
