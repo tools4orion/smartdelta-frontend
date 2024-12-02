@@ -166,7 +166,7 @@ const SelectPodsPrometheus = () => {
     !areAllVisiblePodsSelected;
 
   return (
-    <Box>
+    <Box px={4} py={4}>
       {showCustomPrometheusInput ? (
         <Box sx={{ mb: 3, p: 2, border: "1px solid red", borderRadius: 2 }}>
           <Typography variant="h5" color="error" gutterBottom sx={{ mb: 1 }}>

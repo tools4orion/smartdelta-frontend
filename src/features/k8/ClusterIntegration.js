@@ -1,92 +1,53 @@
 import React, { useState } from "react";
-import { Card, Grid } from "@mui/material";
+import { Card, Grid, Tooltip } from "@mui/material";
 
 import MDBox from "components/MDBox";
+import useSnackbar from "hooks/useSnackbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDTypography from "components/MDTypography";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 
-import authenticateK8S from "./actions/auth.action";
-import getClusterInfo from "./actions/cluster.action";
-import getPodMetrics from "./actions/podmetrics.action";
-import useSnackbar from "hooks/useSnackbar";
-import { useNavigate } from "react-router-dom";
-
-import awsEks from "../../assets/svgs/awsEks.svg";
-import google_cloud from "../../assets/svgs/google_cloud.svg";
-import microsoftAzure from "../../assets/svgs/microsoftAzure.png";
-import bareMetal from "../../assets/svgs/bareMetal.svg";
+import k8s from "../../assets/images/kubernetesFullLofo.png";
+import cloud from "../../assets/images/cloud.png";
 import local from "../../assets/images/local.png";
 
-import AuthFormInputs from "./components/AuthFormInputs";
+import prometheus from "../../assets/svgs/prometheus_logo.svg";
+import opentelemetry from "../../assets/images/opentelemetry.png";
+import zabbix from "../../assets/images/zabbix_logo.png";
+import datadog from "../../assets/svgs/datadog-logo.svg";
+
+import DirectlyK8Sinputs from "./components/DirectlyK8Sinputs";
+import CloudProviderInputs from "./components/CloudProviderInputs";
+import MonitoringSystemsInputs from "./components/MonitoringSystemInputs";
+import LocalInputs from "./components/LocalInputs";
+
+const monitoringSysCards = [
+  { src: prometheus, alt: "Prometheus" },
+  { src: opentelemetry, alt: "OpenTelemetry" },
+  { src: zabbix, alt: "Zabbix" },
+  { src: datadog, alt: "Datadog" },
+];
 
 const ClusterIntegration = () => {
-  const tabNames = ["GCloud", "AWS", "Azure", "Bare Metal Server", "Local"];
-  const [value, setValue] = useState(0);
+  const [providerValue, setProviderValue] = useState(0);
+  const [cloudProviderValue, setCloudProviderValue] = useState(0);
+  const [monitoringSysValue, setMonitoringSysValue] = useState(null);
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
-  const navigate = useNavigate();
 
-  const [formInputs, setFormInputs] = useState({
-    authMethod: "kubeconfig",
-    kubeconfig: "",
-    serviceToken: "",
-  });
-
-  const submitForm = async () => {
-    // authenticate with the provided details
-    const { isAuthenticated, provider, credentials, authMethod } =
-      await authenticateK8S(
-        tabNames[value],
-        formInputs.kubeconfig,
-        formInputs.authMethod,
-        snackbar
-      );
-
-    if (isAuthenticated) {
-      try {
-        const clusterInfo = await getClusterInfo(
-          provider,
-          credentials,
-          authMethod
-        );
-        console.log("Cluster Info:", clusterInfo);
-
-        // fetch pod metrics right after retrieving cluster info
-        const namespace = "default"; // to find needed microservices
-        const podMetrics = await getPodMetrics(
-          provider,
-          credentials,
-          authMethod,
-          namespace
-        );
-        console.log("Pod Metrics:", podMetrics);
-      } catch (error) {
-        snackbar.openSnackbar(
-          "Error fetching cluster info or pod metrics",
-          "error"
-        );
-      }
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
-    }
+  const handleProviderChange = (event, newValue) => {
+    setProviderValue(newValue);
+    setCloudProviderValue(0);
+    setMonitoringSysValue(null);
   };
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleCloudProviderChange = (event, newValue) => {
+    setCloudProviderValue(newValue);
   };
-
-  const handleFormInputChange = (inputName, inputValue) => {
-    setFormInputs((prevInputs) => ({
-      ...prevInputs,
-      [inputName]: inputValue,
-    }));
+  const handleMonitoringSysChange = (index) => {
+    setMonitoringSysValue((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
@@ -110,42 +71,44 @@ const ClusterIntegration = () => {
                   Enable Kubernetes Cluster Monitoring
                 </MDTypography>
               </MDBox>
-              <MDTypography variant="h6" py={3} px={4}>
+              <MDTypography variant="h6" py={3} px={8}>
                 Select Your Provider
               </MDTypography>
-              <MDBox px={2}>
+              <MDBox px={8}>
                 <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="icon label tabs example"
+                  value={providerValue}
+                  onChange={handleProviderChange}
+                  aria-label="icon label tabs"
                 >
-                  <Tab icon={<img width="150" src={google_cloud} />} />
-                  <Tab icon={<img width="50" height="50" src={awsEks} />} />
-                  <Tab
-                    icon={<img width="200" height="100" src={microsoftAzure} />}
-                  />
-                  <Tab
-                    icon={<img width="250" height="150" src={bareMetal} />}
-                  />
-                  <Tab icon={<img width="50" height="50" src={local} />} />
+                  <Tooltip title="Directly from Kubernetes Cluster" arrow>
+                    <Tab icon={<img width="135" height="100" src={k8s} />} />
+                  </Tooltip>
+                  <Tooltip title="Via a Cloud Provider" arrow>
+                    <Tab icon={<img width="90" height="60" src={cloud} />} />
+                  </Tooltip>
+                  <Tooltip title="Via Localhost" arrow>
+                    <Tab icon={<img width="75" height="75" src={local} />} />
+                  </Tooltip>
                 </Tabs>
               </MDBox>
-              <MDBox display="flex" flexDirection="column" px={4} py={6}>
-                <AuthFormInputs
-                  selectedTab={value}
-                  formInputs={formInputs}
-                  handleFormInputChange={handleFormInputChange}
-                />
-                {tabNames[value] !== "Local" && (
-                  <MDButton
-                    variant="outlined"
-                    size="small"
-                    color={"success"}
-                    onClick={submitForm}
-                    style={{ marginTop: "1rem" }}
-                  >
-                    Connect To {tabNames[value]}
-                  </MDButton>
+              <MDBox display="flex" flexDirection="column" px={4} pb={4}>
+                {providerValue === 0 && <DirectlyK8Sinputs />}
+                {providerValue === 1 && (
+                  <CloudProviderInputs
+                    providerValue={providerValue}
+                    cloudProviderValue={cloudProviderValue}
+                    monitoringSysCards={monitoringSysCards}
+                    handleCloudProviderChange={handleCloudProviderChange}
+                    handleMonitoringSysChange={handleMonitoringSysChange}
+                    monitoringSysValue={monitoringSysValue}
+                  />
+                )}
+                {providerValue === 2 && (
+                  <LocalInputs
+                    monitoringSysCards={monitoringSysCards}
+                    handleMonitoringSysChange={handleMonitoringSysChange}
+                    monitoringSysValue={monitoringSysValue}
+                  />
                 )}
               </MDBox>
             </Card>

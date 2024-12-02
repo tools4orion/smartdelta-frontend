@@ -32,56 +32,72 @@ const CodeBlock = styled("pre")(({ theme }) => ({
   overflowX: "auto",
 }));
 
-const AuthFormInputs = ({ selectedTab, formInputs, handleFormInputChange }) => {
-  const [isCopied, setIsCopied] = useState(false);
+const AuthFormInputs = ({
+  selectedProviderTab,
+  selectedMonitoringSysTab,
+  selectedCloudProviderTab,
+  // formInputs,
+  // handleFormInputChange,
+}) => {
+  // const [isCopied, setIsCopied] = useState(false);
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
+  // const [selectedCloudProvider, setSelectedCloudProvider] = useState(null);
 
   const getProviderName = () => {
-    const providers = [
-      "Google Cloud",
-      "AWS ECS",
-      "Microsoft Azure AKS",
-      "Bare Metal Server",
-      "Local Server",
-    ];
-    return providers[selectedTab];
+    const providers = ["Kubernetes", "Cloud", "Local Server"];
+    return providers[selectedProviderTab];
   };
 
-  const codeExample =
-    getProviderName() === "Google Cloud"
-      ? "gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${REGION} && cat ~/.kube/config | xsel -ib"
-      : "cat ~/.kube/config | pbcopy";
+  // const getSelectedCloudProviderName = () => {
+  //   const cloudProviders = ["AWS", "Google Cloud", "Microsoft Azure AKS"];
+  //   return cloudProviders[selectedCloudProvider];
+  // };
 
-  const gcloudItems = [
-    "Copy the command below to get auth credentials",
-    "Paste in Terminal",
-  ];
+  // const getMonitoringSysName = () => {
+  //   const monitoringSysNames = [
+  //     "Prometheus",
+  //     "OpenTelemetry",
+  //     "Zabbix",
+  //     "Datadog",
+  //   ];
+  //   return monitoringSysNames[selectedMonitoringSysTab];
+  // };
 
-  const handleCopyToClipboard = () => {
-    setIsCopied(true);
-    snackbar.openSnackbar(
-      "Paste In your terminal",
-      "success",
-      "Copied to clipboard"
-    );
-  };
+  // const codeExample =
+  //   getProviderName() === "Google Cloud"
+  //     ? "gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${REGION} && cat ~/.kube/config | xsel -ib"
+  //     : "cat ~/.kube/config | pbcopy";
 
-  const renderCopyCmd = (operatingSystem) => {
-    const copyCommands = {
-      Linux: "xsel -ib",
-      "Mac OS": "pbcopy",
-      Windows: "clip",
-    };
+  // const gcloudItems = [
+  //   "Copy the command below to get auth credentials",
+  //   "Paste in Terminal",
+  // ];
 
-    return copyCommands[operatingSystem] || "xsel -ib";
-  };
+  // const handleCopyToClipboard = () => {
+  //   setIsCopied(true);
+  //   snackbar.openSnackbar(
+  //     "Paste In your terminal",
+  //     "success",
+  //     "Copied to clipboard"
+  //   );
+  // };
+
+  // const renderCopyCmd = (operatingSystem) => {
+  //   const copyCommands = {
+  //     Linux: "xsel -ib",
+  //     "Mac OS": "pbcopy",
+  //     Windows: "clip",
+  //   };
+
+  //   return copyCommands[operatingSystem] || "xsel -ib";
+  // };
 
   return (
     <Stack spacing={2}>
       {getProviderName() !== "Local Server" ? (
         <>
-          <MDTypography variant="h5">
+          {/* <MDTypography variant="h5">
             {getProviderName()} Guide For {getOperatingSystem()}
           </MDTypography>
           <Breadcrumbs
@@ -130,11 +146,11 @@ const AuthFormInputs = ({ selectedTab, formInputs, handleFormInputChange }) => {
             rows={6}
             variant="outlined"
             fullWidth
-            value={formInputs.kubeconfig}
-            onChange={(e) =>
-              handleFormInputChange("kubeconfig", e.target.value)
-            }
-          />
+            // value={formInputs.kubeconfig}
+            // onChange={(e) =>
+            //   handleFormInputChange("kubeconfig", e.target.value)
+            // }
+          /> */}
         </>
       ) : (
         <SelectPodsPrometheus />
