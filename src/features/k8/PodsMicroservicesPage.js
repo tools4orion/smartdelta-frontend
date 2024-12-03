@@ -493,6 +493,69 @@ const MicroservicesMonitoring = () => {
                   </Box>
                 </Grid>
               </Grid>
+              {/* Image Sizes */}
+              {Object.keys(imageSizes).length !== 0 && (
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  margin={3}
+                >
+                  <Box display="flex" alignItems="center">
+                    <Typography
+                      variant="h5"
+                      align="center"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      Image Sizes
+                    </Typography>
+                    <Tooltip title="The sizes of the images used in the pod / microservices">
+                      <IconButton>
+                        <HelpOutlineIcon
+                          sx={{ color: darkMode ? "#FFF" : "#000" }}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Box marginTop={2} width="100%" maxWidth="600px">
+                    {Object.entries(imageSizes).map(
+                      ([name, { imageSize }], index) => (
+                        <Box
+                          key={index}
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          padding={1}
+                          borderBottom="1px solid"
+                          borderColor={darkMode ? "#444" : "#ddd"}
+                          sx={{
+                            backgroundColor: darkMode ? "#1a2035" : "#f9f9f9",
+                            borderRadius: "4px",
+                            marginBottom: 1,
+                          }}
+                        >
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              fontWeight: "bold",
+                              color: darkMode ? "#FFF" : "#000",
+                            }}
+                          >
+                            {name}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            sx={{ color: darkMode ? "#FFF" : "#000" }}
+                          >
+                            {(imageSize / 1048576).toFixed(2)} MB
+                          </Typography>
+                        </Box>
+                      )
+                    )}
+                  </Box>
+                </Box>
+              )}
             </Card>
           </Grid>
         </Grid>
