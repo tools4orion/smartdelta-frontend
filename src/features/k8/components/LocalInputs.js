@@ -10,7 +10,7 @@ import local from "../../../assets/images/local.png";
 import MonitoringSystemsInputs from "./MonitoringSystemInputs";
 
 import prometheus from "../../../assets/svgs/prometheus_logo.svg";
-import opentelemetry from "../../../assets/images/opentelemetry.png";
+import signoz from "../../../assets/svgs/signoz.svg";
 import zabbix from "../../../assets/images/zabbix_logo.png";
 import datadog from "../../../assets/svgs/datadog-logo.svg";
 
@@ -26,12 +26,7 @@ const LocalInputs = ({
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
 
   const getMonitoringSysName = () => {
-    const monitoringSysNames = [
-      "Prometheus",
-      "OpenTelemetry",
-      "Zabbix",
-      "Datadog",
-    ];
+    const monitoringSysNames = ["Prometheus", "SigNoz", "Zabbix", "Datadog"];
     return monitoringSysNames[monitoringSysValue] || "Local";
   };
 
@@ -39,8 +34,8 @@ const LocalInputs = ({
     const monitoringsysname = getMonitoringSysName();
     if (monitoringsysname === "Prometheus") {
       return prometheus;
-    } else if (monitoringsysname === "OpenTelemetry") {
-      return opentelemetry;
+    } else if (monitoringsysname === "SigNoz") {
+      return signoz;
     } else if (monitoringsysname === "Zabbix") {
       return zabbix;
     } else if (monitoringsysname === "Datadog") {
@@ -75,7 +70,7 @@ const LocalInputs = ({
                 alignItems="center"
               >
                 <MDTypography variant="h6">
-                  {`Please Enter Your ${getMonitoringSysName()} Monitoring System Details`}
+                  {`Please enter your ${getMonitoringSysName()} Monitoring system details`}
                 </MDTypography>
                 <img
                   src={getMonitoringSysIcon()}

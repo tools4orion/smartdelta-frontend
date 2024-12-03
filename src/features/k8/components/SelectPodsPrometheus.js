@@ -253,7 +253,7 @@ const SelectPodsPrometheus = () => {
                 style={{ height: 50, marginRight: 12 }}
               />
               <Typography variant="h5" style={{ textAlign: "center" }}>
-                Kubernetes Cluster Monitoring via Prometheus from Local
+                Kubernetes Cluster Monitoring via Prometheus
               </Typography>
             </Box>
             <Box

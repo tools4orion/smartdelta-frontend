@@ -15,18 +15,17 @@ import cloud from "../../assets/images/cloud.png";
 import local from "../../assets/images/local.png";
 
 import prometheus from "../../assets/svgs/prometheus_logo.svg";
-import opentelemetry from "../../assets/images/opentelemetry.png";
+import signoz from "../../assets/svgs/signoz.svg";
 import zabbix from "../../assets/images/zabbix_logo.png";
 import datadog from "../../assets/svgs/datadog-logo.svg";
 
 import DirectlyK8Sinputs from "./components/DirectlyK8Sinputs";
 import CloudProviderInputs from "./components/CloudProviderInputs";
-import MonitoringSystemsInputs from "./components/MonitoringSystemInputs";
 import LocalInputs from "./components/LocalInputs";
 
 const monitoringSysCards = [
   { src: prometheus, alt: "Prometheus" },
-  { src: opentelemetry, alt: "OpenTelemetry" },
+  { src: signoz, alt: "SigNoz" },
   { src: zabbix, alt: "Zabbix" },
   { src: datadog, alt: "Datadog" },
 ];
@@ -72,7 +71,7 @@ const ClusterIntegration = () => {
                 </MDTypography>
               </MDBox>
               <MDTypography variant="h6" py={3} px={8}>
-                Select Your Provider
+                How would you like to integrate your Kubernetes monitoring?
               </MDTypography>
               <MDBox px={8}>
                 <Tabs
@@ -81,13 +80,35 @@ const ClusterIntegration = () => {
                   aria-label="icon label tabs"
                 >
                   <Tooltip title="Directly from Kubernetes Cluster" arrow>
-                    <Tab icon={<img width="135" height="100" src={k8s} />} />
+                    <Tab
+                      icon={
+                        <img width="135" height="100" src={k8s} alt="k8s img" />
+                      }
+                    />
                   </Tooltip>
                   <Tooltip title="Via a Cloud Provider" arrow>
-                    <Tab icon={<img width="90" height="60" src={cloud} />} />
+                    <Tab
+                      icon={
+                        <img
+                          width="90"
+                          height="60"
+                          src={cloud}
+                          alt="cloud img"
+                        />
+                      }
+                    />
                   </Tooltip>
                   <Tooltip title="Via Localhost" arrow>
-                    <Tab icon={<img width="75" height="75" src={local} />} />
+                    <Tab
+                      icon={
+                        <img
+                          width="75"
+                          height="75"
+                          src={local}
+                          alt="localhost img"
+                        />
+                      }
+                    />
                   </Tooltip>
                 </Tabs>
               </MDBox>
@@ -95,7 +116,6 @@ const ClusterIntegration = () => {
                 {providerValue === 0 && <DirectlyK8Sinputs />}
                 {providerValue === 1 && (
                   <CloudProviderInputs
-                    providerValue={providerValue}
                     cloudProviderValue={cloudProviderValue}
                     monitoringSysCards={monitoringSysCards}
                     handleCloudProviderChange={handleCloudProviderChange}

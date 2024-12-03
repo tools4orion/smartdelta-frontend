@@ -32,7 +32,7 @@ const DirectlyK8Sinputs = () => {
             alignItems="center"
           >
             <MDTypography variant="h6">
-              Please Enter Your Kubernetes Cluster Details
+              Please enter your Kubernetes Cluster details
             </MDTypography>
             <img src={k8slogo} alt="Kubernetes Logo" style={{ height: 60 }} />
           </MDBox>
