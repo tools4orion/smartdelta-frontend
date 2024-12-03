@@ -21,15 +21,18 @@ import MDSnackbar from "components/MDSnackbar";
 import useSnackbar from "hooks/useSnackbar";
 import ReplayIcon from "@mui/icons-material/Replay";
 import prometheus from "../../../assets/svgs/prometheus_logo.svg";
+import getLatestTag from "../actions/imagesize.action";
 
 const SelectPodsPrometheus = () => {
   const [pods, setPods] = useState([]);
   const [filteredPods, setFilteredPods] = useState([]);
   const [selectedPods, setSelectedPods] = useState([]);
+  const [selectedApps, setSelectedApps] = useState([]); // shorter name of pods
   const [searchQuery, setSearchQuery] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(6);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [dockerhubUsername, setDockerhubUsername] = useState("");
   const [controller, _] = useMaterialUIController();
 
   const [prometheusIP, setPrometheusIP] = useState("127.0.0.1");
@@ -96,20 +99,28 @@ const SelectPodsPrometheus = () => {
     }, 500);
   };
 
-  const handleSelectPod = (podName) => {
+  const handleSelectPod = (podName, appName) => {
     setSelectedPods((prevSelected) =>
       prevSelected.includes(podName)
         ? prevSelected.filter((pod) => pod !== podName)
         : [...prevSelected, podName]
     );
+    setSelectedApps((preSelected) =>
+      preSelected.includes(appName)
+        ? preSelected.filter((app) => app !== appName)
+        : [...preSelected, appName]
+    );
   };
 
   const handleSelectAll = (isSelected) => {
     const visiblePods = filteredPods.map((pod) => pod.pod);
+    const visibleApps = filteredPods.map((pod) => pod.app);
     setSelectedPods(isSelected ? visiblePods : []);
+    setSelectedApps(isSelected ? visibleApps : []);
   };
 
-  const handleConnect = () => {
+  const handleConnect = async () => {
+    // setConnectButtonClicked(true);
     if (selectedPods.length === 0) {
       snackbar.openSnackbar(
         "Please select at least one pod.",
@@ -118,13 +129,46 @@ const SelectPodsPrometheus = () => {
       );
       return;
     }
-    navigate("/k8s-cluster-comparisons", {
-      state: {
-        selectedPods,
-        prometheusIP,
-        prometheusPort,
-      },
-    });
+
+    let imageSizes = {};
+    try {
+      setLoading(true);
+      for (let i = 0; i < selectedApps.length; i++) {
+        const data = await getLatestTag(dockerhubUsername, selectedApps[i]);
+        if (data && data.images && data.images[0]) {
+          const imageSize = data.images[0].size;
+          console.log("Image Size:", imageSize);
+          imageSizes[selectedApps[i]] = {
+            imageSize,
+          };
+        } else {
+          snackbar.openSnackbar(
+            `Failed to fetch data for ${selectedApps[i]}`,
+            "error",
+            "Fetch Error"
+          );
+        }
+      }
+      console.log("Image Sizes:", imageSizes);
+    } catch (error) {
+      snackbar.openSnackbar(
+        "Failed to fetch the latest tag.",
+        "error",
+        "Fetch Error"
+      );
+    } finally {
+      console.log("Image Sizes:", imageSizes);
+      navigate("/k8s-cluster-comparisons", {
+        state: {
+          selectedPods,
+          prometheusIP,
+          prometheusPort,
+          imageSizes,
+        },
+      });
+      setLoading(false);
+      // setDockerhubUsername("");
+    }
   };
 
   const handleItemsPerPageChange = (event) => {
@@ -259,6 +303,23 @@ const SelectPodsPrometheus = () => {
             <Box
               sx={{
                 display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                pb: 2,
+              }}
+            >
+              <TextField
+                label="Enter Your Docker Hub Username..."
+                variant="outlined"
+                fullWidth
+                value={dockerhubUsername}
+                onChange={(e) => setDockerhubUsername(e.target.value)}
+                sx={{ maxWidth: 300 }}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
                 justifyContent: "space-between",
                 width: "100%",
                 alignItems: "center",
@@ -351,7 +412,7 @@ const SelectPodsPrometheus = () => {
                             : "1px solid #e0e0e0",
                           cursor: "pointer",
                         }}
-                        onClick={() => handleSelectPod(item.pod)}
+                        onClick={() => handleSelectPod(item.pod, item.app)}
                       >
                         <Tooltip
                           title={
@@ -413,7 +474,7 @@ const SelectPodsPrometheus = () => {
                     backgroundColor: "gray",
                   },
                 }}
-                disabled={selectedPods.length === 0}
+                disabled={selectedPods.length === 0 || !dockerhubUsername}
                 onClick={handleConnect}
               >
                 Compare Selected Microservices

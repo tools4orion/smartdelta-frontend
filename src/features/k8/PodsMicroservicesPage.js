@@ -46,6 +46,7 @@ const MicroservicesMonitoring = () => {
     selectedPods,
     prometheusIP = "127.0.0.1",
     prometheusPort = "9090",
+    imageSizes,
   } = location.state || {};
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -64,7 +65,7 @@ const MicroservicesMonitoring = () => {
   const [loadingMemory, setLoadingMemory] = useState(false);
 
   const prometheusServer = `http://${prometheusIP}:${prometheusPort}`;
-
+  console.log(imageSizes);
   // action network requests is not used since third party API is used for all requests in this component
   const fetchPodMetrics = useCallback(
     async (pod, timeRange, metric) => {
