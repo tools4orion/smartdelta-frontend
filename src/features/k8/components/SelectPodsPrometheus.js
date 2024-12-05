@@ -120,7 +120,6 @@ const SelectPodsPrometheus = () => {
   };
 
   const handleConnect = async () => {
-    // setConnectButtonClicked(true);
     if (selectedPods.length === 0) {
       snackbar.openSnackbar(
         "Please select at least one pod.",
@@ -141,33 +140,29 @@ const SelectPodsPrometheus = () => {
           imageSizes[selectedApps[i]] = {
             imageSize,
           };
-        } else {
-          snackbar.openSnackbar(
-            `Failed to fetch data for ${selectedApps[i]}`,
-            "error",
-            "Fetch Error"
-          );
         }
       }
       console.log("Image Sizes:", imageSizes);
     } catch (error) {
+      console.error("Failed to fetch the latest tag.", error);
       snackbar.openSnackbar(
-        "Failed to fetch the latest tag.",
+        "Failed to fetch the image sizes from Docker Hub.",
         "error",
-        "Fetch Error"
+        "Docker Hub Image Size Fetch Error"
       );
     } finally {
       console.log("Image Sizes:", imageSizes);
-      navigate("/k8s-cluster-comparisons", {
-        state: {
-          selectedPods,
-          prometheusIP,
-          prometheusPort,
-          imageSizes,
-        },
-      });
-      setLoading(false);
-      // setDockerhubUsername("");
+      setTimeout(() => {
+        navigate("/k8s-cluster-comparisons", {
+          state: {
+            selectedPods,
+            prometheusIP,
+            prometheusPort,
+            imageSizes,
+          },
+        });
+        setLoading(false);
+      }, 250);
     }
   };
 
@@ -309,7 +304,7 @@ const SelectPodsPrometheus = () => {
               }}
             >
               <TextField
-                label="Enter Your Docker Hub Username..."
+                label="Enter Your Docker Hub Username"
                 variant="outlined"
                 fullWidth
                 value={dockerhubUsername}

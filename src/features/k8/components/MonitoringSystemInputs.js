@@ -9,7 +9,7 @@ const MonitoringSystemsInputs = ({
 }) => {
   return (
     <>
-      <MDTypography variant="h6" py={5} px={4}>
+      <MDTypography variant="h6" py={4} px={4}>
         Would you like to monitor your Kubernetes Cluster using any of the
         following monitoring systems?
       </MDTypography>
