@@ -13,11 +13,12 @@ import {
   Checkbox,
   Tooltip,
   FormControlLabel,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import k8spm from "../../../assets/images/k8spm.png";
 import { useMaterialUIController } from "contexts/UIContext";
-import MDSnackbar from "components/MDSnackbar";
 import useSnackbar from "hooks/useSnackbar";
 import ReplayIcon from "@mui/icons-material/Replay";
 import prometheus from "../../../assets/svgs/prometheus_logo.svg";
@@ -43,6 +44,12 @@ const SelectPodsPrometheus = () => {
   const [showCustomPrometheusInput, setShowCustomPrometheusInput] =
     useState(false);
   const [prometheusFetchTrigger, setPrometheusFetchTrigger] = useState(0);
+  const [snackbarState, setSnackbarState] = useState({
+    open: false,
+    message: "",
+    severity: "info", // can be "success", "error", "warning", or "info"
+    action: null, // Optional action buttons
+  });
 
   const navigate = useNavigate();
   const snackbar = useSnackbar();
@@ -119,13 +126,19 @@ const SelectPodsPrometheus = () => {
     setSelectedApps(isSelected ? visibleApps : []);
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarState({ ...snackbarState, open: false });
+    setLoading(false);
+  };
+
   const handleConnect = async () => {
     if (selectedPods.length === 0) {
-      snackbar.openSnackbar(
-        "Please select at least one pod.",
-        "error",
-        "Empty selection"
-      );
+      setSnackbarState({
+        open: true,
+        message: "Please select at least one pod.",
+        severity: "error",
+        action: null,
+      });
       return;
     }
 
@@ -143,15 +156,6 @@ const SelectPodsPrometheus = () => {
         }
       }
       console.log("Image Sizes:", imageSizes);
-    } catch (error) {
-      console.error("Failed to fetch the latest tag.", error);
-      snackbar.openSnackbar(
-        "Failed to fetch the image sizes from Docker Hub.",
-        "error",
-        "Docker Hub Image Size Fetch Error"
-      );
-    } finally {
-      console.log("Image Sizes:", imageSizes);
       setTimeout(() => {
         navigate("/k8s-cluster-comparisons", {
           state: {
@@ -163,6 +167,37 @@ const SelectPodsPrometheus = () => {
         });
         setLoading(false);
       }, 250);
+    } catch (error) {
+      console.error("Failed to fetch the latest tag.", error);
+      setSnackbarState({
+        open: true,
+        message: "Failed to fetch the image sizes from Docker Hub.",
+        severity: "error",
+        action: (
+          <>
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                navigate("/k8s-cluster-comparisons", {
+                  state: {
+                    selectedPods,
+                    prometheusIP,
+                    prometheusPort,
+                    imageSizes,
+                  },
+                });
+                handleSnackbarClose();
+              }}
+            >
+              YES
+            </Button>
+            <Button color="inherit" size="small" onClick={handleSnackbarClose}>
+              NO
+            </Button>
+          </>
+        ),
+      });
     }
   };
 
@@ -478,18 +513,46 @@ const SelectPodsPrometheus = () => {
           )}
         </>
       )}
-      <MDSnackbar
-        open={isOpen}
-        autoHideDuration={3000}
-        onClose={closeSnackbar}
-        message={message}
-        icon={icon}
-        close={closeSnackbar}
-        title={title}
-        color={type}
+      <Snackbar
+        open={snackbarState.open}
+        autoHideDuration={snackbarState.action ? null : 6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        sx={{
+          "& .MuiAlert-root": {
+            backgroundColor: "rgb(244, 67, 54)",
+            color: "#fff",
+            boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+          },
+        }}
       >
-        <p>{snackbar.message}</p>
-      </MDSnackbar>
+        <Alert
+          severity={snackbarState.severity}
+          action={snackbarState.action}
+          onClose={handleSnackbarClose}
+          sx={{
+            width: "100%",
+            backgroundColor: "rgb(244, 67, 54)",
+            color: "#fff",
+            display: "flex",
+            flexDirection: "column",
+            "& .MuiAlert-icon": {
+              color: "#fff",
+            },
+          }}
+        >
+          <div style={{ fontSize: "1.1rem" }}>
+            Failed to fetch the image sizes from Docker Hub.
+          </div>
+          <div style={{ fontSize: "1.1rem" }}>
+            You won't see the image sizes. Do you want to continue?
+          </div>
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
