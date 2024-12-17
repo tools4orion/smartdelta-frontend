@@ -41,6 +41,8 @@ import Dashboard from "layouts/dashboard";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import elastic from "./assets/svgs/elastic.svg";
+// import vervelLogo from "./assets/svgs/vercel_favicon.svg";
+import vervelLogo from "./assets/images/vercel_icon.jpg";
 
 // import Billing from "layouts/billing";
 // import Notifications from "layouts/notifications";
@@ -67,6 +69,7 @@ import ElasticIntegration from "features/elastic/ElasticIntegration";
 import Services from "features/elastic/Services";
 import Anomalies from "features/elastic/AnomalyDetection";
 import ComparisonResult from "features/compare";
+import VercelProjectIntegrations from "features/vercel/index";
 // import ReactFlowWrapperTrace from "features/visualize/TraceLayout";
 
 const FeatureDiscovery = lazy(() => import("features/featureDiscovery"));
@@ -153,9 +156,25 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Deployment Management",
+    key: "vercelDeploy",
+    icon: (
+      <img
+        src={vervelLogo}
+        width={20}
+        height={20}
+        style={{ borderRadius: "50%" }}
+        alt="vercel"
+      />
+    ),
+    route: "/vercel-deployment-management",
+    component: <VercelProjectIntegrations />,
+  },
+  {
+    type: "collapse",
     name: "Elastic Cloud",
     key: "elasticCloud",
-    icon: <img src={elastic} />,
+    icon: <img src={elastic} alt="elastic" />,
     route: "/elastic",
     component: <ElasticIntegration />,
   },

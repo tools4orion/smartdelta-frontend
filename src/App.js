@@ -56,6 +56,7 @@ import ReactFlowWrapperTrace from "features/visualize/TraceLayout";
 import TraceVisualizer from "features/visualize/TraceVisualizer";
 import Traces from "features/elastic/Traces";
 import MicroservicesMonitoring from "features/k8/PodsMicroservicesPage";
+import VercelProjectsPanel from "features/vercel/components/VercelProjects";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -181,6 +182,10 @@ export default function App() {
         <Route
           path="/k8s-cluster-comparisons"
           element={<MicroservicesMonitoring />}
+        />
+        <Route
+          path="/vercel-deployment-management/vercel-projects"
+          element={<VercelProjectsPanel />}
         />
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
