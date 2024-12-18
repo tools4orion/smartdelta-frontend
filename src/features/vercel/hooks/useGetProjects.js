@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import getVercelProjects from "../actions/vercelprojects.action";
+import { getEncryptedToken } from "../actions/getEncryptedVercelToken.action";
 
 const useGetProjects = (setSnackbar) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleToken = async (inputVercelToken) => {
+  const handleToken = async (email) => {
     setLoading(true);
 
-    if (!inputVercelToken) {
+    if (!email) {
       setSnackbar({
         open: true,
-        message: "Token cannot be empty!",
+        message: "There is no token found related to the associated email",
         severity: "error",
       });
       setLoading(false);
@@ -20,8 +21,9 @@ const useGetProjects = (setSnackbar) => {
     }
 
     try {
-      const data = await getVercelProjects(inputVercelToken);
-      console.log("Projects fetched successfully:", data);
+      const encryptedToken = await getEncryptedToken(email);
+
+      const data = await getVercelProjects(encryptedToken);
 
       setSnackbar({
         open: true,

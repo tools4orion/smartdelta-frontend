@@ -22,7 +22,7 @@ const styles = {
 };
 
 const VercelAccountList = ({
-  data,
+  vercelAccountsData,
   setInputVercelEmail,
   setInputVercelUsername,
   setInputVercelToken,
@@ -33,8 +33,7 @@ const VercelAccountList = ({
 }) => {
   // TODO:: Remove credentials from props
   const { columns, rows } = useGetVercelAccountTableData(
-    data,
-    inputVercelToken,
+    vercelAccountsData,
     handleToken
   );
 

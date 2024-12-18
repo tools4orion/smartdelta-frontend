@@ -17,11 +17,23 @@ import VercelAccountList from "./components/VercelAccountList";
 import { getVercelIntegratedProfiles } from "./actions/listVercelProfiles.action";
 
 const VercelProjectIntegrations = () => {
-  const [vercelAccountData, setVercelAccountData] = useState({
-    username: "Alper Celik",
-    email: "alperwithsteel@gmail.com",
-    token: "xutw4zdgv9ROo0VBUB2rAhbk",
-  }); // TODO:: Temporary, remove it
+  const [vercelAccountsData, setVercelAccountsData] = useState({});
+
+  useEffect(() => {
+    getVercelIntegratedProfiles()
+      .then((integrations) => {
+        console.log("integrated vercel accounts", integrations);
+        setVercelAccountsData(integrations);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch Vercel integrated profiles", error);
+        setSnackbar({
+          open: true,
+          message: "Failed to fetch Vercel integrated profiles",
+          severity: "error",
+        });
+      });
+  }, []);
 
   // TODO:: Change the logic
   const [inputVercelUsername, setInputVercelUsername] = useState("");
@@ -59,7 +71,7 @@ const VercelProjectIntegrations = () => {
 
     return isAnyIntegrationExist ? (
       <VercelAccountList
-        data={vercelAccountData}
+        vercelAccountsData={vercelAccountsData}
         inputVercelUsername={inputVercelUsername}
         inputVercelEmail={inputVercelEmail}
         inputVercelToken={inputVercelToken}
@@ -80,12 +92,6 @@ const VercelProjectIntegrations = () => {
       />
     );
   };
-
-  useEffect(() => {
-    getVercelIntegratedProfiles().then((integrations) => {
-      console.log("integrations", integrations);
-    });
-  }, []);
 
   return (
     <DashboardLayout>

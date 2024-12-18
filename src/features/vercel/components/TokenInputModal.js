@@ -71,7 +71,7 @@ const TokenInputModal = ({
           </Box>
           <Box mt={4} mb={1}>
             <Button
-              onClick={() => handleToken(inputVercelToken)}
+              onClick={() => handleToken(inputVercelEmail)}
               variant="contained"
               color={darkMode ? "primary" : "info"}
               fullWidth
