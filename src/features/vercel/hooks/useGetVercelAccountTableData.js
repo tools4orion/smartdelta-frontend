@@ -15,24 +15,12 @@ export const useGetVercelAccountTableData = (
     const { username, email } = user;
     return {
       username: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
+        <MDTypography variant="caption" color="text" fontWeight="medium">
           {username}
         </MDTypography>
       ),
       email: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
+        <MDTypography variant="caption" color="text" fontWeight="medium">
           {email}
         </MDTypography>
       ),

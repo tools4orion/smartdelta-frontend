@@ -29,7 +29,7 @@ const styles = {
   transform: "translate(-50%, -50%)",
 };
 
-const VercelAccountList = ({ vercelAccountsData, handleToken }) => {
+const VercelAccountList = ({ vercelAccountsData }) => {
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -156,11 +156,24 @@ const VercelAccountList = ({ vercelAccountsData, handleToken }) => {
           autoHideDuration={2000}
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          sx={{
+            "& .MuiAlert-root": {
+              backgroundColor: "rgb(244, 67, 54)",
+              color: "#fff",
+            },
+          }}
         >
           <Alert
             onClose={handleCloseSnackbar}
             severity={snackbar.severity}
-            sx={{ width: "100%" }}
+            sx={{
+              width: "100%",
+              backgroundColor: "rgb(244, 67, 54)",
+              color: "#fff",
+              "& .MuiAlert-icon": {
+                color: "#fff",
+              },
+            }}
           >
             {snackbar.message}
           </Alert>

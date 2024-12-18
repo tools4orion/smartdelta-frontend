@@ -11,7 +11,6 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
-import useGetProjects from "./hooks/useGetProjects";
 import TokenInputModal from "./components/TokenInputModal";
 import VercelAccountList from "./components/VercelAccountList";
 import { getVercelIntegratedProfiles } from "./actions/listVercelProfiles.action";
@@ -19,8 +18,10 @@ import { getVercelIntegratedProfiles } from "./actions/listVercelProfiles.action
 const VercelProjectIntegrations = () => {
   const [vercelAccountsData, setVercelAccountsData] = useState({});
   const [isAnyIntegrationExist, setIsAnyIntegrationExist] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     getVercelIntegratedProfiles()
       .then((integrations) => {
         console.log("integrated vercel accounts", integrations);
@@ -33,6 +34,9 @@ const VercelProjectIntegrations = () => {
           message: "Failed to fetch Vercel integrated profiles",
           severity: "error",
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -50,8 +54,6 @@ const VercelProjectIntegrations = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const { handleToken, loading } = useGetProjects(setSnackbar);
-
   const renderContent = () => {
     if (loading) {
       return (
@@ -68,10 +70,7 @@ const VercelProjectIntegrations = () => {
     }
 
     return isAnyIntegrationExist ? (
-      <VercelAccountList
-        vercelAccountsData={vercelAccountsData}
-        handleToken={handleToken}
-      />
+      <VercelAccountList vercelAccountsData={vercelAccountsData} />
     ) : (
       <TokenInputModal />
     );
