@@ -1,26 +1,82 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
-import { Box, Typography, Link, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Link,
+  TextField,
+  Button,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { useMaterialUIController } from "contexts/UIContext";
+import { useNavigate } from "react-router-dom";
+import { encryptToken } from "../utils/encrpytToken";
+import { saveVercelProfile } from "../actions/saveVercelProfile.action";
+import { getVercelProjects } from "../actions/getVercelProjects.action";
 
-const TokenInputModal = ({
-  styles,
-  inputVercelToken,
-  inputVercelUsername,
-  inputVercelEmail,
-  setInputVercelUsername,
-  setInputVercelEmail,
-  setInputVercelToken,
-  handleToken,
-}) => {
-  const [controller, _] = useMaterialUIController();
+const TokenInputModal = ({ styles }) => {
+  const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
-  useEffect(() => {
-    setInputVercelToken("");
-    setInputVercelUsername("");
-    setInputVercelEmail("");
-  }, []);
+  const [inputVercelUsername, setInputVercelUsername] = useState("");
+  const [inputVercelEmail, setInputVercelEmail] = useState("");
+  const [inputVercelToken, setInputVercelToken] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
+
+  const navigate = useNavigate();
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const handleIntegrate = async () => {
+    setLoading(true);
+
+    const secretKey = process.env.REACT_APP_SECRET_KEY;
+    if (!secretKey) {
+      console.error("Secret key is missing.");
+      return;
+    }
+
+    const encryptedToken = encryptToken(inputVercelToken, secretKey);
+
+    try {
+      const projects = await getVercelProjects(inputVercelToken);
+
+      await saveVercelProfile(
+        inputVercelUsername,
+        inputVercelEmail,
+        encryptedToken
+      );
+
+      setSnackbar({
+        open: true,
+        message: "Integration successful! Redirecting...",
+        severity: "success",
+      });
+
+      navigate("/vercel-deployment-management/vercel-projects", {
+        state: { vercelProjects: projects },
+      });
+    } catch (error) {
+      console.error("Integration failed:", error);
+
+      setSnackbar({
+        open: true,
+        message: "Integration failed. Please check your credentials.",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card sx={{ ...styles }}>
@@ -48,6 +104,7 @@ const TokenInputModal = ({
               type="text"
               fullWidth
               variant="outlined"
+              value={inputVercelUsername}
               onChange={(e) => setInputVercelUsername(e.target.value)}
             />
           </Box>
@@ -57,6 +114,7 @@ const TokenInputModal = ({
               type="text"
               fullWidth
               variant="outlined"
+              value={inputVercelEmail}
               onChange={(e) => setInputVercelEmail(e.target.value)}
             />
           </Box>
@@ -66,20 +124,24 @@ const TokenInputModal = ({
               type="password"
               fullWidth
               variant="outlined"
+              value={inputVercelToken}
               onChange={(e) => setInputVercelToken(e.target.value)}
             />
           </Box>
           <Box mt={4} mb={1}>
             <Button
-              onClick={() => handleToken(inputVercelEmail)}
+              onClick={handleIntegrate}
               variant="contained"
               color={darkMode ? "primary" : "info"}
               fullWidth
               disabled={
-                !inputVercelToken || !inputVercelUsername || !inputVercelEmail
+                !inputVercelToken ||
+                !inputVercelUsername ||
+                !inputVercelEmail ||
+                loading
               }
             >
-              Integrate
+              {loading ? "Integrating..." : "Integrate"}
             </Button>
           </Box>
           <Box mt={3} mb={1} textAlign="center">
@@ -100,6 +162,22 @@ const TokenInputModal = ({
           </Box>
         </Box>
       </Box>
+
+      {/* Snackbar for showing success or error messages */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };

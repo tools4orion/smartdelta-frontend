@@ -1,7 +1,10 @@
 import MDTypography from "../../../components/MDTypography";
 import { IconButton } from "@mui/material";
 
-export const useGetVercelAccountTableData = (vercelUserlist, handleToken) => {
+export const useGetVercelAccountTableData = (
+  vercelUserlist,
+  handleOpenProjects
+) => {
   const columns = [
     { Header: "Username", accessor: "username", align: "left" },
     { Header: "Email", accessor: "email", align: "left" },
@@ -10,7 +13,6 @@ export const useGetVercelAccountTableData = (vercelUserlist, handleToken) => {
 
   const rows = (vercelUserlist || []).map((user) => {
     const { username, email } = user;
-
     return {
       username: (
         <MDTypography
@@ -35,7 +37,7 @@ export const useGetVercelAccountTableData = (vercelUserlist, handleToken) => {
         </MDTypography>
       ),
       actions: (
-        <IconButton onClick={() => handleToken(email)}>
+        <IconButton onClick={() => handleOpenProjects(email)}>
           <MDTypography
             component="a"
             variant="caption"

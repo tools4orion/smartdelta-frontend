@@ -1,12 +1,13 @@
 import vercelEndpoints from "../../../network/endpoints/vercel";
-import CryptoJS from "crypto-js";
+import { encryptToken } from "../utils/encrpytToken";
 
-// save a Vercel profile
 export const saveVercelProfile = async (username, email, token) => {
-  const encryptedToken = CryptoJS.AES.encrypt(
-    token,
-    process.env.SECRET_KEY
-  ).toString();
+  const secretKey = process.env.REACT_APP_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("Secret key is missing.");
+  }
+
+  const encryptedToken = encryptToken(token, secretKey);
 
   try {
     const response = await vercelEndpoints.saveIntegration({
@@ -14,10 +15,11 @@ export const saveVercelProfile = async (username, email, token) => {
       email,
       token: encryptedToken,
     });
-    console.log("Vercel profile saved successfully:", response.data);
+
+    console.log("Save Vercel Profile Response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error saving integration:", error);
-    throw error;
+    console.error("Error saving Vercel profile:", error);
+    throw new Error("Error saving Vercel profile.");
   }
 };

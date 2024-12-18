@@ -1,17 +1,25 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import DataTable from "examples/Tables/DataTable";
 import { useGetVercelAccountTableData } from "../hooks/useGetVercelAccountTableData";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import { Card, IconButton, Tooltip } from "@mui/material";
+import {
+  Card,
+  IconButton,
+  Tooltip,
+  Snackbar,
+  Alert,
+  Modal,
+  Backdrop,
+  Fade,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import Backdrop from "@mui/material/Backdrop";
-import useSnackbar from "hooks/useSnackbar";
-import MDSnackbar from "components/MDSnackbar";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
 import TokenInputModal from "./TokenInputModal";
+import { getEncryptedToken } from "../actions/getEncryptedVercelToken.action";
+import { getVercelProjects } from "../actions/getVercelProjects.action";
+import { decryptToken } from "../utils/decryptToken";
 import vercel_favicon from "../../../assets/images/vercel_icon.jpg";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   width: "50vw",
@@ -21,29 +29,62 @@ const styles = {
   transform: "translate(-50%, -50%)",
 };
 
-const VercelAccountList = ({
-  vercelAccountsData,
-  setInputVercelEmail,
-  setInputVercelUsername,
-  setInputVercelToken,
-  inputVercelUsername,
-  inputVercelEmail,
-  inputVercelToken,
-  handleToken,
-}) => {
-  // TODO:: Remove credentials from props
-  const { columns, rows } = useGetVercelAccountTableData(
-    vercelAccountsData,
-    handleToken
-  );
+const VercelAccountList = ({ vercelAccountsData, handleToken }) => {
+  const navigate = useNavigate();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
-  // for modal
   const [open, setOpen] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const snackbar = useSnackbar();
-  const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const handleOpenProjects = async (email) => {
+    try {
+      const encryptedToken = await getEncryptedToken(email);
+      const secretKey = process.env.REACT_APP_SECRET_KEY;
+      if (!secretKey) {
+        throw new Error("Secret key is missing.");
+      }
+
+      const token = decryptToken(encryptedToken, secretKey);
+      console.log("Decrypted Token:", token);
+
+      const projects = await getVercelProjects(token);
+
+      console.log("Fetched projects:", projects);
+
+      setSnackbar({
+        open: true,
+        message: "Projects fetched successfully!",
+        severity: "success",
+      });
+
+      navigate("/vercel-deployment-management/vercel-projects", {
+        state: { vercelProjects: projects },
+      });
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+
+      setSnackbar({
+        open: true,
+        message: "Failed to fetch projects. Please check the token.",
+        severity: "error",
+      });
+    }
+  };
+
+  const { columns, rows } = useGetVercelAccountTableData(
+    vercelAccountsData,
+    handleOpenProjects
+  );
 
   return (
     <Card>
@@ -78,7 +119,7 @@ const VercelAccountList = ({
             color="white"
             aria-label="add new deployment"
           >
-            <Tooltip placement="left" title="add new deployment">
+            <Tooltip placement="left" title="Add New Deployment">
               <AddIcon />
             </Tooltip>
           </IconButton>
@@ -107,31 +148,24 @@ const VercelAccountList = ({
         >
           <Fade in={open}>
             <div>
-              <TokenInputModal
-                styles={styles}
-                inputVercelToken={inputVercelToken}
-                inputVercelUsername={inputVercelUsername}
-                inputVercelEmail={inputVercelEmail}
-                setInputVercelUsername={setInputVercelUsername}
-                setInputVercelEmail={setInputVercelEmail}
-                setInputVercelToken={setInputVercelToken}
-                handleToken={handleToken}
-              />
+              <TokenInputModal styles={styles} />
             </div>
           </Fade>
         </Modal>
-        <MDSnackbar
-          open={isOpen}
+        <Snackbar
+          open={snackbar.open}
           autoHideDuration={3000}
-          onClose={closeSnackbar}
-          message={message}
-          icon={icon}
-          close={closeSnackbar}
-          title={title}
-          color={type}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <p>{snackbar.message}</p>
-        </MDSnackbar>
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </div>
     </Card>
   );

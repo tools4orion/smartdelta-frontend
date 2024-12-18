@@ -18,6 +18,7 @@ import { getVercelIntegratedProfiles } from "./actions/listVercelProfiles.action
 
 const VercelProjectIntegrations = () => {
   const [vercelAccountsData, setVercelAccountsData] = useState({});
+  const [isAnyIntegrationExist, setIsAnyIntegrationExist] = useState(false);
 
   useEffect(() => {
     getVercelIntegratedProfiles()
@@ -35,12 +36,9 @@ const VercelProjectIntegrations = () => {
       });
   }, []);
 
-  // TODO:: Change the logic
-  const [inputVercelUsername, setInputVercelUsername] = useState("");
-  const [inputVercelEmail, setInputVercelEmail] = useState("");
-  const [inputVercelToken, setInputVercelToken] = useState("");
-
-  const isAnyIntegrationExist = true; // TODO:: Check if any integration exists
+  useEffect(() => {
+    setIsAnyIntegrationExist(Object.keys(vercelAccountsData).length > 0);
+  }, [vercelAccountsData]);
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -72,24 +70,10 @@ const VercelProjectIntegrations = () => {
     return isAnyIntegrationExist ? (
       <VercelAccountList
         vercelAccountsData={vercelAccountsData}
-        inputVercelUsername={inputVercelUsername}
-        inputVercelEmail={inputVercelEmail}
-        inputVercelToken={inputVercelToken}
-        setInputVercelUsername={setInputVercelUsername}
-        setInputVercelEmail={setInputVercelEmail}
-        setInputVercelToken={setInputVercelToken}
         handleToken={handleToken}
       />
     ) : (
-      <TokenInputModal
-        inputVercelToken={inputVercelToken}
-        inputVercelUsername={inputVercelUsername}
-        inputVercelEmail={inputVercelEmail}
-        setInputVercelUsername={setInputVercelUsername}
-        setInputVercelEmail={setInputVercelEmail}
-        setInputVercelToken={setInputVercelToken}
-        handleToken={handleToken}
-      />
+      <TokenInputModal />
     );
   };
 
@@ -121,12 +105,12 @@ const VercelProjectIntegrations = () => {
           severity={snackbar.severity}
           sx={{
             width: "100%",
-            backgroundColor: "rgb(244, 67, 54)", // Custom background color
-            color: "#fff", // Text color
+            backgroundColor: "rgb(244, 67, 54)",
+            color: "#fff",
             display: "flex",
             flexDirection: "column",
             "& .MuiAlert-icon": {
-              color: "#fff", // Icon color
+              color: "#fff",
               textAlign: "center",
             },
           }}

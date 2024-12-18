@@ -44,7 +44,6 @@ const VercelProjectsPanel = () => {
 
   const truncateCommitSha = (sha) => sha?.slice(0, 7) || "";
 
-  // Debounced Search Logic
   const debounce = (func, delay) => {
     let timer;
     return (...args) => {
@@ -70,7 +69,6 @@ const VercelProjectsPanel = () => {
     handleSearch(searchTerm);
   }, [searchTerm, handleSearch]);
 
-  // Pagination Logic
   const handlePageChange = (_, page) => setCurrentPage(page);
 
   const paginatedProjects = filteredProjects.slice(
