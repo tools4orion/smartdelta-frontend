@@ -1,9 +1,11 @@
 import { axiosClient } from "../apiClient";
 
 const vercelEndpoints = {
-  saveIntegration: (data) => axiosClient.post("/vercel/store", data),
   listIntegrations: () => axiosClient.get("/vercel/list"),
-  fetchProjects: (email) => axiosClient.post("/vercel/projects", { email }),
+  saveIntegration: (data) => axiosClient.post("/vercel/store", data),
+  fetchProjects: (encryptedToken) =>
+    axiosClient.post("/vercel/projects", { encryptedToken }),
+  getEncryptedToken: (email) => axiosClient.post("/vercel/token", { email }),
 };
 
 export default vercelEndpoints;

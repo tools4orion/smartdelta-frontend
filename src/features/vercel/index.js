@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -14,6 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import useGetProjects from "./hooks/useGetProjects";
 import TokenInputModal from "./components/TokenInputModal";
 import VercelAccountList from "./components/VercelAccountList";
+import { getVercelIntegratedProfiles } from "./actions/listVercelProfiles.action";
 
 const VercelProjectIntegrations = () => {
   const [vercelAccountData, setVercelAccountData] = useState({
@@ -79,6 +80,12 @@ const VercelProjectIntegrations = () => {
       />
     );
   };
+
+  useEffect(() => {
+    getVercelIntegratedProfiles().then((integrations) => {
+      console.log("integrations", integrations);
+    });
+  }, []);
 
   return (
     <DashboardLayout>
