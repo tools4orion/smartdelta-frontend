@@ -163,17 +163,29 @@ const TokenInputModal = ({ styles }) => {
         </Box>
       </Box>
 
-      {/* Snackbar for showing success or error messages */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        sx={{
+          "& .MuiAlert-root": {
+            backgroundColor: "rgb(244, 67, 54)",
+            color: "#fff",
+          },
+        }}
       >
         <Alert
           onClose={handleCloseSnackbar}
           severity={snackbar.severity}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            backgroundColor: "rgb(244, 67, 54)",
+            color: "#fff",
+            "& .MuiAlert-icon": {
+              color: "#fff",
+            },
+          }}
         >
           {snackbar.message}
         </Alert>

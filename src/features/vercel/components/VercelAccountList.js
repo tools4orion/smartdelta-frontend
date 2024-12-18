@@ -55,7 +55,6 @@ const VercelAccountList = ({ vercelAccountsData, handleToken }) => {
       }
 
       const token = decryptToken(encryptedToken, secretKey);
-      console.log("Decrypted Token:", token);
 
       const projects = await getVercelProjects(token);
 
@@ -154,7 +153,7 @@ const VercelAccountList = ({ vercelAccountsData, handleToken }) => {
         </Modal>
         <Snackbar
           open={snackbar.open}
-          autoHideDuration={3000}
+          autoHideDuration={2000}
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
