@@ -48,13 +48,13 @@ const TokenInputModal = ({ styles }) => {
     const encryptedToken = encryptToken(inputVercelToken, secretKey);
 
     try {
-      const projects = await getVercelProjects(inputVercelEmail);
-
       await saveVercelProfile(
         inputVercelUsername,
         inputVercelEmail,
         encryptedToken
       );
+
+      const projects = await getVercelProjects(inputVercelEmail);
 
       setSnackbar({
         open: true,
