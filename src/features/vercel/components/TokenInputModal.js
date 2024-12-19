@@ -48,7 +48,7 @@ const TokenInputModal = ({ styles }) => {
     const encryptedToken = encryptToken(inputVercelToken, secretKey);
 
     try {
-      const projects = await getVercelProjects(inputVercelToken);
+      const projects = await getVercelProjects(encryptedToken);
 
       await saveVercelProfile(
         inputVercelUsername,
@@ -70,7 +70,7 @@ const TokenInputModal = ({ styles }) => {
 
       setSnackbar({
         open: true,
-        message: "Integration failed. Please check your credentials.",
+        message: "Vercel integration failed. Please check your credentials.",
         severity: "error",
       });
     } finally {

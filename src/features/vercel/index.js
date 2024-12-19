@@ -70,7 +70,10 @@ const VercelProjectIntegrations = () => {
     }
 
     return isAnyIntegrationExist ? (
-      <VercelAccountList vercelAccountsData={vercelAccountsData} />
+      <VercelAccountList
+        vercelAccountsData={vercelAccountsData}
+        setLoading={setLoading}
+      />
     ) : (
       <TokenInputModal />
     );

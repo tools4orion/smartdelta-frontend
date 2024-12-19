@@ -17,7 +17,6 @@ import AddIcon from "@mui/icons-material/Add";
 import TokenInputModal from "./TokenInputModal";
 import { getEncryptedToken } from "../actions/getEncryptedVercelToken.action";
 import { getVercelProjects } from "../actions/getVercelProjects.action";
-import { decryptToken } from "../utils/decryptToken";
 import vercel_favicon from "../../../assets/images/vercel_icon.jpg";
 import { useNavigate } from "react-router-dom";
 
@@ -29,7 +28,7 @@ const styles = {
   transform: "translate(-50%, -50%)",
 };
 
-const VercelAccountList = ({ vercelAccountsData }) => {
+const VercelAccountList = ({ vercelAccountsData, setLoading }) => {
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -48,16 +47,14 @@ const VercelAccountList = ({ vercelAccountsData }) => {
 
   const handleOpenProjects = async (email) => {
     try {
+      setLoading(true);
       const encryptedToken = await getEncryptedToken(email);
+
       const secretKey = process.env.REACT_APP_SECRET_KEY;
       if (!secretKey) {
         throw new Error("Secret key is missing.");
       }
-
-      const token = decryptToken(encryptedToken, secretKey);
-
-      const projects = await getVercelProjects(token);
-
+      const projects = await getVercelProjects(encryptedToken);
       console.log("Fetched projects:", projects);
 
       setSnackbar({
@@ -77,6 +74,8 @@ const VercelAccountList = ({ vercelAccountsData }) => {
         message: "Failed to fetch projects. Please check the token.",
         severity: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
