@@ -9,6 +9,7 @@ import {
   Chip,
   Grid,
   Pagination,
+  Tooltip,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -17,9 +18,14 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import vercel_favicon from "../../../assets/svgs/vercel_favicon.svg";
+import vercel_favicon from "../../../assets/images/vercel_icon.jpg";
 import vercel_logo_thumbnail from "../../../assets/svgs/vercel_logo_thumbnail.svg";
 import { useMaterialUIController } from "contexts/UIContext";
+import CommitIcon from "@mui/icons-material/Commit";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const PAGE_SIZE = 10;
 
@@ -103,7 +109,7 @@ const VercelProjectsPanel = () => {
                 <img
                   src={vercel_favicon}
                   alt="Vercel Logo"
-                  style={{ height: 35 }}
+                  style={{ height: 35, borderRadius: "50%" }}
                 />
               </MDBox>
               {/* Search Bar */}
@@ -118,7 +124,7 @@ const VercelProjectsPanel = () => {
                 }}
               >
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                  Deployed Vercel Projects
+                  Deployed Vercel Projects/Services
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                   <TextField
@@ -194,27 +200,66 @@ const VercelProjectsPanel = () => {
                               variant="body2"
                               color={darkMode ? "#ddd" : "text.secondary"}
                             >
+                              <GitHubIcon
+                                fontSize="small"
+                                sx={{ verticalAlign: "middle", mr: 1 }}
+                              />
                               <strong>Owner:</strong> {meta.githubOrg || "N/A"}
                             </Typography>
                             <Typography
                               variant="body2"
                               color={darkMode ? "#ddd" : "text.secondary"}
                             >
+                              <AccountTreeIcon
+                                fontSize="small"
+                                sx={{ verticalAlign: "middle", mr: 1 }}
+                              />
                               <strong>Branch:</strong>{" "}
                               {meta.githubCommitRef || "N/A"}
+                              {meta.githubCommitRef
+                                .toLowerCase()
+                                .includes("release") ? (
+                                <Tooltip
+                                  title="Release Branch"
+                                  placement="right"
+                                >
+                                  <CheckBoxIcon
+                                    fontSize="small"
+                                    sx={{
+                                      verticalAlign: "middle",
+                                      ml: 1,
+                                      color: "success.main",
+                                    }}
+                                  />
+                                </Tooltip>
+                              ) : (
+                                <Tooltip
+                                  title="NOT Release Branch!"
+                                  placement="right"
+                                >
+                                  <WarningIcon
+                                    fontSize="small"
+                                    sx={{
+                                      verticalAlign: "middle",
+                                      ml: 1,
+                                      color: "error.main",
+                                    }}
+                                  />
+                                </Tooltip>
+                              )}
                             </Typography>
+
                             <Typography
                               variant="body2"
                               color={darkMode ? "#ddd" : "text.secondary"}
                             >
-                              <strong>Commit ID:</strong>{" "}
-                              {truncateCommitSha(meta.githubCommitSha)}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color={darkMode ? "#ddd" : "text.secondary"}
-                            >
+                              <CommitIcon
+                                fontSize="small"
+                                sx={{ verticalAlign: "middle", mr: 1 }}
+                              />
                               <strong>Latest Commit:</strong>{" "}
+                              {truncateCommitSha(meta.githubCommitSha)}
+                              {" | "}
                               {meta.githubCommitMessage || "No Message"}
                             </Typography>
                           </Grid>
