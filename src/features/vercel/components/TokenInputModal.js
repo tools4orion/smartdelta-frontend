@@ -48,7 +48,7 @@ const TokenInputModal = ({ styles }) => {
     const encryptedToken = encryptToken(inputVercelToken, secretKey);
 
     try {
-      const projects = await getVercelProjects(encryptedToken);
+      const projects = await getVercelProjects(inputVercelEmail);
 
       await saveVercelProfile(
         inputVercelUsername,
