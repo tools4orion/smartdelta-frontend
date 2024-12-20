@@ -100,10 +100,10 @@ const VercelProjectsPanel = () => {
         ),
       label:
         isReleaseBranch && isDeploymentReady
-          ? "Deployment Ready"
+          ? "Deployment is ready"
           : !isDeploymentReady
-          ? "Deployment is NOT Ready"
-          : "Deployment Ready (But NOT the Release Branch)",
+          ? "Deployment is NOT ready"
+          : "Deployment is ready (but NOT the release branch)",
       color:
         isReleaseBranch && isDeploymentReady
           ? "success"
