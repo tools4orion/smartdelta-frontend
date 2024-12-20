@@ -274,7 +274,7 @@ const VercelProjectsPanel = () => {
                                     sx={{
                                       verticalAlign: "middle",
                                       ml: 1,
-                                      color: "error.main",
+                                      color: "warning.main",
                                     }}
                                   />
                                 </Tooltip>
