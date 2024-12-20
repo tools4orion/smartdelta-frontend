@@ -100,7 +100,7 @@ const TokenInputModal = ({ styles }) => {
         <Box component="form" role="form">
           <Box mb={2}>
             <TextField
-              label="Vercel Username"
+              label="Username (Name & Surname)"
               type="text"
               fullWidth
               variant="outlined"

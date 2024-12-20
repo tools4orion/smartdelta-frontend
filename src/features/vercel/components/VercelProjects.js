@@ -26,6 +26,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 
 const PAGE_SIZE = 10;
 
@@ -81,6 +82,36 @@ const VercelProjectsPanel = () => {
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
   );
+
+  const getStatusChipProps = (meta, deployment) => {
+    const isReleaseBranch = meta.githubCommitRef
+      ?.toLowerCase()
+      .includes("release");
+    const isDeploymentReady = deployment.readyState === "READY";
+
+    return {
+      icon:
+        isReleaseBranch && isDeploymentReady ? (
+          <CheckCircleIcon />
+        ) : !isDeploymentReady ? (
+          <ErrorOutlineIcon />
+        ) : (
+          <ReportProblemIcon />
+        ),
+      label:
+        isReleaseBranch && isDeploymentReady
+          ? "Deployment Ready"
+          : !isDeploymentReady
+          ? "Deployment is NOT Ready"
+          : "Deployment Ready (But NOT the Release Branch)",
+      color:
+        isReleaseBranch && isDeploymentReady
+          ? "success"
+          : !isDeploymentReady
+          ? "error"
+          : "warning",
+    };
+  };
 
   return (
     <DashboardLayout>
@@ -148,6 +179,7 @@ const VercelProjectsPanel = () => {
                 {paginatedProjects.map((project) => {
                   const deployment = project.latestDeployments?.[0] || {};
                   const meta = deployment.meta || {};
+                  const statusChipProps = getStatusChipProps(meta, deployment);
 
                   return (
                     <Card
@@ -291,23 +323,7 @@ const VercelProjectsPanel = () => {
 
                             <Box mt={1}>
                               <Chip
-                                icon={
-                                  deployment.readyState === "READY" ? (
-                                    <CheckCircleIcon />
-                                  ) : (
-                                    <ErrorOutlineIcon />
-                                  )
-                                }
-                                label={
-                                  deployment.readyState === "READY"
-                                    ? "Deployment Ready"
-                                    : "Not Ready"
-                                }
-                                color={
-                                  deployment.readyState === "READY"
-                                    ? "success"
-                                    : "error"
-                                }
+                                {...statusChipProps}
                                 sx={{ fontWeight: "bold" }}
                               />
                             </Box>
