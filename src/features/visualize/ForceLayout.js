@@ -151,17 +151,17 @@ function ForceLayoutTopology({ csvData }) {
   const nodes = useMemo(() => calculateNodes(), [csvData]);
   const edges = useMemo(() => calculateEdges(), [csvData]);
 
-  const updateNodesAndEdges = () => {
-    const nodes = calculateNodes();
-    const edges = calculateEdges();
-
-    setNodes(nodes);
-    setEdges(edges);
-  };
-
   useEffect(() => {
+    const updateNodesAndEdges = () => {
+      const nodes = calculateNodes();
+      const edges = calculateEdges();
+
+      setNodes(nodes);
+      setEdges(edges);
+    };
+
     updateNodesAndEdges();
-  }, [csvData, setNodes, setEdges]);
+  }, []);
 
   // Apply force layout
   useForceLayout({ strength, distance, simulationFrozen });
