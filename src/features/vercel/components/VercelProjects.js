@@ -219,6 +219,10 @@ const VercelProjectsPanel = () => {
                                     justifyContent: "center",
                                     p: 1,
                                     backgroundColor: "#fff",
+                                    "&:hover": {
+                                      borderColor: "#1976d2",
+                                      borderWidth: "4px",
+                                    },
                                   }}
                                 >
                                   <img
