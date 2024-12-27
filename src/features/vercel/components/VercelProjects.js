@@ -314,7 +314,7 @@ const VercelProjectsPanel = () => {
                                   color="inherit"
                                   sx={{
                                     "&:hover": {
-                                      color: "blue", // Changes the text color to blue on hover
+                                      color: "#1591ea",
                                     },
                                   }}
                                 >
