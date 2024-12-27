@@ -10,6 +10,7 @@ import {
   Grid,
   Pagination,
   Tooltip,
+  Link,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -200,24 +201,34 @@ const VercelProjectsPanel = () => {
                         <Grid container spacing={2} alignItems="center">
                           {/* Left Section: Logo and Project Name */}
                           <Grid item xs={3} sm={2}>
-                            <Box
-                              sx={{
-                                border: "1px solid",
-                                borderColor: darkMode ? "#444" : "#ccc",
-                                borderRadius: 1,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                p: 1,
-                                backgroundColor: "#fff",
-                              }}
-                            >
-                              <img
-                                src={vercel_logo_thumbnail}
-                                alt="Vercel Thumbnail"
-                                style={{ width: "100%", maxHeight: "50px" }}
-                              />
-                            </Box>
+                            <Tooltip title="Go to the service" placement="top">
+                              <Link
+                                href={`https://${deployment.url}`}
+                                target="_blank"
+                                rel="noopener"
+                                underline="none"
+                                sx={{ display: "block" }}
+                              >
+                                <Box
+                                  sx={{
+                                    border: "1px solid",
+                                    borderColor: darkMode ? "#444" : "#ccc",
+                                    borderRadius: 1,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    p: 1,
+                                    backgroundColor: "#fff",
+                                  }}
+                                >
+                                  <img
+                                    src={vercel_logo_thumbnail}
+                                    alt="Vercel Thumbnail"
+                                    style={{ width: "100%", maxHeight: "50px" }}
+                                  />
+                                </Box>
+                              </Link>
+                            </Tooltip>
                           </Grid>
                           {/* Middle Section: Project Details */}
                           <Grid item xs={9} sm={6}>
@@ -290,7 +301,26 @@ const VercelProjectsPanel = () => {
                                 sx={{ verticalAlign: "middle", mr: 1 }}
                               />
                               <strong>Latest Commit:</strong>{" "}
-                              {truncateCommitSha(meta.githubCommitSha)}
+                              <Tooltip
+                                title={`View commit ${truncateCommitSha(
+                                  meta.githubCommitSha
+                                )}`}
+                              >
+                                <Link
+                                  href={`https://github.com/${meta.githubOrg}/${meta.githubRepo}/commit/${meta.githubCommitSha}`}
+                                  target="_blank"
+                                  rel="noopener"
+                                  underline="hover"
+                                  color="inherit"
+                                  sx={{
+                                    "&:hover": {
+                                      color: "blue", // Changes the text color to blue on hover
+                                    },
+                                  }}
+                                >
+                                  {truncateCommitSha(meta.githubCommitSha)}
+                                </Link>
+                              </Tooltip>
                               {" | "}
                               {meta.githubCommitMessage || "No Message"}
                             </Typography>
