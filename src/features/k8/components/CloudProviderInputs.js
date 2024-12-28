@@ -3,6 +3,7 @@ import { Tabs, Tab, Box, TextField, Button, Tooltip } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import awsEks from "../../../assets/svgs/awsEks.svg";
+import aws from "../../../assets/svgs/Amazon_Web_Services_Logo.svg";
 import google_cloud from "../../../assets/svgs/google_cloud.svg";
 import microsoftAzure from "../../../assets/svgs/microsoftAzure.png";
 import MDSnackbar from "components/MDSnackbar";
@@ -30,7 +31,7 @@ const CloudProviderInputs = ({
   const getCloudProviderSysIcon = () => {
     const monitoringsysname = getCloudProviderName();
     if (monitoringsysname === "AWS") {
-      return awsEks;
+      return aws;
     }
     if (monitoringsysname === "Google Cloud") {
       return google_cloud;
@@ -52,7 +53,7 @@ const CloudProviderInputs = ({
           aria-label="icon label tabs"
         >
           <Tooltip title="Amazon Web Services" arrow>
-            <Tab icon={<img width="75" height="75" src={awsEks} />} />
+            <Tab icon={<img width="75" height="75" src={aws} />} />
           </Tooltip>
           <Tooltip title="Google Cloud" arrow>
             <Tab icon={<img width="150" height="75" src={google_cloud} />} />
