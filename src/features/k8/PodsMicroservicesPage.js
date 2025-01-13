@@ -68,6 +68,8 @@ const MicroservicesMonitoring = () => {
   const [heapTableData, setHeapTableData] = useState([]);
   const [selectedHeapPods, setSelectedHeapPods] = useState(selectedPods);
   const [loadingHeap, setLoadingHeap] = useState(false);
+  const [globalTimeRange, setGlobalTimeRange] = useState(timeRanges[0].value);
+  const [globalEntriesPerPage, setGlobalEntriesPerPage] = useState(5);
 
   const prometheusServer = `http://${prometheusIP}:${prometheusPort}`;
   // action network requests is not used since third party API is used for all requests in this component
@@ -272,6 +274,12 @@ const MicroservicesMonitoring = () => {
     heapUsageData,
   ]);
 
+  useEffect(() => {
+    setCpuTimeRange(globalTimeRange);
+    setMemoryTimeRange(globalTimeRange);
+    setHeapTimeRange(globalTimeRange);
+  }, [globalTimeRange]);
+
   const createChartOptions = (title) => ({
     chart: {
       type: "line",
@@ -391,12 +399,109 @@ const MicroservicesMonitoring = () => {
                 <MDTypography variant="h6" color="white">
                   CPU, Active Memory and Heap Usage Metrics for Microservices
                 </MDTypography>
-                <img
-                  src={k8slogo}
-                  alt="Kubernetes Logo"
-                  style={{ height: 60 }}
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "right",
+                    alignItems: "center",
+                  }}
+                >
+                  <TextField
+                    select
+                    label="Global Time Range"
+                    value={globalTimeRange}
+                    onChange={(e) => setGlobalTimeRange(Number(e.target.value))}
+                    sx={{
+                      width: 150,
+                      ".MuiOutlinedInput-root": {
+                        height: 40,
+                      },
+                    }}
+                  >
+                    {timeRanges.map((range) => (
+                      <MenuItem key={range.value} value={range.value}>
+                        {range.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Global Entries Per Page"
+                    value={globalEntriesPerPage}
+                    onChange={(e) =>
+                      setGlobalEntriesPerPage(Number(e.target.value))
+                    }
+                    sx={{
+                      width: 150,
+                      ".MuiOutlinedInput-root": {
+                        height: 40,
+                      },
+                      marginLeft: 1,
+                    }}
+                  >
+                    {[5, 10, 20, 50, 100].map((entry) => (
+                      <MenuItem key={entry} value={entry}>
+                        {entry}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <img
+                    src={k8slogo}
+                    alt="Kubernetes Logo"
+                    style={{ height: 60 }}
+                  />
+                </Box>
               </MDBox>
+              {/* <Box
+                sx={{
+                  paddingTop: 3,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Box />
+                <TextField
+                  select
+                  label="Global Time Range"
+                  value={globalTimeRange}
+                  onChange={(e) => setGlobalTimeRange(Number(e.target.value))}
+                  sx={{
+                    width: 150,
+                    ".MuiOutlinedInput-root": {
+                      height: 40,
+                    },
+                  }}
+                >
+                  {timeRanges.map((range) => (
+                    <MenuItem key={range.value} value={range.value}>
+                      {range.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <Box />
+                <Box sx={{ paddingLeft: 1 }} />
+                <TextField
+                  select
+                  label="Global Entries Per Page"
+                  value={globalEntriesPerPage}
+                  onChange={(e) =>
+                    setGlobalEntriesPerPage(Number(e.target.value))
+                  }
+                  sx={{
+                    width: 150,
+                    ".MuiOutlinedInput-root": {
+                      height: 40,
+                    },
+                  }}
+                >
+                  {[5, 10, 20, 50, 100].map((entry) => (
+                    <MenuItem key={entry} value={entry}>
+                      {entry}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <Box />
+              </Box> */}
               <Grid container spacing={3}>
                 {/* CPU Usage Section */}
                 <Grid item xs={12} md={4}>
@@ -470,7 +575,7 @@ const MicroservicesMonitoring = () => {
                       <DataTable
                         table={createTableStructure(cpuTableData, "CPU")}
                         entriesPerPage={{
-                          defaultValue: 5,
+                          defaultValue: globalEntriesPerPage,
                           entries: [5, 10, 20, 50, 100],
                         }}
                         canSearch
@@ -556,7 +661,7 @@ const MicroservicesMonitoring = () => {
                       <DataTable
                         table={createTableStructure(memoryTableData, "Memory")}
                         entriesPerPage={{
-                          defaultValue: 5,
+                          defaultValue: globalEntriesPerPage,
                           entries: [5, 10, 20, 50, 100],
                         }}
                         canSearch
@@ -638,7 +743,7 @@ const MicroservicesMonitoring = () => {
                       <DataTable
                         table={createTableStructure(heapTableData, "Heap")}
                         entriesPerPage={{
-                          defaultValue: 5,
+                          defaultValue: globalEntriesPerPage,
                           entries: [5, 10, 20, 50, 100],
                         }}
                         canSearch
@@ -649,7 +754,6 @@ const MicroservicesMonitoring = () => {
                   </Box>
                 </Grid>
               </Grid>
-
               {/* Image Sizes */}
               {Object.keys(imageSizes).length !== 0 && (
                 <Box
