@@ -472,56 +472,6 @@ const MicroservicesMonitoring = () => {
                   />
                 </Box>
               </MDBox>
-              {/* <Box
-                sx={{
-                  paddingTop: 3,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Box />
-                <TextField
-                  select
-                  label="Global Time Range"
-                  value={globalTimeRange}
-                  onChange={(e) => setGlobalTimeRange(Number(e.target.value))}
-                  sx={{
-                    width: 150,
-                    ".MuiOutlinedInput-root": {
-                      height: 40,
-                    },
-                  }}
-                >
-                  {timeRanges.map((range) => (
-                    <MenuItem key={range.value} value={range.value}>
-                      {range.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <Box />
-                <Box sx={{ paddingLeft: 1 }} />
-                <TextField
-                  select
-                  label="Global Entries Per Page"
-                  value={globalEntriesPerPage}
-                  onChange={(e) =>
-                    setGlobalEntriesPerPage(Number(e.target.value))
-                  }
-                  sx={{
-                    width: 150,
-                    ".MuiOutlinedInput-root": {
-                      height: 40,
-                    },
-                  }}
-                >
-                  {[5, 10, 20, 50, 100].map((entry) => (
-                    <MenuItem key={entry} value={entry}>
-                      {entry}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <Box />
-              </Box> */}
               <Grid container spacing={3}>
                 {/* CPU Usage Section */}
                 <Grid item xs={12} md={4}>
