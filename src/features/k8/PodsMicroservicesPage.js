@@ -10,6 +10,7 @@ import {
   Card,
   Tooltip,
 } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
 import IconButton from "@mui/material/IconButton";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Chart from "react-apexcharts";
@@ -53,6 +54,7 @@ const MicroservicesMonitoring = () => {
   const snackbar = useSnackbar();
   const { isOpen, closeSnackbar, message, icon, title, type } = snackbar;
 
+  const [isLoading, setIsLoading] = useState(false);
   const [cpuTimeRange, setCpuTimeRange] = useState(timeRanges[0].value);
   const [memoryTimeRange, setMemoryTimeRange] = useState(timeRanges[0].value);
   const [cpuUsageData, setCpuUsageData] = useState({});
@@ -138,6 +140,7 @@ const MicroservicesMonitoring = () => {
       );
 
       if (podsToFetch.length > 0) {
+        setIsLoading(true);
         setLoadingCpu(true);
         const newMetrics = await Promise.all(
           podsToFetch.map((pod) =>
@@ -161,6 +164,9 @@ const MicroservicesMonitoring = () => {
         });
 
         setLoadingCpu(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       }
     };
 
@@ -176,6 +182,7 @@ const MicroservicesMonitoring = () => {
       );
 
       if (podsToFetch.length > 0) {
+        setIsLoading(true);
         setLoadingMemory(true);
         const newMetrics = await Promise.all(
           podsToFetch.map((pod) =>
@@ -200,6 +207,9 @@ const MicroservicesMonitoring = () => {
         });
 
         setLoadingMemory(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       }
     };
 
@@ -215,6 +225,7 @@ const MicroservicesMonitoring = () => {
       );
 
       if (podsToFetch.length > 0) {
+        setIsLoading(true);
         setLoadingHeap(true);
         const newMetrics = await Promise.all(
           podsToFetch.map((pod) =>
@@ -238,6 +249,9 @@ const MicroservicesMonitoring = () => {
         });
 
         setLoadingHeap(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       }
     };
 
@@ -378,6 +392,12 @@ const MicroservicesMonitoring = () => {
 
   return (
     <DashboardLayout>
+      <Backdrop
+        open={isLoading}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <DashboardNavbar />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
