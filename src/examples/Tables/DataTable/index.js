@@ -179,13 +179,13 @@ function DataTable({
                 sx={{ width: "5rem" }}
                 renderInput={(params) => <MDInput {...params} />}
               />
-              <MDTypography variant="caption" color="text">
-                &nbsp;&nbsp;entries per page
+              <MDTypography variant="caption" color="text" padding={1}>
+                entries per page
               </MDTypography>
             </MDBox>
           )}
           {canSearch && (
-            <MDBox width="12rem" ml="auto">
+            <MDBox width="10rem" ml="auto">
               <MDInput
                 placeholder="Search..."
                 value={search}

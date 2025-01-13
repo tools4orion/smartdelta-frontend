@@ -63,9 +63,13 @@ const MicroservicesMonitoring = () => {
   const [selectedMemoryPods, setSelectedMemoryPods] = useState(selectedPods);
   const [loadingCpu, setLoadingCpu] = useState(false);
   const [loadingMemory, setLoadingMemory] = useState(false);
+  const [heapTimeRange, setHeapTimeRange] = useState(timeRanges[0].value);
+  const [heapUsageData, setHeapUsageData] = useState({});
+  const [heapTableData, setHeapTableData] = useState([]);
+  const [selectedHeapPods, setSelectedHeapPods] = useState(selectedPods);
+  const [loadingHeap, setLoadingHeap] = useState(false);
 
   const prometheusServer = `http://${prometheusIP}:${prometheusPort}`;
-  console.log(imageSizes);
   // action network requests is not used since third party API is used for all requests in this component
   const fetchPodMetrics = useCallback(
     async (pod, timeRange, metric) => {
@@ -201,6 +205,44 @@ const MicroservicesMonitoring = () => {
   }, [selectedPods, memoryTimeRange, fetchPodMetrics, memoryUsageData]);
 
   useEffect(() => {
+    const updateHeapMetrics = async () => {
+      const podsToFetch = selectedPods.filter(
+        (pod) =>
+          !heapUsageData[pod]?.timeRange ||
+          heapUsageData[pod]?.timeRange !== heapTimeRange
+      );
+
+      if (podsToFetch.length > 0) {
+        setLoadingHeap(true);
+        const newMetrics = await Promise.all(
+          podsToFetch.map((pod) =>
+            fetchPodMetrics(
+              pod,
+              heapTimeRange,
+              "nodejs_heap_size_used_bytes"
+            ).then((data) => ({
+              pod,
+              data,
+            }))
+          )
+        );
+
+        setHeapUsageData((prevData) => {
+          const updatedData = { ...prevData };
+          newMetrics.forEach(({ pod, data }) => {
+            updatedData[pod] = { timeRange: heapTimeRange, data };
+          });
+          return updatedData;
+        });
+
+        setLoadingHeap(false);
+      }
+    };
+
+    updateHeapMetrics();
+  }, [selectedPods, heapTimeRange, fetchPodMetrics, heapUsageData]);
+
+  useEffect(() => {
     const updateTableData = (usageData, selectedPods) => {
       return selectedPods.flatMap(
         (pod) =>
@@ -220,7 +262,15 @@ const MicroservicesMonitoring = () => {
 
     setCpuTableData(updateTableData(cpuUsageData, selectedCpuPods));
     setMemoryTableData(updateTableData(memoryUsageData, selectedMemoryPods));
-  }, [selectedCpuPods, selectedMemoryPods, cpuUsageData, memoryUsageData]);
+    setHeapTableData(updateTableData(heapUsageData, selectedHeapPods));
+  }, [
+    selectedCpuPods,
+    selectedMemoryPods,
+    cpuUsageData,
+    memoryUsageData,
+    selectedHeapPods,
+    heapUsageData,
+  ]);
 
   const createChartOptions = (title) => ({
     chart: {
@@ -256,7 +306,7 @@ const MicroservicesMonitoring = () => {
         formatter: function (val) {
           if (title === "CPU Usage") {
             return `${val.toFixed(6)} cores`;
-          } else if (title === "Memory Usage") {
+          } else if (title === "Memory Usage" || title === "Heap Usage") {
             return `${(val / (1024 * 1024)).toFixed(2)} MB`;
           }
           return val;
@@ -284,10 +334,34 @@ const MicroservicesMonitoring = () => {
 
   const createTableStructure = (data, metric) => ({
     columns: [
-      { Header: "Pod", accessor: "pod" },
-      { Header: "Timestamp", accessor: "timestamp" },
       {
-        Header: metric === "Memory" ? `${metric} (MB)` : `${metric} (Cores)`,
+        Header: "Pod",
+        accessor: "pod",
+        Cell: ({ value }) => (
+          <Tooltip title={value} arrow>
+            <span>
+              {value.length > 15 ? `${value.slice(0, 15)}...` : value}
+            </span>
+          </Tooltip>
+        ),
+      },
+      {
+        Header: "Timestamp",
+        accessor: "timestamp",
+        Cell: ({ value }) => {
+          const datePart = value.split(" ")[0];
+          return (
+            <Tooltip title={value} arrow>
+              <span>{datePart}</span>
+            </Tooltip>
+          );
+        },
+      },
+      {
+        Header:
+          metric === "Memory" || metric === "Heap"
+            ? `${metric} (MB)`
+            : `${metric} (Cores)`,
         accessor: "value",
       },
     ],
@@ -315,7 +389,7 @@ const MicroservicesMonitoring = () => {
                 alignItems="center"
               >
                 <MDTypography variant="h6" color="white">
-                  CPU & Memory Metrics for Microservices
+                  CPU, Active Memory and Heap Usage Metrics for Microservices
                 </MDTypography>
                 <img
                   src={k8slogo}
@@ -325,7 +399,7 @@ const MicroservicesMonitoring = () => {
               </MDBox>
               <Grid container spacing={3}>
                 {/* CPU Usage Section */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <Box sx={{ m: 3 }}>
                     <Box
                       display="flex"
@@ -407,7 +481,7 @@ const MicroservicesMonitoring = () => {
                   </Box>
                 </Grid>
                 {/* Memory Usage Section */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <Box sx={{ m: 3 }}>
                     <Box
                       display="flex"
@@ -492,7 +566,90 @@ const MicroservicesMonitoring = () => {
                     )}
                   </Box>
                 </Grid>
+                {/* Heap Usage Section */}
+                <Grid item xs={12} md={4}>
+                  <Box sx={{ m: 3 }}>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      margin={3}
+                    >
+                      <Typography variant="h5" align="center">
+                        Heap Usage
+                      </Typography>
+                      <Tooltip title="`nodejs_heap_size_used_bytes` metric is used to monitor the heap memory actively used by Node.js applications.">
+                        <IconButton>
+                          <HelpOutlineIcon
+                            fontSize="small"
+                            sx={{ color: darkMode ? "#FFF" : "#000" }}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <TextField
+                      select
+                      label="Heap Time Range"
+                      value={heapTimeRange}
+                      onChange={(e) => setHeapTimeRange(Number(e.target.value))}
+                      sx={{
+                        width: 150,
+                        ".MuiOutlinedInput-root": {
+                          height: 35,
+                        },
+                      }}
+                    >
+                      {timeRanges.map((range) => (
+                        <MenuItem key={range.value} value={range.value}>
+                          {range.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <Chart
+                      options={createChartOptions("Heap Usage")}
+                      series={createChartData(heapUsageData, selectedPods)}
+                      type="line"
+                      height={300}
+                    />
+                    <Autocomplete
+                      multiple
+                      options={selectedPods}
+                      value={selectedHeapPods}
+                      onChange={(e, newValue) => setSelectedHeapPods(newValue)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Pods for Heap Table"
+                        />
+                      )}
+                      sx={{ mb: 1, mt: 6, minWidth: 300 }}
+                    />
+                    {loadingHeap ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          my: 5,
+                        }}
+                      >
+                        <CircularProgress color="secondary" />
+                      </Box>
+                    ) : (
+                      <DataTable
+                        table={createTableStructure(heapTableData, "Heap")}
+                        entriesPerPage={{
+                          defaultValue: 5,
+                          entries: [5, 10, 20, 50, 100],
+                        }}
+                        canSearch
+                        showTotalEntries
+                        pagination={{ variant: "gradient", color: "info" }}
+                      />
+                    )}
+                  </Box>
+                </Grid>
               </Grid>
+
               {/* Image Sizes */}
               {Object.keys(imageSizes).length !== 0 && (
                 <Box
