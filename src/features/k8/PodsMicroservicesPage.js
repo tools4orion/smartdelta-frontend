@@ -433,8 +433,16 @@ const MicroservicesMonitoring = () => {
                     onChange={(e) => setGlobalTimeRange(Number(e.target.value))}
                     sx={{
                       width: 150,
-                      ".MuiOutlinedInput-root": {
-                        height: 40,
+                      "& .MuiOutlinedInput-root": {
+                        height: 35,
+                        "& fieldset": {
+                          borderColor: "#fff",
+                          borderWidth: 1,
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "#fff",
+                        fontWeight: "bold",
                       },
                     }}
                   >
@@ -453,8 +461,16 @@ const MicroservicesMonitoring = () => {
                     }
                     sx={{
                       width: 150,
-                      ".MuiOutlinedInput-root": {
-                        height: 40,
+                      "& .MuiOutlinedInput-root": {
+                        height: 35,
+                        "& fieldset": {
+                          borderColor: "#fff",
+                          borderWidth: 1,
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "#fff",
+                        fontWeight: "bold",
                       },
                       marginLeft: 1,
                     }}
