@@ -166,7 +166,7 @@ const MicroservicesMonitoring = () => {
         setLoadingCpu(false);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000);
+        }, 50);
       }
     };
 
@@ -209,7 +209,7 @@ const MicroservicesMonitoring = () => {
         setLoadingMemory(false);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000);
+        }, 50);
       }
     };
 
@@ -251,7 +251,7 @@ const MicroservicesMonitoring = () => {
         setLoadingHeap(false);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000);
+        }, 50);
       }
     };
 
@@ -428,7 +428,7 @@ const MicroservicesMonitoring = () => {
                 >
                   <TextField
                     select
-                    label="Global Time Range"
+                    label="Choose Time Range"
                     value={globalTimeRange}
                     onChange={(e) => setGlobalTimeRange(Number(e.target.value))}
                     sx={{
@@ -446,7 +446,7 @@ const MicroservicesMonitoring = () => {
                   </TextField>
                   <TextField
                     select
-                    label="Global Entries Per Page"
+                    label="Choose Entries Per Page"
                     value={globalEntriesPerPage}
                     onChange={(e) =>
                       setGlobalEntriesPerPage(Number(e.target.value))
