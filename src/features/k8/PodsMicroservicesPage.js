@@ -428,7 +428,7 @@ const MicroservicesMonitoring = () => {
                 >
                   <TextField
                     select
-                    label="Choose Time Range"
+                    label="Global Time Range"
                     value={globalTimeRange}
                     onChange={(e) => setGlobalTimeRange(Number(e.target.value))}
                     sx={{
@@ -446,7 +446,7 @@ const MicroservicesMonitoring = () => {
                   </TextField>
                   <TextField
                     select
-                    label="Choose Entries Per Page"
+                    label="Global Entries Per Page"
                     value={globalEntriesPerPage}
                     onChange={(e) =>
                       setGlobalEntriesPerPage(Number(e.target.value))
