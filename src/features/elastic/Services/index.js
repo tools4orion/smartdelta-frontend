@@ -3,17 +3,17 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
-import getServices from "../actions/getServices";
+// import getServices from "../actions/getServices";
 import ServiceList from "./ServiceList";
-import LogList from "../Logs/LogList";
+// import LogList from "../Logs/LogList";
 
 const Services = () => {
   const [data, setData] = useState(null);
   //const { columns, rows } = getServicesTable(data);
 
   useEffect(async () => {
-    const data = await getServices();
-    setData(data);
+    // const data = await getServices();
+    // setData(data);
   }, []);
   return (
     <DashboardLayout>
